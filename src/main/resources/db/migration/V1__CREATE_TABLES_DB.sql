@@ -1,0 +1,5 @@
+CREATE TABLE tab_materials (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(250) NOT NULL,
+    ativo BOOLEAN NOT NULL DEFAULT 1
+);

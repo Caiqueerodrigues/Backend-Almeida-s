@@ -1,0 +1,14 @@
+server:
+  port: 3003 
+  error: 
+    include-stacktrace: never
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/Almeidas_Cortes?createDatabaseIfNotExist=true
+    username: root
+    password: 1234
+
+  jpa:
+    show-sql: true
