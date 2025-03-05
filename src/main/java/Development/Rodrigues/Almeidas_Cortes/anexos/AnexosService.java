@@ -23,6 +23,7 @@ import Development.Rodrigues.Almeidas_Cortes.anexos.dto.ListAnexosDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.entities.Anexo;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.models.ModelRepository;
+import Development.Rodrigues.Almeidas_Cortes.models.dto.UpdateModelDTO;
 import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
 import jakarta.validation.Valid;
 
@@ -118,6 +119,30 @@ public class AnexosService {
             );
 
             repository.save(newAnexo);
+
+            Model modelUpdate = model.get();
+            
+            String anexoId = modelUpdate.getFotos() != null && !modelUpdate.getFotos().isEmpty() ?
+                modelUpdate.getFotos() + "," + newAnexo.getId() :
+                Long.toString(newAnexo.getId());
+
+            UpdateModelDTO newDados = new UpdateModelDTO(
+                modelUpdate.getId(), 
+                modelUpdate.getClient(), 
+                modelUpdate.getTipo(), 
+                modelUpdate.getPreco(),
+                modelUpdate.getQtdPecasPar(), 
+                modelUpdate.getRefOrdem(), 
+                anexoId, 
+                modelUpdate.getQtdFaca(), 
+                modelUpdate.getRendimento(), 
+                modelUpdate.getCronometragem(), 
+                modelUpdate.getObs()
+            );
+
+            modelUpdate.updateModel(newDados);
+            modelRepository.save(modelUpdate);
+
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar o arquivo", e);
         }
