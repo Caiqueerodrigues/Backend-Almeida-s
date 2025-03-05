@@ -18,7 +18,6 @@ public record UpdateModelDTO(
     "  \"ativo\": true,\n" +
     "  \"obs\": \"Paga todo dia 05\"\n" +
     "}")
-
     Client client,
 
     @NotBlank

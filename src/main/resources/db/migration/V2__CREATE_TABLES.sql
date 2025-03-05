@@ -7,16 +7,6 @@ CREATE TABLE tab_clients (
     obs VARCHAR(255)
 );
 
-CREATE TABLE tab_anexos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome_File VARCHAR(100) NOT NULL,
-    nome_Peca VARCHAR(100) NOT NULL,
-    qtd_Par INT NOT NULL DEFAULT 2,
-    propriedade_Faca VARCHAR(100) NOT NULL,
-    preco_Faca DOUBLE NOT NULL,
-    obs VARCHAR(255)
-);
-
 CREATE TABLE tab_models (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_Client INT NOT NULL,
@@ -30,6 +20,18 @@ CREATE TABLE tab_models (
     cronometragem VARCHAR(255),
     obs VARCHAR(255),
     FOREIGN KEY (id_Client) REFERENCES tab_clients(id)
+);
+
+CREATE TABLE tab_anexos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_Modelo INT,
+    nome_File VARCHAR(100) NOT NULL,
+    nome_Peca VARCHAR(100) NOT NULL,
+    qtd_Par INT NOT NULL DEFAULT 2,
+    propriedade_Faca VARCHAR(100) NOT NULL,
+    preco_Faca DOUBLE NOT NULL,
+    obs VARCHAR(255),
+    FOREIGN KEY (id_Modelo) REFERENCES tab_models(id)
 );
 
 CREATE TABLE tab_pedidos (

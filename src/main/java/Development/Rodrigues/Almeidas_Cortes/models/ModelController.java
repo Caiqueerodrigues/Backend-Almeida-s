@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Development.Rodrigues.Almeidas_Cortes.anexos.AnexosService;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.models.dto.CreateModelDTO;
 import Development.Rodrigues.Almeidas_Cortes.models.dto.UpdateModelDTO;
@@ -74,5 +75,4 @@ public class ModelController {
             return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
         }
     }
-    
 }
