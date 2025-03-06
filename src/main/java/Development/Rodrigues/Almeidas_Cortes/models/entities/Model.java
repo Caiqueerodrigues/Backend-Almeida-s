@@ -1,5 +1,8 @@
 package Development.Rodrigues.Almeidas_Cortes.models.entities;
 
+import java.util.List;
+
+import Development.Rodrigues.Almeidas_Cortes.anexos.dto.AnexoDTO;
 import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
 import Development.Rodrigues.Almeidas_Cortes.models.dto.CreateModelDTO;
 import Development.Rodrigues.Almeidas_Cortes.models.dto.UpdateModelDTO;

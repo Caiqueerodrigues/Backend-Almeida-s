@@ -7,6 +7,9 @@ upload:
   dir:
     photos: "src/main/resources/photos/"
 
+backend:
+  api: "http://localhost:3003/"
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

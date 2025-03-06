@@ -6,10 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import Development.Rodrigues.Almeidas_Cortes.anexos.dto.AnexoDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.dto.ListAnexosDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.entities.Anexo;
+import Development.Rodrigues.Almeidas_Cortes.anexos.entities.SendAnexo;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.models.ModelRepository;
 import Development.Rodrigues.Almeidas_Cortes.models.dto.UpdateModelDTO;
@@ -38,6 +41,9 @@ public class AnexosService {
 
     @Value("${upload.dir.photos}") 
     private String uploadDir;
+    
+    @Value("${backend.api}")
+    private String backendApi; 
 
     public ResponseDTO insertImageModelService(@Valid AnexoDTO dados) {
         try {
@@ -146,6 +152,37 @@ public class AnexosService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar o arquivo", e);
         }
+    }
+
+        public List<SendAnexo> getPhotos(String ids, String modelo) {
+            List<Long> anexoIds = Arrays.stream(ids.split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            
+            List<Anexo> anexos = repository.findByIdIn(anexoIds);
+        
+            List<SendAnexo> sendAnexos = anexos.stream()
+                .map(anexo -> {
+                    String fileName = anexo.getNomeFile();
+                    String photoUrl = backendApi + "anexo/" + modelo + "/" + fileName;
+                    System.out.println("nome " + fileName + " url " + photoUrl);
+    
+                    SendAnexo sendAnexo = new SendAnexo(
+                        anexo.getId(),
+                        anexo.getNomeFile(),
+                        anexo.getIdModelo(),
+                        anexo.getNomePeca(),
+                        anexo.getQtdPar(),
+                        anexo.getPropriedadeFaca(),
+                        anexo.getPrecoFaca(),
+                        anexo.getObs(),
+                        photoUrl 
+                    );
+                    return sendAnexo;
+                })
+                .collect(Collectors.toList());
+        
+        return sendAnexos;
     }
 
     private String generateUniqueFileName(String originalFileName, String nomePeca) {
