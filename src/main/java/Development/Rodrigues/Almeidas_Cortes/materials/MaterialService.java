@@ -26,6 +26,13 @@ public class MaterialService {
         else return new ResponseDTO("", "", "", "Não existem materials cadastrados!");
     }
 
+    public ResponseDTO getMateriaIdService(Long id) {
+        Optional<Material> material = materialRepository.findById(id);
+
+        if(material.isPresent()) return new ResponseDTO(material, "", "", "");
+        else return new ResponseDTO("", "", "", "Dados informados incorretos!");
+    }
+
     public ResponseDTO getMaterialsActiveService () {
         List<Material> ativos = materialRepository.findByAtivo(true);
 
