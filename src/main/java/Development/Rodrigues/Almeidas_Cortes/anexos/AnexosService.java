@@ -47,7 +47,7 @@ public class AnexosService {
 
     public ResponseDTO insertImageModelService(@Valid AnexoDTO dados) {
         try {
-            String targetDir = uploadDir + File.separator + dados.nomeModelo();
+            String targetDir = uploadDir + File.separator + dados.idClient() + File.separator + dados.idModelo();
 
             saveFileToDisk(dados, targetDir);
 
@@ -57,9 +57,9 @@ public class AnexosService {
         }
     }
 
-    public Resource getPhotoService(String model, String file) {
+    public Resource getPhotoService(String model, String file, String idCliente) {
         try {
-            String targetDir = uploadDir + File.separator + model + File.separator + file;
+            String targetDir = uploadDir + File.separator + idCliente + File.separator + model + File.separator + file;
             Path path = Paths.get(targetDir);
             Resource resource = new UrlResource(path.toUri());
 
@@ -154,34 +154,33 @@ public class AnexosService {
         }
     }
 
-        public List<SendAnexo> getPhotos(String ids, String modelo) {
-            List<Long> anexoIds = Arrays.stream(ids.split(","))
-                    .map(Long::parseLong)
-                    .collect(Collectors.toList());
-            
-            List<Anexo> anexos = repository.findByIdIn(anexoIds);
-        
-            List<SendAnexo> sendAnexos = anexos.stream()
-                .map(anexo -> {
-                    String fileName = anexo.getNomeFile();
-                    String photoUrl = backendApi + "anexo/" + modelo + "/" + fileName;
-                    System.out.println("nome " + fileName + " url " + photoUrl);
-    
-                    SendAnexo sendAnexo = new SendAnexo(
-                        anexo.getId(),
-                        anexo.getNomeFile(),
-                        anexo.getIdModelo(),
-                        anexo.getNomePeca(),
-                        anexo.getQtdPar(),
-                        anexo.getPropriedadeFaca(),
-                        anexo.getPrecoFaca(),
-                        anexo.getObs(),
-                        photoUrl 
-                    );
-                    return sendAnexo;
-                })
+    public List<SendAnexo> getPhotosService(String ids, Long idModelo, Long idCliente ) {
+        List<Long> anexoIds = Arrays.stream(ids.split(","))
+                .map(Long::parseLong)
                 .collect(Collectors.toList());
         
+        List<Anexo> anexos = repository.findByIdIn(anexoIds);
+    
+        List<SendAnexo> sendAnexos = anexos.stream()
+            .map(anexo -> {
+                String fileName = anexo.getNomeFile();
+                String photoUrl = backendApi + "anexo/" + idCliente + "/" + idModelo + "/" + fileName;
+
+                SendAnexo sendAnexo = new SendAnexo(
+                    anexo.getId(),
+                    anexo.getNomeFile(),
+                    anexo.getIdModelo(),
+                    anexo.getNomePeca(),
+                    anexo.getQtdPar(),
+                    anexo.getPropriedadeFaca(),
+                    anexo.getPrecoFaca(),
+                    anexo.getObs(),
+                    photoUrl 
+                );
+                return sendAnexo;
+            })
+            .collect(Collectors.toList());
+    
         return sendAnexos;
     }
 

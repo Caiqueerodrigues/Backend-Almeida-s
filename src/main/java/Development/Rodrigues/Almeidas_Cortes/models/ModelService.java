@@ -50,7 +50,7 @@ public class ModelService {
             List<SendAnexo> listAnexo = new ArrayList<SendAnexo>();
 
             if(model.getFotos() != null && !model.getFotos().isEmpty()) {
-                listAnexo = anexosService.getPhotos(model.getFotos(), model.getTipo());
+                listAnexo = anexosService.getPhotosService(model.getFotos(), model.getId(), model.getClient().getId());
             }
             
             SendModel response = new SendModel(

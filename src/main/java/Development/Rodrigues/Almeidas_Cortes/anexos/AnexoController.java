@@ -44,6 +44,7 @@ public class AnexoController {
         summary = "Anexa uma imagem a um determinado modelo",
         parameters = {
             @Parameter(name = "id", description = "ID do modelo", required = false),
+            @Parameter(name = "idClient", description = "ID do client", required = true),
             @Parameter(name = "file", description = "Arquivo de imagem", required = true),
             @Parameter(name = "nomePeca", description = "Nome da peça", required = true),
             @Parameter(name = "pecaPar", description = "Número da peça", required = true),
@@ -58,6 +59,7 @@ public class AnexoController {
         @RequestParam("files[]") List<MultipartFile> files,
         @RequestParam("nomePeca[]") List<String> nomePeca,
         @RequestParam("idModelo") Long idModelo,
+        @RequestParam("idClient") Long idClient,
         @RequestParam("nomeModelo") String nomeModelo,
         @RequestParam("pecaPar") Long pecaPar,
         @RequestParam("propriedadeFaca") String propriedadeFaca,
@@ -77,6 +79,7 @@ public class AnexoController {
             AnexoDTO dados = new AnexoDTO(
                 id, 
                 anexos,
+                idClient,
                 nomePeca, 
                 nomeModelo, 
                 idModelo, 
@@ -92,10 +95,10 @@ public class AnexoController {
         }
     }
 
-    @GetMapping("/{model}/{file}")
-    public ResponseEntity<Resource> getPhoto(@PathVariable String model, @PathVariable String file) {
+    @GetMapping("/{idClient}/{model}/{file}")
+    public ResponseEntity<Resource> getPhoto(@PathVariable String model, @PathVariable String file, @PathVariable String idClient) {
         try {
-            Resource response = service.getPhotoService(model, file);
+            Resource response = service.getPhotoService(model, file, idClient);
             String contentType = Files.probeContentType(Paths.get(response.getURI()));
             
             return ResponseEntity.ok()

@@ -45,7 +45,7 @@ public class MaterialService {
             materialRepository.save(new Material(dados));
             return new ResponseDTO("", "", "Material cadastrado com sucesso!", "");
         }
-        return new ResponseDTO("", "", "", "MAterial já cadastrado anteriormente!");
+        return new ResponseDTO("", "", "", "Material já cadastrado anteriormente!");
     }
 
     public ResponseDTO putMaterialService(UpdateMaterialDTO dados) {

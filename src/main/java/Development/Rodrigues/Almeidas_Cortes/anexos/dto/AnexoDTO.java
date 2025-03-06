@@ -15,6 +15,9 @@ public record AnexoDTO(
     @NotNull
     List<ListAnexosDTO> files,
 
+    @Schema(example = "1")
+    Long idClient,
+
     @NotBlank
     @Schema(example = "Cabedal, Teste")
     List<String> nomePeca,
