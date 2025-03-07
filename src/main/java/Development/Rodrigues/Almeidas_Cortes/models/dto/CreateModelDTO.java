@@ -37,7 +37,7 @@ public record CreateModelDTO(
 
     @NotNull
     @Schema(example = "4")
-    Long qtdFacas,
+    Long qtdFaca,
 
     @Schema(example = "12")
     String rendimento,

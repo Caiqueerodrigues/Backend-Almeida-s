@@ -60,7 +60,7 @@ public class Model {
         this.qtdPecasPar = dados.qtdPecasPar();
         this.refOrdem = dados.ordem();
         this.fotos = dados.fotos();
-        this.qtdFaca = dados.qtdFacas();
+        this.qtdFaca = dados.qtdFaca();
         this.rendimento = dados.rendimento();
         this.cronometragem = dados.cronometragem();
         this.obs = dados.obs();
@@ -71,11 +71,11 @@ public class Model {
         this.tipo = dados.tipo();
         this.preco = dados.preco();
         this.qtdPecasPar = dados.qtdPecasPar();
-        if(!dados.ordem().isEmpty()) this.refOrdem = dados.ordem();
-        if(!dados.fotos().isEmpty())this.fotos = dados.fotos();
-        this.qtdFaca = dados.qtdFacas();
-        if(!dados.rendimento().isEmpty()) this.rendimento = dados.rendimento();
-        if(!dados.cronometragem().isEmpty()) this.cronometragem = dados.cronometragem();
-        if(!dados.obs().isEmpty()) this.obs = dados.obs();
+        this.refOrdem = dados.refOrdem();
+        this.fotos = dados.fotos();
+        this.qtdFaca = dados.qtdFaca();
+        this.rendimento = dados.rendimento();
+        this.cronometragem = dados.cronometragem();
+        this.obs = dados.obs();
     }
 }

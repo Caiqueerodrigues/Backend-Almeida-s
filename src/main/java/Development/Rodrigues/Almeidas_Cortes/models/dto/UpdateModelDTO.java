@@ -33,14 +33,14 @@ public record UpdateModelDTO(
     Long qtdPecasPar,
 
     @Schema(example = "13245678")
-    String ordem,
+    String refOrdem,
     
     @Schema(example = "1, 12, 15")
     String fotos,
 
     @NotNull
     @Schema(example = "4")
-    Long qtdFacas,
+    Long qtdFaca,
 
     @Schema(example = "12, 15, 17")
     String rendimento,

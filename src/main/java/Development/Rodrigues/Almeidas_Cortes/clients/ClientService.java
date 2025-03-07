@@ -23,10 +23,10 @@ public class ClientService {
         List<Client> clients = repository.findAll();
 
         if(clients.size() > 0) {
-            List<DadosBasicosClientDTO> responseList = clients.stream()
-                    .map(client -> new DadosBasicosClientDTO(client.getId(), client.getNome(), client.getTelefone()))
-                    .collect(Collectors.toList());
-            return new ResponseDTO(responseList, "", "", "");
+            // List<Client> responseList = clients.stream()
+            //         .map(client -> new DadosBasicosClientDTO(client.getId(), client.getNome(), client.getTelefone()))
+            //         .collect(Collectors.toList());
+            return new ResponseDTO(clients, "", "", "");
         }
 
         return new ResponseDTO("", "", "", "Não existem clientes cadastrados!");

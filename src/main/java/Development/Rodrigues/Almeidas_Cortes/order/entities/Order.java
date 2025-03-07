@@ -87,16 +87,16 @@ public class Order {
         this.client = dados.client();
         this.modelo = dados.modelo();
         this.dataPedido = dados.dataPedido();
-        if(!dados.relatorio().isEmpty()) this.relatorioCliente = dados.relatorio();
+        this.relatorioCliente = dados.relatorio();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
         this.totalPecas = dados.totalPecas();
         this.grade = dados.grade();
-        if(!dados.obs().isEmpty()) this.obs = dados.obs();
-        if(dados.dataPagamento() != null) this.dataPagamento = dados.dataPagamento();
+        this.obs = dados.obs();
+        this.dataPagamento = dados.dataPagamento();
         this.metragemRecebido = dados.metragemRecebida();
         this.tipoRecebido = dados.tipoRecebido();
-        if(!dados.metragemFinalizado().isEmpty()) this.metragemFinalizado = dados.metragemFinalizado();
-        if(!dados.rendimento().isEmpty())this.rendimentoParesMetro = dados.rendimento();
+        this.metragemFinalizado = dados.metragemFinalizado();
+        this.rendimentoParesMetro = dados.rendimento();
     }
 }

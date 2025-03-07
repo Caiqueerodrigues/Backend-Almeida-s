@@ -47,7 +47,7 @@ public class Client {
         this.nome = dados.nome();
         this.telefone = dados.telefone();
         this.ativo = dados.ativo();
-        if(!dados.razaoSocial().isBlank()) this.razaoSocial = dados.razaoSocial();
-        if(!dados.obs().isBlank()) this.obs = dados.obs();
+        this.razaoSocial = dados.razaoSocial();
+        this.obs = dados.obs();
     }
 }

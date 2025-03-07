@@ -46,7 +46,7 @@ public class SendModel {
         Long qtdPecasPar,
         String ordem,
         List<SendAnexo> fotos,
-        Long qtdFacas,
+        Long qtdFaca,
         String rendimento,
         String cronometragem,
         String obs
@@ -58,7 +58,7 @@ public class SendModel {
         this.qtdPecasPar = qtdPecasPar;
         this.refOrdem = ordem;
         this.fotos = fotos;
-        this.qtdFaca = qtdFacas;
+        this.qtdFaca = qtdFaca;
         this.rendimento = rendimento;
         this.cronometragem = cronometragem;
         this.obs = obs;
