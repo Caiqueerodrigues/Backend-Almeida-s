@@ -66,6 +66,9 @@ public class Order {
     @Column(name = "rendimento_Pares_Metro")
     private String rendimentoParesMetro;
 
+    @Column(name = "quem_Assinou", length = 100)
+    private String quemAssinou;
+
     public Order(CreateOrderDTO dados) {
         this.client = dados.client();
         this.modelo = dados.modelo();
@@ -81,6 +84,7 @@ public class Order {
         this.tipoRecebido = dados.tipoRecebido();
         this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
+        this.quemAssinou = dados.quemAssinou();
     }
 
     public void updateOrder(UpdateOrderDTO dados) {
@@ -98,5 +102,6 @@ public class Order {
         this.tipoRecebido = dados.tipoRecebido();
         this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
+        this.quemAssinou = dados.quemAssinou();
     }
 }
