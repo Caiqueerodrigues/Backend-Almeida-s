@@ -13,7 +13,7 @@ backend:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DATABASE_HOST:localhost}:3306/${DATABASE_DATABASE:Almeidas_Cortes}?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${DATABASE_HOST:localhost}:3306/${DATABASE_DATABASE:Almeidas_Cortes}?createDatabaseIfNotExist=true&serverTimezone=GMT-3
     username: ${DATABASE_USERNAME:root}
     password: ${DATABASE_PASSWORD:1234}
   servlet:
@@ -22,7 +22,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   jpa:
-    hibernate:
-      dialect: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     ddl-auto: none
