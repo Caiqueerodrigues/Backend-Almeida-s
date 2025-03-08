@@ -8,15 +8,14 @@ upload:
     photos: "src/main/resources/photos/"
 
 backend:
-  api: "http://localhost:3003/"
+  api: "http://192.168.0.9:3003/"
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/Almeidas_Cortes?createDatabaseIfNotExist=true
-    username: root
-    password: 1234
-
+    url: jdbc:mysql://${DATABASE__HOST:localhost}:${3306}/${DATABASE_DATABASE:Almeidas_Cortes}?createDatabaseIfNotExist=true
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:1234}
   servlet:
     multipart:
       enabled: true
