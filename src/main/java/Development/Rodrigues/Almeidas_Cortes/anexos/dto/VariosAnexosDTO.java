@@ -2,14 +2,11 @@ package Development.Rodrigues.Almeidas_Cortes.anexos.dto;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record AnexoDTO(
+public record VariosAnexosDTO(
     Long id,
 
     @NotNull
@@ -32,17 +29,18 @@ public record AnexoDTO(
 
     @NotNull
     @Schema(example = "4")
-    Long qtdPar,
+    List<Long> qtdPar,
     
     @NotBlank
     @Schema(example = "Nossa")
     List<String> propriedadeFaca,
     
     @NotNull
-    @Schema(example = "0.15")
-    Double precoFaca,
+    @Schema(example = "0.15, 0.12")
+    List<Double> precoFaca,
     
     @Schema(example = "Cuidado com a faca")
-    String obs
+    List<String> obs
 ) {
+
 }

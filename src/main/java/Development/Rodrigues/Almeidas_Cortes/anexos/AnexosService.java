@@ -16,12 +16,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import Development.Rodrigues.Almeidas_Cortes.anexos.dto.AnexoDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.dto.ListAnexosDTO;
+import Development.Rodrigues.Almeidas_Cortes.anexos.dto.VariosAnexosDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.entities.Anexo;
 import Development.Rodrigues.Almeidas_Cortes.anexos.entities.SendAnexo;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
@@ -45,15 +47,15 @@ public class AnexosService {
     @Value("${backend.api}")
     private String backendApi; 
 
-    public ResponseDTO insertImageModelService(@Valid AnexoDTO dados) {
+    public ResponseDTO insertImageModelService(@Valid VariosAnexosDTO dados) {
         try {
-            String targetDir = uploadDir + File.separator + dados.idClient() + File.separator + dados.idModelo();
+            String targetDir = uploadDir + dados.idClient() + "/" + dados.idModelo();
 
-            saveFileToDisk(dados, targetDir);
+            String listId = saveFileToDisk(dados, targetDir);
 
-            return new ResponseDTO("", "", "Foto(s) anexada(s) com sucecsso!", "");
+            return new ResponseDTO(listId, "", "Foto(s) anexada(s) com sucecsso!", "");
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao processar o arquivo", e);
+            throw new RuntimeException("Erro ao processar o arquivo " + e);
         }
     }
 
@@ -73,18 +75,16 @@ public class AnexosService {
         }
     }
 
-    private void saveFileToDisk(AnexoDTO dados, String targetDir) throws IOException {
+    private String saveFileToDisk(VariosAnexosDTO dados, String targetDir) throws IOException {
         try {
-            
             File directory = new File(targetDir);
-            
+            String idsAnexos = "";
             for(int i = 0; i < dados.files().size(); i ++) {
+                MultipartFile file = dados.files().get(i).file();
+
                 boolean newImage = true;
                 String fileName = generateUniqueFileName(dados.files().get(i).originalName(), dados.nomePeca().get(i));
                 
-                MultipartFile file = dados.files().get(i).files();
-
-
                 if (!directory.exists()) {
                     directory.mkdirs();
                 } else {
@@ -92,7 +92,7 @@ public class AnexosService {
                     File[] files = directory.listFiles();
                     
                     for (File existingFile : files) {
-                        if (existingFile.getName().startsWith(baseName)) {
+                        if (existingFile.getName().split("_")[0].equalsIgnoreCase(baseName)) {
                             fileName = existingFile.getName();
                             existingFile.delete();
                             newImage = false;
@@ -100,17 +100,37 @@ public class AnexosService {
                         }
                     }
                 }
+                System.out.println("BYTES !#" + file.getBytes());
 
                 Path targetPath = Paths.get(targetDir, fileName);
                 Files.write(targetPath, file.getBytes());
-                if(newImage) saveAnexoDataBase(dados, fileName, dados.nomePeca().get(i));
+                if(newImage) {
+                    idsAnexos = saveAnexoDataBase(
+                        dados, 
+                        fileName, 
+                        dados.nomePeca().get(i), 
+                        dados.propriedadeFaca().get(i),
+                        dados.qtdPar().get(i),
+                        dados.precoFaca().get(i),
+                        dados.obs().get(i)
+                    );
+                } 
             }
+            return idsAnexos;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao processar o arquivo", e);
+            throw new RuntimeException("Erro ao processar o arquivo " + e);
         }
     }
 
-    private void saveAnexoDataBase(AnexoDTO dados, String fileName, String nomePecaString) {
+    private String saveAnexoDataBase(
+            VariosAnexosDTO dados, 
+            String fileName, 
+            String nomePecaString, 
+            String propriedadeFaca, 
+            Long qtdPar,
+            Double precoFaca,
+            String obs
+        ) {
         try {
             Optional<Model> model = modelRepository.findById(dados.idModelo());
 
@@ -118,16 +138,15 @@ public class AnexosService {
                 fileName,
                 model.get(),
                 nomePecaString,
-                dados.pecaPar(),
-                dados.propriedadeFaca(),
-                dados.precoFaca(),
-                dados.obs()
+                qtdPar,
+                propriedadeFaca,
+                precoFaca,
+                obs
             );
 
             repository.save(newAnexo);
 
             Model modelUpdate = model.get();
-            
             String anexoId = modelUpdate.getFotos() != null && !modelUpdate.getFotos().isEmpty() ?
                 modelUpdate.getFotos() + "," + newAnexo.getId() :
                 Long.toString(newAnexo.getId());
@@ -149,6 +168,7 @@ public class AnexosService {
             modelUpdate.updateModel(newDados);
             modelRepository.save(modelUpdate);
 
+            return anexoId;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar o arquivo", e);
         }
@@ -186,7 +206,7 @@ public class AnexosService {
 
     private String generateUniqueFileName(String originalFileName, String nomePeca) {
         String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
-        String uniqueFileName = nomePeca + "_" + UUID.randomUUID().toString() + extension;
+        String uniqueFileName = nomePeca + "_" + UUID.randomUUID().toString().replace("-", "") + extension;
         return uniqueFileName;
     }
 }

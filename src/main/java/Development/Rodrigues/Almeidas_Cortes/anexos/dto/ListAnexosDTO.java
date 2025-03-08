@@ -1,7 +1,5 @@
 package Development.Rodrigues.Almeidas_Cortes.anexos.dto;
 
-import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 public record ListAnexosDTO(
     
     @NotBlank
-    MultipartFile files,
+    MultipartFile file,
 
     @NotBlank
     String fileName,

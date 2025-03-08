@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import Development.Rodrigues.Almeidas_Cortes.anexos.dto.AnexoDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.dto.ListAnexosDTO;
+import Development.Rodrigues.Almeidas_Cortes.anexos.dto.VariosAnexosDTO;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -61,22 +62,22 @@ public class AnexoController {
         @RequestParam("idModelo") Long idModelo,
         @RequestParam("idClient") Long idClient,
         @RequestParam("nomeModelo") String nomeModelo,
-        @RequestParam("pecaPar") Long pecaPar,
-        @RequestParam("propriedadeFaca") String propriedadeFaca,
-        @RequestParam("precoFaca") Double precoFaca,
-        @RequestParam(value = "obs", required = false) String obs
+        @RequestParam("pecaPar[]") List<Long> pecaPar,
+        @RequestParam("propriedadeFaca[]") List<String> propriedadeFaca,
+        @RequestParam("precoFaca[]") List<Double> precoFaca,
+        @RequestParam(value = "obs[]", required = false) List<String> obs
     ) {
         try {
             List<ListAnexosDTO> anexos = new ArrayList<>();
             for (int i = 0; i < files.size(); i++) {
-                nomePeca.set(i, nomePeca.get(i).replace(" ", "*"));
-                String nomeOriginalSemEspaco = files.get(i).getOriginalFilename().replace(" ", "*");
+                nomePeca.set(i, nomePeca.get(i).replace(" ", "-"));
+                String nomeOriginalSemEspaco = files.get(i).getOriginalFilename().replace(" ", "-");
 
                 ListAnexosDTO anexo = new ListAnexosDTO(files.get(i), nomePeca.get(i), nomeOriginalSemEspaco);
                 anexos.add(anexo);
             }
 
-            AnexoDTO dados = new AnexoDTO(
+            VariosAnexosDTO dados = new VariosAnexosDTO(
                 id, 
                 anexos,
                 idClient,
@@ -91,7 +92,7 @@ public class AnexoController {
             ResponseDTO response = service.insertImageModelService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!" +e, "", ""));
         }
     }
 

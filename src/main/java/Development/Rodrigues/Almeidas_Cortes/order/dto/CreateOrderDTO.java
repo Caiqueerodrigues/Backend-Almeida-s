@@ -85,7 +85,7 @@ public record CreateOrderDTO(
     @Schema(example = "20, 10, 10")
     String rendimento,
     
-    @Schema(example = "Cliclano da silva")
+    @Schema(example = "Ciclano da silva")
     String quemAssinou
 ) {
 
