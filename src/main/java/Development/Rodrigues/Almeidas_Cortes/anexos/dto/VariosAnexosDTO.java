@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 public record VariosAnexosDTO(
     Long id,
 
-    @NotNull
+    // @NotNull
     List<ListAnexosDTO> files,
 
     @Schema(example = "1")
@@ -38,6 +38,9 @@ public record VariosAnexosDTO(
     @NotNull
     @Schema(example = "0.15, 0.12")
     List<Double> precoFaca,
+
+    @Schema(example = "1, 2, 43")
+    List<Long> idsFotos,
     
     @Schema(example = "Cuidado com a faca")
     List<String> obs

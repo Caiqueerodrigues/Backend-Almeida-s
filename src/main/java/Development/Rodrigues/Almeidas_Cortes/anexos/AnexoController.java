@@ -43,21 +43,11 @@ public class AnexoController {
     @Transactional
     @Operation(
         summary = "Anexa uma imagem a um determinado modelo",
-        parameters = {
-            @Parameter(name = "id", description = "ID do modelo", required = false),
-            @Parameter(name = "idClient", description = "ID do client", required = true),
-            @Parameter(name = "file", description = "Arquivo de imagem", required = true),
-            @Parameter(name = "nomePeca", description = "Nome da peça", required = true),
-            @Parameter(name = "pecaPar", description = "Número da peça", required = true),
-            @Parameter(name = "propriedadeFaca", description = "Propriedade da faca", required = true),
-            @Parameter(name = "precoFaca", description = "Preço da faca", required = true),
-            @Parameter(name = "obs", description = "Observações", required = false)
-        },
         requestBody = @RequestBody( content = @Content( mediaType = "multipart/form-data" ) ) 
     )
     public ResponseEntity insertImageModel (
         @RequestParam(value = "id", required = false) Long id,
-        @RequestParam("files[]") List<MultipartFile> files,
+        @RequestParam(value = "files[]", required = false) List<MultipartFile> files,
         @RequestParam("nomePeca[]") List<String> nomePeca,
         @RequestParam("idModelo") Long idModelo,
         @RequestParam("idClient") Long idClient,
@@ -65,16 +55,19 @@ public class AnexoController {
         @RequestParam("pecaPar[]") List<Long> pecaPar,
         @RequestParam("propriedadeFaca[]") List<String> propriedadeFaca,
         @RequestParam("precoFaca[]") List<Double> precoFaca,
-        @RequestParam(value = "obs[]", required = false) List<String> obs
+        @RequestParam(value = "obs[]", required = false) List<String> obs,
+        @RequestParam(value = "idsFotos[]", required = false) List<Long> idsFotos
     ) {
         try {
             List<ListAnexosDTO> anexos = new ArrayList<>();
-            for (int i = 0; i < files.size(); i++) {
-                nomePeca.set(i, nomePeca.get(i).replace(" ", "-"));
-                String nomeOriginalSemEspaco = files.get(i).getOriginalFilename().replace(" ", "-");
-
-                ListAnexosDTO anexo = new ListAnexosDTO(files.get(i), nomePeca.get(i), nomeOriginalSemEspaco);
-                anexos.add(anexo);
+            if(files != null && !files.isEmpty()) {
+                for (int i = 0; i < files.size(); i++) {
+                    nomePeca.set(i, nomePeca.get(i).replace(" ", "-"));
+                    String nomeOriginalSemEspaco = files.get(i).getOriginalFilename().replace(" ", "-");
+    
+                    ListAnexosDTO anexo = new ListAnexosDTO(files.get(i), nomePeca.get(i), nomeOriginalSemEspaco);
+                    anexos.add(anexo);
+                }
             }
 
             VariosAnexosDTO dados = new VariosAnexosDTO(
@@ -87,6 +80,7 @@ public class AnexoController {
                 pecaPar, 
                 propriedadeFaca, 
                 precoFaca, 
+                idsFotos,       
                 obs
             );
             ResponseDTO response = service.insertImageModelService(dados);

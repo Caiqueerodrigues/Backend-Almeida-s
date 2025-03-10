@@ -57,4 +57,24 @@ public class Anexo {
         this.precoFaca = precoFaca;
         this.obs = obs;
     }
+
+    public void updateAnexo(
+        Long id,
+        String nomeFile, 
+        Model idModelo, 
+        String nomePeca, 
+        Long qtdPar,
+        String propriedadeFaca, 
+        Double precoFaca, 
+        String obs
+    ) {
+        this.id = id;
+        this.nomeFile = nomeFile;
+        this.idModelo = idModelo;
+        this.nomePeca = nomePeca;
+        this.qtdPar = qtdPar;
+        this.propriedadeFaca = propriedadeFaca;
+        this.precoFaca = precoFaca;
+        this.obs = obs;
+    }
 }

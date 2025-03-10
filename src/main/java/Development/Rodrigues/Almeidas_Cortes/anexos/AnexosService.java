@@ -47,18 +47,7 @@ public class AnexosService {
     @Value("${backend.api}")
     private String backendApi; 
 
-    public ResponseDTO insertImageModelService(@Valid VariosAnexosDTO dados) {
-        try {
-            String targetDir = uploadDir + dados.idClient() + "/" + dados.idModelo();
-
-            String listId = saveFileToDisk(dados, targetDir);
-
-            return new ResponseDTO(listId, "", "Foto(s) anexada(s) com sucecsso!", "");
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao processar o arquivo " + e);
-        }
-    }
-
+    
     public Resource getPhotoService(String model, String file, String idCliente) {
         try {
             String targetDir = uploadDir + File.separator + idCliente + File.separator + model + File.separator + file;
@@ -75,46 +64,87 @@ public class AnexosService {
         }
     }
 
-    private String saveFileToDisk(VariosAnexosDTO dados, String targetDir) throws IOException {
+    public ResponseDTO insertImageModelService(@Valid VariosAnexosDTO dados) {
+        try {
+            String targetDir = uploadDir + dados.idClient() + "/" + dados.idModelo();
+
+            List<Long> listId = saveFileToDisk(dados, targetDir);
+
+            return new ResponseDTO(listId, "", "Foto(s) anexada(s) com sucecsso!", "");
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao processar o arquivo " + e);
+        }
+    }
+
+    private List<Long> saveFileToDisk(VariosAnexosDTO dados, String targetDir) throws IOException {
         try {
             File directory = new File(targetDir);
-            String idsAnexos = "";
-            for(int i = 0; i < dados.files().size(); i ++) {
-                MultipartFile file = dados.files().get(i).file();
+            List<Long> idsAnexos = new ArrayList<Long>();
 
-                boolean newImage = true;
-                String fileName = generateUniqueFileName(dados.files().get(i).originalName(), dados.nomePeca().get(i));
-                
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                } else {
-                    String baseName = fileName.substring(0, fileName.indexOf('_'));
-                    File[] files = directory.listFiles();
-                    
-                    for (File existingFile : files) {
-                        if (existingFile.getName().split("_")[0].equalsIgnoreCase(baseName)) {
-                            fileName = existingFile.getName();
-                            existingFile.delete();
-                            newImage = false;
-                            break;
-                        }
-                    }
+            if (dados.files() == null || dados.files().isEmpty()) {
+                for (int i = 0; i < dados.nomePeca().size(); i++) {
+                    Optional<Anexo> exists = repository.findById(dados.idsFotos().get(i));
+
+                    Anexo anexo = exists.get();
+                    anexo.updateAnexo(
+                        dados.idsFotos().get(i),
+                        anexo.getNomeFile(),
+                        anexo.getIdModelo(),
+                        dados.nomePeca().get(i), 
+                        dados.qtdPar().get(i),
+                        dados.propriedadeFaca().get(i),
+                        dados.precoFaca().get(i),
+                        dados.obs().get(i)
+                    );
+    
+                    idsAnexos.add(dados.idsFotos().get(i));
                 }
-                System.out.println("BYTES !#" + file.getBytes());
+            } else {
+                for(int i = 0; i < dados.files().size(); i ++) {
+                    MultipartFile file = dados.files().get(i).file();
+                    String contentType = file.getContentType();
 
-                Path targetPath = Paths.get(targetDir, fileName);
-                Files.write(targetPath, file.getBytes());
-                if(newImage) {
-                    idsAnexos = saveAnexoDataBase(
+                    String fileName = "";
+
+                    if(!contentType.equals("text/plain")) {
+                        if (!directory.exists()) {
+                            directory.mkdirs();
+                        } else {
+                            fileName = generateUniqueFileName(dados.files().get(i).originalName(), dados.nomePeca().get(i));
+                            
+                            String baseName = fileName.substring(0, fileName.indexOf('_'));
+                            File[] files = directory.listFiles();
+                            
+                            for (File existingFile : files) {
+                                String fileNamePath = existingFile.getName();
+                                String baseNameExistis = fileNamePath.split("_")[0];
+
+                                if (baseNameExistis.equalsIgnoreCase(baseName)) {
+                                    fileName = existingFile.getName();
+                                    existingFile.delete();
+                                    break;
+                                }
+                            }
+                        }
+        
+                        Path targetPath = Paths.get(targetDir, fileName);
+                        Files.write(targetPath, file.getBytes());
+                        
+                    }
+                    
+                    Long newId = saveAnexoDataBase(
                         dados, 
                         fileName, 
                         dados.nomePeca().get(i), 
                         dados.propriedadeFaca().get(i),
                         dados.qtdPar().get(i),
                         dados.precoFaca().get(i),
-                        dados.obs().get(i)
+                        dados.obs().get(i),
+                        dados.idsFotos().get(i)
                     );
-                } 
+
+                    if(!dados.idsFotos().get(i).equals(newId)) idsAnexos.add(newId);
+                }
             }
             return idsAnexos;
         } catch (Exception e) {
@@ -122,53 +152,44 @@ public class AnexosService {
         }
     }
 
-    private String saveAnexoDataBase(
+    private Long saveAnexoDataBase(
             VariosAnexosDTO dados, 
             String fileName, 
             String nomePecaString, 
             String propriedadeFaca, 
             Long qtdPar,
             Double precoFaca,
-            String obs
+            String obs,
+            Long id
         ) {
         try {
             Optional<Model> model = modelRepository.findById(dados.idModelo());
 
-            Anexo newAnexo = new Anexo(
-                fileName,
-                model.get(),
-                nomePecaString,
-                qtdPar,
-                propriedadeFaca,
-                precoFaca,
-                obs
-            );
+            Long idAnexo = null;
 
-            repository.save(newAnexo);
+            if(id > 0) {
+                Optional<Anexo> anexoExists = repository.findById(id);
+                Anexo anexo = anexoExists.get();
 
-            Model modelUpdate = model.get();
-            String anexoId = modelUpdate.getFotos() != null && !modelUpdate.getFotos().isEmpty() ?
-                modelUpdate.getFotos() + "," + newAnexo.getId() :
-                Long.toString(newAnexo.getId());
+                idAnexo = id;
+                anexo.updateAnexo(id, fileName.isBlank() ? anexo.getNomeFile() : fileName, model.get(), nomePecaString, qtdPar, propriedadeFaca, precoFaca, obs);
+                repository.save(anexo);
+            } else {
+                Anexo newAnexo = new Anexo(
+                    fileName,
+                    model.get(),
+                    nomePecaString,
+                    qtdPar,
+                    propriedadeFaca,
+                    precoFaca,
+                    obs
+                );
 
-            UpdateModelDTO newDados = new UpdateModelDTO(
-                modelUpdate.getId(), 
-                modelUpdate.getClient(), 
-                modelUpdate.getTipo(), 
-                modelUpdate.getPreco(),
-                modelUpdate.getQtdPecasPar(), 
-                modelUpdate.getRefOrdem(), 
-                anexoId, 
-                modelUpdate.getQtdFaca(), 
-                modelUpdate.getRendimento(), 
-                modelUpdate.getCronometragem(), 
-                modelUpdate.getObs()
-            );
+                repository.save(newAnexo);
+                idAnexo = newAnexo.getId();
+            }
 
-            modelUpdate.updateModel(newDados);
-            modelRepository.save(modelUpdate);
-
-            return anexoId;
+            return idAnexo;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar o arquivo", e);
         }
