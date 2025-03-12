@@ -1,13 +1,12 @@
 package Development.Rodrigues.Almeidas_Cortes.order.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
 import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 public record UpdateOrderDTO(
     
@@ -48,9 +47,13 @@ public record UpdateOrderDTO(
     "}")
     Model modelo,
     
-    @PastOrPresent
+    @NotNull
     @Schema(example = "2025/02/02")
-    LocalDate dataPedido,
+    LocalDateTime dataPedido,
+
+    @NotNull
+    @Schema(example = "2025/02/02")
+    LocalDateTime dataFinalizado,
 
     @Schema(example = "132456")
     String relatorio,
@@ -75,7 +78,7 @@ public record UpdateOrderDTO(
     String obs,
     
     @Schema(example = "2025/02/08")
-    LocalDate dataPagamento,
+    LocalDateTime dataPagamento,
     
     @Schema(example = "1.5, 1.8, 30")
     String metragemRecebida,

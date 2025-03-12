@@ -49,10 +49,10 @@ public class OrderController {
     @Operation(summary = "Retorna todos os pedidos registrados naquela data")
     public ResponseEntity getOrdersDate(@RequestBody @Valid FilterDateOrdersDTO dados) {
         try {
-            ResponseDTO response = service.getAllOrdersDateService(dados.date());
+            ResponseDTO response = service.getAllOrdersDateService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!" + e, "", ""));
         }
     }
 

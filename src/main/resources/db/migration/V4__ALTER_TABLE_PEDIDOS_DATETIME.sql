@@ -1,0 +1,4 @@
+ALTER TABLE tab_pedidos
+MODIFY COLUMN data_Pedido DATETIME,
+MODIFY COLUMN data_Pagamento DATETIME,
+ADD COLUMN data_Finalizado DATETIME;

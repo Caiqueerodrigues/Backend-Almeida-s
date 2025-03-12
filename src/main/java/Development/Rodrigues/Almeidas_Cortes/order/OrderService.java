@@ -1,7 +1,7 @@
 package Development.Rodrigues.Almeidas_Cortes.order;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,6 +13,7 @@ import Development.Rodrigues.Almeidas_Cortes.commons.services.MapConverterServic
 import Development.Rodrigues.Almeidas_Cortes.materials.MaterialRepository;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.CreateOrderDTO;
+import Development.Rodrigues.Almeidas_Cortes.order.dto.FilterDateOrdersDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.ListOrder;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
@@ -34,8 +35,11 @@ public class OrderService {
         return new ResponseDTO("", "Dados informados incorretos!", "", "");
     }
 
-    public ResponseDTO getAllOrdersDateService(LocalDate date) {
-        List<Order> list = repository.findByDataPedido(date);
+    public ResponseDTO getAllOrdersDateService(FilterDateOrdersDTO dados) {
+        LocalDateTime dateInicio = dados.date().withHour(00).withMinute(00).withSecond(00).withNano(000000);
+        LocalDateTime dateFim = dados.date().withHour(23).withMinute(59).withSecond(59).withNano(999999);
+
+        List<Order> list = repository.findByDataPedidoBetween(dateInicio, dateFim);
     
         if(!list.isEmpty()) {
             List<ListOrder> listFormatted = new ArrayList<ListOrder>();
@@ -68,6 +72,7 @@ public class OrderService {
                     item.getClient(),
                     item.getModelo(),
                     item.getDataPedido(),
+                    item.getDataFinalizado(),
                     item.getRelatorioCliente(),
                     item.getTotalDinheiro(),
                     item.getTotalPares(),

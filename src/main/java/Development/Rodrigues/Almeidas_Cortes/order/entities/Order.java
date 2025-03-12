@@ -1,6 +1,7 @@
 package Development.Rodrigues.Almeidas_Cortes.order.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
 import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
@@ -10,7 +11,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Table(name = "tab_pedidos")
-@Entity(name = "Pedidos")
+@Entity(name = "Order")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,7 +32,10 @@ public class Order {
     private Model modelo;
 
     @Column(name = "data_pedido", nullable = false)
-    private LocalDate dataPedido;
+    private LocalDateTime dataPedido;
+
+    @Column(name = "data_finalizado", nullable = false)
+    private LocalDateTime dataFinalizado;
 
     @Column(name = "relatorio_Cliente", length = 100)
     private String relatorioCliente;
@@ -52,7 +56,7 @@ public class Order {
     private String obs;
 
     @Column(name = "data_pagamento")
-    private LocalDate dataPagamento;
+    private LocalDateTime dataPagamento;
 
     @Column(name = "metragem_Recebido", columnDefinition = "TEXT")
     private String metragemRecebido;
@@ -73,6 +77,7 @@ public class Order {
         this.client = dados.client();
         this.modelo = dados.modelo();
         this.dataPedido = dados.dataPedido();
+        this.dataFinalizado = dados.dataFinalizado();
         this.relatorioCliente = dados.relatorio();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
@@ -91,6 +96,7 @@ public class Order {
         this.client = dados.client();
         this.modelo = dados.modelo();
         this.dataPedido = dados.dataPedido();
+        this.dataFinalizado = dados.dataFinalizado();
         this.relatorioCliente = dados.relatorio();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
