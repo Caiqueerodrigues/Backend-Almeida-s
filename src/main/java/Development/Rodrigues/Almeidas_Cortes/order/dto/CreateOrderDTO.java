@@ -43,11 +43,10 @@ public record CreateOrderDTO(
     "}")
     Model modelo,
     
-    @NotBlank
+    @NotNull
     @Schema(example = "2025/02/02")
     LocalDateTime dataPedido,
     
-    @NotBlank
     @Schema(example = "2025/02/02")
     LocalDateTime dataFinalizado,
 
@@ -77,7 +76,7 @@ public record CreateOrderDTO(
     LocalDateTime dataPagamento,
     
     @Schema(example = "1.5, 1.8, 30")
-    String metragemRecebida,
+    String metragemRecebido,
     
     @Schema(example = "15, 18, 30")
     String tipoRecebido,

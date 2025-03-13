@@ -1,6 +1,5 @@
 package Development.Rodrigues.Almeidas_Cortes.order.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
@@ -85,7 +84,7 @@ public class Order {
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
-        this.metragemRecebido = dados.metragemRecebida();
+        this.metragemRecebido = dados.metragemRecebido();
         this.tipoRecebido = dados.tipoRecebido();
         this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
@@ -104,7 +103,7 @@ public class Order {
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
-        this.metragemRecebido = dados.metragemRecebida();
+        this.metragemRecebido = dados.metragemRecebido();
         this.tipoRecebido = dados.tipoRecebido();
         this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
