@@ -1,7 +1,5 @@
 package Development.Rodrigues.Almeidas_Cortes.order;
 
-import java.sql.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +15,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -80,4 +77,13 @@ public class OrderController {
     }
     
 
+    @GetMapping("/period/{initialDate}/{finalDate}")
+    public ResponseEntity getOrderPeriod(@PathVariable String initialDate, @PathVariable String finalDate) {
+        try {
+            ResponseDTO response = service.getOrderPeriodService(initialDate, finalDate);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+        }
+    }
 }
