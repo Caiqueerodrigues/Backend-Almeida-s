@@ -43,30 +43,30 @@ public class ListOrder {
 
     @Column(name = "total_Pares", nullable = false)
     private Long totalPares;
-
-    @Column(name = "total_Pecas", nullable = false)
-    private Long totalPecas;
-
+    
     @Column(name = "grade", nullable = false)
     private Object grade;
-
+    
     @Column(name = "obs", length = 255)
     private String obs;
-
+    
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
-
+    
     @Column(name = "metragem_Recebido")
     private List<String> metragemRecebido;
-
+    
     @Column(name = "tipo_Recebido")
     private List<Object> tipoRecebido;
-
+    
     @Column(name = "metragem_Finalizado")
     private List<String> metragemFinalizado;
-
+    
     @Column(name = "rendimento_Pares_Metro")
     private List<String> rendimentoParesMetro;
+    
+    @Column(name = "cor", nullable = false)
+    private List<String> cor;
 
     public ListOrder(ListOrdersDTO dados) {
         this.id = dados.id();
@@ -77,7 +77,6 @@ public class ListOrder {
         this.relatorioCliente = dados.relatorioCliente();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
-        this.totalPecas = dados.totalPecas();
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
@@ -85,5 +84,6 @@ public class ListOrder {
         this.tipoRecebido = dados.tipoRecebido();
         this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimentoParesMetro();
+        this.cor = dados.cor();
     }
 }

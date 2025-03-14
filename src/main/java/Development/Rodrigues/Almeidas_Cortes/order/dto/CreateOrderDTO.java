@@ -53,6 +53,10 @@ public record CreateOrderDTO(
     @Schema(example = "132456")
     String relatorio,
 
+    @NotBlank
+    @Schema(example = "rosa, roxo")
+    String cor,
+
     @NotNull
     @Schema(example = "10.00")
     Double totalDinheiro,
@@ -60,10 +64,6 @@ public record CreateOrderDTO(
     @NotNull
     @Schema(example = "1000")
     Long totalPares,
-    
-    @NotNull
-    @Schema(example = "10000")
-    Long totalPecas,
     
     @NotBlank
     @Schema(example = "31: 10, 32/33: 12, 34/35: 15")

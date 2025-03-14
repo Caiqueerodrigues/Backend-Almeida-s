@@ -32,46 +32,46 @@ public class Order {
 
     @Column(name = "data_pedido", nullable = false)
     private LocalDateTime dataPedido;
-
+    
     @Column(name = "data_finalizado", nullable = false)
     private LocalDateTime dataFinalizado;
-
+    
     @Column(name = "relatorio_Cliente", length = 100)
     private String relatorioCliente;
-
+    
     @Column(name = "total_Dinheiro", nullable = false)
     private Double totalDinheiro;
-
+    
     @Column(name = "total_Pares", nullable = false)
     private Long totalPares;
-
-    @Column(name = "total_Pecas", nullable = false)
-    private Long totalPecas;
-
+    
     @Column(name = "grade", nullable = false, columnDefinition = "TEXT")
     private String grade;
-
+    
     @Column(name = "obs", length = 255)
     private String obs;
 
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
-
+    
     @Column(name = "metragem_Recebido", columnDefinition = "TEXT")
     private String metragemRecebido;
-
+    
     @Column(name = "tipo_Recebido", columnDefinition = "TEXT")
     private String tipoRecebido;
-
+    
     @Column(name = "metragem_Finalizado", columnDefinition = "TEXT")
     private String metragemFinalizado;
-
+    
     @Column(name = "rendimento_Pares_Metro")
     private String rendimentoParesMetro;
-
+    
     @Column(name = "quem_Assinou", length = 100)
     private String quemAssinou;
 
+    @Column(name = "cor", nullable = false)
+    private String cor;
+    
     public Order(CreateOrderDTO dados) {
         this.client = dados.client();
         this.modelo = dados.modelo();
@@ -80,7 +80,6 @@ public class Order {
         this.relatorioCliente = dados.relatorio();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
-        this.totalPecas = dados.totalPecas();
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
@@ -89,6 +88,7 @@ public class Order {
         this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
         this.quemAssinou = dados.quemAssinou();
+        this.cor = dados.cor();
     }
 
     public void updateOrder(UpdateOrderDTO dados) {
@@ -99,7 +99,6 @@ public class Order {
         this.relatorioCliente = dados.relatorio();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
-        this.totalPecas = dados.totalPecas();
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
@@ -108,5 +107,6 @@ public class Order {
         this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
         this.quemAssinou = dados.quemAssinou();
+        this.cor = dados.cor();
     }
 }

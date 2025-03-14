@@ -65,13 +65,13 @@ public record UpdateOrderDTO(
     @Schema(example = "1000")
     Long totalPares,
     
-    @NotNull
-    @Schema(example = "10000")
-    Long totalPecas,
-    
     @NotBlank
     @Schema(example = "31: 10, 32/33: 12, 34/35: 15")
     String grade,
+    
+    @NotBlank
+    @Schema(example = "rosa, roxo")
+    String cor,
     
     @Schema(example = "Atenção no cabedal")
     String obs,

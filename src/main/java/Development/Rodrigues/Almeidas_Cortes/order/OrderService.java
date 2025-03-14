@@ -57,6 +57,9 @@ public class OrderService {
                 List<String> rendimentoList = item.getRendimentoParesMetro() != null 
                     ? new ArrayList<>(Arrays.asList(item.getRendimentoParesMetro().split(",\\s*"))) 
                     : new ArrayList<>();
+                List<String> corList = item.getCor() != null 
+                    ? new ArrayList<>(Arrays.asList(item.getCor().split(",\\s*"))) 
+                    : new ArrayList<>();
 
                 List<Long> idList = Arrays.stream(item.getTipoRecebido().split(",\\s*"))
                     .map(String::trim)
@@ -76,13 +79,13 @@ public class OrderService {
                     item.getRelatorioCliente(),
                     item.getTotalDinheiro(),
                     item.getTotalPares(),
-                    item.getTotalPecas(),
                     listGrade,item.getObs(),
                     item.getDataPagamento(),
                     metragemRecebido,
                     materialList,
                     metragemFinalizado,
-                    rendimentoList
+                    rendimentoList,
+                    corList
                 );
 
                 listFormatted.add(newItem);
