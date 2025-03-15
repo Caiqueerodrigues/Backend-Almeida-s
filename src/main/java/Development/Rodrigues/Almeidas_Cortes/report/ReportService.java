@@ -1,18 +1,24 @@
 package Development.Rodrigues.Almeidas_Cortes.report;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
+import org.apache.pdfbox.pdmodel.*;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Font;
-import com.lowagie.text.Paragraph;
+import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
@@ -26,6 +32,9 @@ public class ReportService {
 
     @Autowired
     OrderRepository repository;
+
+    @Value("${frontEnd.api}")
+    private String frontendApi; 
 
     public ResponseDTO generateReportService(ParamsFiltersReports dados) {
         LocalDateTime initialDate = dados.period().size() > 0 ? 
@@ -79,31 +88,98 @@ public class ReportService {
 
         if(list.size() == 0) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
             
-        byte[] response = generateReportFile(list);
-
-        return new ResponseDTO(response, "", "", "");
+        try {
+            byte[] response = generateReportFile(list, frontendApi);
+            return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     } 
 
-    private byte[] generateReportFile(List<Order> dados) {
-        // Cria um ByteArrayOutputStream para armazenar o PDF gerado em memória
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    private byte[] generateReportFile(List<Order> dados, String fontendApi) throws IOException {
+        try {
+            PDDocument document = new PDDocument();
 
-        // Cria o documento PDF
-        Document document = new Document();
+            // Cria uma página no documento
+            PDPage page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
 
-        // Cria o escritor de PDF, que escreverá o PDF no ByteArrayOutputStream
-        PdfWriter.getInstance(document, byteArrayOutputStream);
+            // Cria o fluxo de conteúdo para adicionar no PDF
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
-        // Abre o documento para adicionar conteúdo
-        document.open();
+            URL url = new URL(frontendApi + "images/logo_escrito.png");
+            InputStream inputStream = url.openStream();
+            PDImageXObject image = PDImageXObject.createFromByteArray(document, inputStream.readAllBytes(), "logo");
 
-        Paragraph orderDetails = new Paragraph("PDF GERADO");
-        document.add(orderDetails);
-        document.add(new Paragraph("\n"));
+            // Define o tamanho da imagem (opcional)
+            float imageWidth = 100; // Largura da imagem
+            float imageHeight = 50; // Altura da imagem
 
-        document.close();
+            // Posiciona a imagem no canto superior esquerdo
+            contentStream.drawImage(image, 20, page.getMediaBox().getHeight() - imageHeight - 20, imageWidth, imageHeight);
 
-        // Retorna o PDF gerado como byte[]
-        return byteArrayOutputStream.toByteArray();
+            // Define a cor do texto como vermelho
+            contentStream.setNonStrokingColor(255, 0, 0); // RGB para vermelho
+
+            // Definir a fonte antes de mostrar o texto
+            PDType1Font font = PDType1Font.HELVETICA_BOLD;
+            contentStream.setFont(font, 18); // 18 é o tamanho da fonte
+
+            // Adiciona o texto ao documento
+            String text = "PDF GERADO";
+        
+            // Centraliza o texto
+            float x = (page.getMediaBox().getWidth() - 100) / 2; // Centraliza horizontalmente
+            float y = page.getMediaBox().getHeight() - 100; // Posição Y no topo da página
+
+            contentStream.beginText();
+            contentStream.newLineAtOffset(x, y); // Define a posição do texto
+            contentStream.showText(text); // Adiciona o texto ao documento
+            contentStream.endText();
+
+            // Fecha o fluxo de conteúdo
+            contentStream.close();
+
+            // Cria um ByteArrayOutputStream para armazenar o PDF gerado em memória
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            // Salva o documento no ByteArrayOutputStream
+            document.save(byteArrayOutputStream);
+
+            // Fecha o documento
+            document.close();
+
+            // Retorna o PDF gerado como byte[]
+            return byteArrayOutputStream.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+    //backup lib mais fraca
+    // private byte[] generateReportFile(List<Order> dados) {
+    //     // Cria um ByteArrayOutputStream para armazenar o PDF gerado em memória
+    //     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+    //     // Cria o documento PDF
+    //     Document document = new Document();
+
+    //     // Cria o escritor de PDF, que escreverá o PDF no ByteArrayOutputStream
+    //     PdfWriter.getInstance(document, byteArrayOutputStream);
+
+    //     // Abre o documento para adicionar conteúdo
+    //     document.open();
+
+    //     Paragraph orderDetails = new Paragraph("PDF GERADO");
+    //         orderDetails.setAlignment(Element.ALIGN_CENTER);
+
+    //     document.add(orderDetails);
+
+    //     document.close();
+
+    //     // Retorna o PDF gerado como byte[]
+    //     return byteArrayOutputStream.toByteArray();
+    // }
 }

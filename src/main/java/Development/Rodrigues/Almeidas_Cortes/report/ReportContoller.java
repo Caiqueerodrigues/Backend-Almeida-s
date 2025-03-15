@@ -1,5 +1,7 @@
 package Development.Rodrigues.Almeidas_Cortes.report;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,7 +33,7 @@ public class ReportContoller {
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(response.response());
             } else {
-                return ResponseEntity.status(404).body(response);
+                return ResponseEntity.status(200).body(response);
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!" + e, "", ""));
