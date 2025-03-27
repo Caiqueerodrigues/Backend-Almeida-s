@@ -71,6 +71,9 @@ public class Order {
 
     @Column(name = "cor", nullable = false)
     private String cor;
+
+    @Column(name = "data_Retirada")
+    private LocalDateTime dataRetirada;
     
     public Order(CreateOrderDTO dados) {
         this.client = dados.client();
@@ -89,6 +92,7 @@ public class Order {
         this.rendimentoParesMetro = dados.rendimento();
         this.quemAssinou = dados.quemAssinou();
         this.cor = dados.cor();
+        this.dataRetirada = dados.dataRetirada();
     }
 
     public void updateOrder(UpdateOrderDTO dados) {
@@ -108,5 +112,6 @@ public class Order {
         this.rendimentoParesMetro = dados.rendimento();
         this.quemAssinou = dados.quemAssinou();
         this.cor = dados.cor();
+        this.dataRetirada = dados.dataRetirada();
     }
 }

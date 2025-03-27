@@ -11,7 +11,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record ParamsFiltersReports(
 
-    @NotNull
     @Enumerated
     TypesFilterReport firstFilter,
 
@@ -19,13 +18,13 @@ public record ParamsFiltersReports(
 
     List<LocalDateTime> period,
 
-    @NotNull
     @Enumerated
     TypesReport report,
 
-    @NotNull
     @Enumerated
-    TypesSituationReport situation
+    TypesSituationReport situation,
+
+    Long idPedido
 ) {
 
 }

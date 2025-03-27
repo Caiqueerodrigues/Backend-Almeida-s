@@ -92,7 +92,10 @@ public record UpdateOrderDTO(
     String rendimento,
     
     @Schema(example = "Cliclano da silva")
-    String quemAssinou
+    String quemAssinou,
+
+    @Schema(example = "")
+    LocalDateTime dataRetirada
 ) {
 
 }
