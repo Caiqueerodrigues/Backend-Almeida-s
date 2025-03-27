@@ -11,16 +11,12 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.pdfbox.pdmodel.*;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfWriter;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.OrderRepository;
@@ -34,6 +30,9 @@ public class ReportService {
 
     @Autowired
     OrderRepository repository;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     @Value("${frontEnd.api}")
     private String frontendApi; 
@@ -106,89 +105,31 @@ public class ReportService {
         }
     } 
 
-    private byte[] generateReportFile(List<Order> dados, String fontendApi) throws IOException {
+    public byte[] generateReportFile(List<Order> dados, String frontendApi) throws IOException {
         try {
-            PDDocument document = new PDDocument();
+            Context context = new Context();
+            context.setVariable("dados", dados); 
+            context.setVariable("frontendApi", frontendApi);
 
-            // Cria uma página no documento
-            PDPage page = new PDPage(PDRectangle.A4);
-            document.addPage(page);
+            String htmlContent = templateEngine.process("fichaCorte", context);  // O nome correto do seu template
 
-            // Cria o fluxo de conteúdo para adicionar no PDF
-            PDPageContentStream contentStream = new PDPageContentStream(document, page);
-
-            URL url = new URL(frontendApi + "images/logo_escrito.png");
-            InputStream inputStream = url.openStream();
-            PDImageXObject image = PDImageXObject.createFromByteArray(document, inputStream.readAllBytes(), "logo");
-
-            // Define o tamanho da imagem (opcional)
-            float imageWidth = 100; // Largura da imagem
-            float imageHeight = 50; // Altura da imagem
-
-            // Posiciona a imagem no canto superior esquerdo
-            contentStream.drawImage(image, 20, page.getMediaBox().getHeight() - imageHeight - 20, imageWidth, imageHeight);
-
-            // Define a cor do texto como vermelho
-            contentStream.setNonStrokingColor(255, 0, 0); // RGB para vermelho
-
-            // Definir a fonte antes de mostrar o texto
-            PDType1Font font = PDType1Font.HELVETICA_BOLD;
-            contentStream.setFont(font, 18); // 18 é o tamanho da fonte
-
-            // Adiciona o texto ao documento
-            String text = "PDF GERADO";
-        
-            // Centraliza o texto
-            float x = (page.getMediaBox().getWidth() - 100) / 2; // Centraliza horizontalmente
-            float y = page.getMediaBox().getHeight() - 100; // Posição Y no topo da página
-
-            contentStream.beginText();
-            contentStream.newLineAtOffset(x, y); // Define a posição do texto
-            contentStream.showText(text); // Adiciona o texto ao documento
-            contentStream.endText();
-
-            // Fecha o fluxo de conteúdo
-            contentStream.close();
-
-            // Cria um ByteArrayOutputStream para armazenar o PDF gerado em memória
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-            // Salva o documento no ByteArrayOutputStream
-            document.save(byteArrayOutputStream);
-
-            // Fecha o documento
-            document.close();
-
-            // Retorna o PDF gerado como byte[]
-            return byteArrayOutputStream.toByteArray();
+            // HTML gerado, vamos gerar o PDF com Flying Saucer
+            return htmlToPdf(htmlContent);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    //backup lib mais fraca
-    // private byte[] generateReportFile(List<Order> dados) {
-    //     // Cria um ByteArrayOutputStream para armazenar o PDF gerado em memória
-    //     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    private byte[] htmlToPdf(String html) throws IOException {
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(html);
+        renderer.layout();
 
-    //     // Cria o documento PDF
-    //     Document document = new Document();
+        // Criar o PDF em um ByteArrayOutputStream
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        renderer.createPDF(byteArrayOutputStream);
 
-    //     // Cria o escritor de PDF, que escreverá o PDF no ByteArrayOutputStream
-    //     PdfWriter.getInstance(document, byteArrayOutputStream);
-
-    //     // Abre o documento para adicionar conteúdo
-    //     document.open();
-
-    //     Paragraph orderDetails = new Paragraph("PDF GERADO");
-    //         orderDetails.setAlignment(Element.ALIGN_CENTER);
-
-    //     document.add(orderDetails);
-
-    //     document.close();
-
-    //     // Retorna o PDF gerado como byte[]
-    //     return byteArrayOutputStream.toByteArray();
-    // }
+        return byteArrayOutputStream.toByteArray();
+    }
 }

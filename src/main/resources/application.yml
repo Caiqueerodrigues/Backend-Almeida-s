@@ -27,3 +27,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     ddl-auto: none
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
