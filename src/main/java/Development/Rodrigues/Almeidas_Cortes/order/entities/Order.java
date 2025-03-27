@@ -80,7 +80,7 @@ public class Order {
         this.modelo = dados.modelo();
         this.dataPedido = dados.dataPedido();
         this.dataFinalizado = dados.dataFinalizado();
-        this.relatorioCliente = dados.relatorio();
+        this.relatorioCliente = dados.relatorioCliente();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
         this.grade = dados.grade();
@@ -100,7 +100,7 @@ public class Order {
         this.modelo = dados.modelo();
         this.dataPedido = dados.dataPedido();
         this.dataFinalizado = dados.dataFinalizado();
-        this.relatorioCliente = dados.relatorio();
+        this.relatorioCliente = dados.relatorioCliente();
         this.totalDinheiro = dados.totalDinheiro();
         this.totalPares = dados.totalPares();
         this.grade = dados.grade();

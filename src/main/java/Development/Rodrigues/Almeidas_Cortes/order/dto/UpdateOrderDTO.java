@@ -55,7 +55,7 @@ public record UpdateOrderDTO(
     LocalDateTime dataFinalizado,
 
     @Schema(example = "132456")
-    String relatorio,
+    String relatorioCliente,
 
     @NotNull
     @Schema(example = "10.00")

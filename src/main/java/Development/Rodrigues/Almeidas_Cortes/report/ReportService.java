@@ -108,10 +108,11 @@ public class ReportService {
     public byte[] generateReportFile(List<Order> dados, String frontendApi) throws IOException {
         try {
             Context context = new Context();
+            System.out.println(" LOREM " + dados.get(0).getGrade());
             context.setVariable("dados", dados); 
             context.setVariable("frontendApi", frontendApi);
 
-            String htmlContent = templateEngine.process("fichaCorte", context);  // O nome correto do seu template
+            String htmlContent = templateEngine.process("relatorioCliente", context);  // O nome correto do seu template
 
             // HTML gerado, vamos gerar o PDF com Flying Saucer
             return htmlToPdf(htmlContent);

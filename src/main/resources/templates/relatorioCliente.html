@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Relatório de Vendas</title>
+    <style>
+        html, body {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            border: 2px solid #000;
+            padding: 4px;
+            border-radius: 12px;
+            display: table; /* Alternativa ao flex */
+            width: 100%;
+        }
+        .logo {
+            border-radius: 12px;
+            /* width: 150px; */
+            height: 150px;
+            margin-right: 5px;
+            display: inline-block; /* Simula flex-item */
+            vertical-align: top;
+        }
+        .content {
+            display: inline-block; /* Simula flex-item */
+            width: calc(100% - 210px);
+        }
+        .separador {
+            color: #f00;
+            font-weight: bolder;
+            font-size: 20px;
+        }
+        .container-grade {
+            padding: 10px 10px 0 10px;
+            display: table;
+            width: 100%;
+        }
+        .item {
+            display: inline-block;
+            width: 14%;
+            text-align: center;
+            vertical-align: top;
+        }
+        .numeracao {
+            border-bottom: 2px solid #000;
+            display: block;
+        }
+        .final-text {
+            border-top: 2px solid #000;
+            margin: 25px 0 0 80px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .totalPares {
+            padding-top: 0;
+        }
+        .paragraph {
+            margin: 0 0 0 10px;
+            padding: 0;
+        }
+        .d-block {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img 
+            src="http://localhost:3000/images/logo_completo.jpg" 
+            alt="Logo Almeida's Corte" class="logo"
+        />
+        <div class="content">
+            <p class="paragraph">
+                <span>Nome modelo</span>
+                <span class="separador"> - </span>
+                <span> Cor </span>
+                <span class="separador"> - </span>
+                <span> Qtd Peças </span>
+                <span class="separador"> - </span>
+                <span class="bold"> Nome Cliente </span>
+            </p>
+            <p class="paragraph">
+                <span> R$ Total dinheiro </span>
+                <span class="separador"> - </span>
+                <span> Data Pedido </span>
+                <span class="separador"> - </span>
+                <span> Dia semana </span>
+            </p>
+            <div class="container-grade">
+                <div class="item">
+                    <span class="numeracao">19/20</span>
+                    <span>20</span>
+                </div>
+                <div class="item">
+                    <span class="numeracao">19/20</span>
+                    <span>20</span>
+                </div>
+                <div class="item">
+                    <span class="numeracao">19/20</span>
+                    <span>20</span>
+                </div>
+                <div class="item">
+                    <span class="numeracao">19/20</span>
+                    <span>20</span>
+                </div>
+                <div class="item">
+                    <span class="numeracao">19/20</span>
+                    <span>20</span>
+                </div>
+                <div class="item">
+                    <span class="d-block"></span>
+                    <span>= Total Pares</span>
+                </div>
+                <div>
+                    <p class="final-text">
+                        <span>Nome da pessoa</span>
+                        <span class="separador"> - </span> 
+                        <span>Data Retirada</span>
+                        <span class="separador"> - </span> 
+                        <span>Hora retirada</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

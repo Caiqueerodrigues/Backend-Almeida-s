@@ -51,7 +51,7 @@ public record CreateOrderDTO(
     LocalDateTime dataFinalizado,
 
     @Schema(example = "132456")
-    String relatorio,
+    String relatorioCliente,
 
     @NotBlank
     @Schema(example = "rosa, roxo")
