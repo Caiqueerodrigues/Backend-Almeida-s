@@ -132,6 +132,7 @@ public class ReportService {
             context.setVariable("dados", dados); 
 
             String htmlContent = templateEngine.process("relatorioCliente", context);
+            System.out.println("RECEBIDO " + dados.get(0).getGrade());
             // HTML gerado, vamos gerar o PDF com Flying Saucer
             return htmlToPdf(htmlContent);
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package Development.Rodrigues.Almeidas_Cortes.report.entities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,16 +77,26 @@ public class OrderReport {
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {
-        String[] gradePairs = gradeString.split(",");
-        return List.of(gradePairs).stream()
-                .map(pair -> {
-                    String[] keyValue = pair.split(":");  // Divide cada par por ":"
-                    Map<String, String> map = new HashMap<>();
-                    if (keyValue.length == 2) {
-                        map.put(keyValue[0], keyValue[1]);  // Adiciona o par chave-valor no mapa
-                    }
-                    return map;
-                })
-                .collect(Collectors.toList());
+        List<Map<String, String>> result = new ArrayList<>();
+        gradeString = gradeString.replaceAll("\\s+", "");
+
+        String[] parts = gradeString.split(",");
+        for (String part : parts) {
+            // Dividir por ":" para obter chave e valor
+            String[] keyValue = part.split(":");
+            if (keyValue.length == 2) {
+                Map<String, String> entry = new HashMap<>();
+                entry.put("numeracao", keyValue[0]);
+                entry.put("valor", keyValue[1]);
+                result.add(entry);
+            } else if (keyValue.length == 1) {
+                Map<String, String> entry = new HashMap<>();
+                entry.put("numeracao", keyValue[0]);
+                entry.put("valor", "");
+                result.add(entry);
+            }
+        }
+
+        return result;
     }
 }
