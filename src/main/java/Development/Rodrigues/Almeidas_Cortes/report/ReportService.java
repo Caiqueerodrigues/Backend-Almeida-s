@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,7 @@ import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesReport;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesSituationReport;
 import Development.Rodrigues.Almeidas_Cortes.report.dto.ParamsFiltersReports;
+import Development.Rodrigues.Almeidas_Cortes.report.entities.OrderReport;
 
 @Service
 public class ReportService {
@@ -97,7 +100,25 @@ public class ReportService {
         if(list.size() == 0) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
             
         try {
-            byte[] response = generateReportFile(list, frontendApi);
+            List<OrderReport> dadosReport = list.stream()
+                .map(order -> new OrderReport(
+                    order.getId(),
+                    order.getModelo(),
+                    order.getCor(),
+                    order.getTotalPares(),
+                    order.getClient(),
+                    order.getTotalDinheiro(),
+                    formatDate(order.getDataPedido()),
+                    getDayOfWeek(order.getDataPedido()),
+                    order.getGrade(),
+                    order.getTotalPares() * order.getModelo().getQtdPecasPar(),
+                    order.getQuemAssinou() == null || order.getQuemAssinou().isBlank() ? "Pedido não retirado" : order.getQuemAssinou(),
+                    formatDate(order.getDataRetirada()),
+                    getHoraRetirada(order.getDataRetirada())
+                ))
+                .collect(Collectors.toList());
+
+            byte[] response = generateReportFile(dadosReport, frontendApi);
             return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,15 +126,12 @@ public class ReportService {
         }
     } 
 
-    public byte[] generateReportFile(List<Order> dados, String frontendApi) throws IOException {
+    public byte[] generateReportFile(List<OrderReport> dados, String frontendApi) throws IOException {
         try {
             Context context = new Context();
-            System.out.println(" LOREM " + dados.get(0).getGrade());
             context.setVariable("dados", dados); 
-            context.setVariable("frontendApi", frontendApi);
 
-            String htmlContent = templateEngine.process("relatorioCliente", context);  // O nome correto do seu template
-
+            String htmlContent = templateEngine.process("relatorioCliente", context);
             // HTML gerado, vamos gerar o PDF com Flying Saucer
             return htmlToPdf(htmlContent);
         } catch (Exception e) {
@@ -132,5 +150,34 @@ public class ReportService {
         renderer.createPDF(byteArrayOutputStream);
 
         return byteArrayOutputStream.toByteArray();
+    }
+
+    private static String formatDate(LocalDateTime dataPedido) {
+        if (dataPedido == null) return "Pedido não retirado";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return dataPedido.format(formatter);
+    }
+
+    private static String getDayOfWeek(LocalDateTime dataPedido) {
+        if (dataPedido == null) return "Pedido não retirado";
+        String diaSemana = dataPedido.getDayOfWeek().toString();
+        switch (diaSemana) {
+            case "MONDAY": return "Segunda-feira";
+            case "TUESDAY": return "Terça-feira";
+            case "WEDNESDAY": return "Quarta-feira";
+            case "THURSDAY": return "Quinta-feira";
+            case "FRIDAY": return "Sexta-feira";
+            case "SATURDAY": return "Sábado";
+            case "SUNDAY": return "Domingo";
+            default: return diaSemana;
+        }
+    }
+    
+    private static String getHoraRetirada(LocalDateTime dataRetirada) {
+        if (dataRetirada != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return dataRetirada.toLocalTime().format(formatter);
+        }
+        return "Hora não disponível";
     }
 }
