@@ -67,7 +67,6 @@ public class AnexosService {
     public ResponseDTO insertImageModelService(@Valid VariosAnexosDTO dados) {
         try {
             String targetDir = uploadDir + dados.idClient() + "/" + dados.idModelo();
-
             List<Long> listId = saveFileToDisk(dados, targetDir);
 
             return new ResponseDTO(listId, "", "Foto(s) anexada(s) com sucecsso!", "");
@@ -109,21 +108,21 @@ public class AnexosService {
                     if(!contentType.equals("text/plain")) {
                         if (!directory.exists()) {
                             directory.mkdirs();
-                        } else {
-                            fileName = generateUniqueFileName(dados.files().get(i).originalName(), dados.nomePeca().get(i));
-                            
-                            String baseName = fileName.substring(0, fileName.indexOf('_'));
-                            File[] files = directory.listFiles();
-                            
-                            for (File existingFile : files) {
-                                String fileNamePath = existingFile.getName();
-                                String baseNameExistis = fileNamePath.split("_")[0];
+                        } 
+                        
+                        fileName = generateUniqueFileName(dados.files().get(i).originalName(), dados.nomePeca().get(i));
+                        
+                        String baseName = fileName.substring(0, fileName.indexOf('_'));
+                        File[] files = directory.listFiles();
+                        
+                        for (File existingFile : files) {
+                            String fileNamePath = existingFile.getName();
+                            String baseNameExistis = fileNamePath.split("_")[0];
 
-                                if (baseNameExistis.equalsIgnoreCase(baseName)) {
-                                    fileName = existingFile.getName();
-                                    existingFile.delete();
-                                    break;
-                                }
+                            if (baseNameExistis.equalsIgnoreCase(baseName)) {
+                                fileName = existingFile.getName();
+                                existingFile.delete();
+                                break;
                             }
                         }
         
