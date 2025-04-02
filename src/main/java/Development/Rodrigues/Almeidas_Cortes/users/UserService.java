@@ -35,6 +35,7 @@ public class UserService {
     private GetDateHourBrasilia dataHoraBrasilia;
 
     public ResponseDTO loginService(LoginDTO dados) {
+        System.out.println(passwordEncoder.encode(dados.password())  + " senha tentativa login");
         var token = new UsernamePasswordAuthenticationToken(dados.user(), dados.password());
         var auth = manager.authenticate(token);
 
