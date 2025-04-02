@@ -4,32 +4,27 @@
     <meta charset="UTF-8" />
     <title>Relatório de Vendas</title>
     <style>
-        html, body {
-            box-sizing: border-box;
-            padding: 0;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            width: 100%;
-        }
         .container {
             border: 2px solid #000;
             padding: 4px;
             border-radius: 12px;
             display: table; /* Alternativa ao flex */
-            width: 100%;
             margin-top: 10px;
+            width: 100%;
         }
-        .logo {
-            border-radius: 12px;
-            /* width: 150px; */
-            height: 150px;
-            margin-right: 5px;
+        .container-logo {
+            margin: 5px 0 0 5px;
             display: inline-block; /* Simula flex-item */
             vertical-align: top;
         }
+        .logo {
+            border-radius: 12px;
+            height: 150px;
+            display: block;
+        }
         .content {
             display: inline-block; /* Simula flex-item */
-            width: calc(100% - 210px);
+            position: relative;
         }
         .separador {
             color: #f00;
@@ -39,7 +34,6 @@
         .container-grade {
             padding: 10px 10px 0 10px;
             display: table;
-            width: 100%;
         }
         .item {
             display: inline-block;
@@ -71,15 +65,31 @@
         .d-block {
             display: block;
         }
+        .title-pago {
+            /* position: absolute; */
+            font-weight: 500;
+            color: #079C27;
+            /* font-size: 1.5em; */
+            /* right: 10px;
+            top: -10px; */
+        }
     </style>
 </head>
 <body>
     <div th:each="venda : ${dados}" class="container">
-        <img 
-            src="https://almeidascorte.netlify.app/images/logo_completo.jpg" 
-            alt="Logo Almeida's Corte" class="logo"
-        />
+        <div class="container-logo">
+            <img 
+                src="https://almeidascorte.netlify.app/images/logo_completo.jpg" 
+                alt="Logo Almeida's Corte" class="logo"
+            />
+            <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="'PAGO'"></span><br/>
+            <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="${venda.dataPagamento}"></span>
+        </div>
         <div class="content">
+            <!-- <p class="title-pago" th:if="${venda.dataPagamento.contains('/')}">
+                <span>PAGO</span><br/>
+                <span th:text="${venda.dataPagamento}"></span>
+            </p> -->
             <p class="paragraph">
                 <span th:text="${venda.nomeModelo}"></span>
                 <span class="separador"> - </span>
@@ -88,14 +98,17 @@
                 <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
                 <span class="separador"> - </span>
                 <span class="bold" th:text="${venda.nomeCliente}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.precoPar} + ' o par'"></span>
             </p>
             <p class="paragraph">
                 <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
                 <span class="separador"> - </span>
-                <span th:text="${venda.dataPedido}"></span>
+                <span th:text="'Data do pedido ' + ${venda.dataPedido}"></span>
                 <span class="separador"> - </span>
                 <span th:text="${venda.diaSemana}"></span>
             </p>
+            <p class="paragraph" th:if="${venda.obs}" th:text="'OBS: ' + ${venda.obs}"></p>
             <div class="container-grade">
                 <div class="item" th:each="entry : ${venda.grade}">
                     <span class="numeracao" th:text="${entry['numeracao']}"></span>

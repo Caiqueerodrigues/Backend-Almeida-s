@@ -12,6 +12,10 @@ backend:
 frontEnd:
   api: "${API_FRONTEND:http://localhost:3000/}"
 
+security:
+  token:
+    secret: "${JWT_SECRET:ASDasdhjknfghjn123132lkdfasd}"
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

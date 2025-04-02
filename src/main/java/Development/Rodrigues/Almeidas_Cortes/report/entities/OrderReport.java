@@ -45,6 +45,12 @@ public class OrderReport {
     private String dataRetirada;
 
     private String horaRetirada;
+
+    private String precoPar;
+
+    private String dataPagamento;
+
+    private String obs;
     
     public OrderReport(
         Long id, 
@@ -59,14 +65,17 @@ public class OrderReport {
         Long qtdPecas, 
         String quemAssinou, 
         String dataRetirada, 
-        String horaRetirada
+        String horaRetirada,
+        Double precoPar,
+        String dataPagamento,
+        String obs
     ) {
         this.id = id;
-        this.nomeModelo = modelo.getTipo();
+        this.nomeModelo = modelo.getTipo().toUpperCase();
         this.color = cor;
         this.qtdPecas = qtdPecas;
         this.nomeCliente = cliente.getNome();
-        this.totalDinheiro = String.format("%.2f", totalDinheiro);;
+        this.totalDinheiro = String.format("%.2f", totalDinheiro);
         this.dataPedido = dataPedido;
         this.diaSemana = diaSemana;
         this.grade = parseGrades(grade);
@@ -74,6 +83,9 @@ public class OrderReport {
         this.quemAssinou = quemAssinou;
         this.dataRetirada = dataRetirada;
         this.horaRetirada = horaRetirada;
+        this.precoPar = String.format("%.2f", precoPar);
+        this.dataPagamento = dataPagamento;
+        this.obs = obs;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {

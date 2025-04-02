@@ -16,6 +16,12 @@ public class Swagger {
         return new OpenAPI()
             .info(new Info().title("Almeida's API").version("1.0")
             .description("Documentação da API de Almeida's Cortes"))
-            .components(new io.swagger.v3.oas.models.Components());
+            .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+            .components(new io.swagger.v3.oas.models.Components()
+            .addSecuritySchemes("bearerAuth", new SecurityScheme()
+            .name("bearerAuth")
+            .type(SecurityScheme.Type.HTTP)
+            .scheme("bearer")
+            .bearerFormat("JWT")));
     }
 }

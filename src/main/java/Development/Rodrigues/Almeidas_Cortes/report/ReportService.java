@@ -114,7 +114,10 @@ public class ReportService {
                     order.getTotalPares() * order.getModelo().getQtdPecasPar(),
                     order.getQuemAssinou() == null || order.getQuemAssinou().isBlank() ? "Pedido não retirado" : order.getQuemAssinou(),
                     formatDate(order.getDataRetirada()),
-                    getHoraRetirada(order.getDataRetirada())
+                    getHoraRetirada(order.getDataRetirada()),
+                    order.getModelo().getPreco(),
+                    formatDate(order.getDataPagamento()),
+                    order.getObs()
                 ))
                 .collect(Collectors.toList());
 

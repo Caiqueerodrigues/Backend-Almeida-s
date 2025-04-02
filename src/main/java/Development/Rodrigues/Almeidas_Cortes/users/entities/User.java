@@ -1,6 +1,12 @@
 package Development.Rodrigues.Almeidas_Cortes.users.entities;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
 import jakarta.persistence.Column;
@@ -24,7 +30,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class User {
+public class User implements UserDetails {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,8 +49,39 @@ public class User {
     private LocalDateTime firstLogin;
 
     @Column(name = "last_Login")
-    private LocalDateTime lasttLogin;
+    private LocalDateTime lastLogin;
 
     @Column(name = "active", nullable = false)
-    private LocalDateTime active;
+    private boolean active;
+    
+    public User(String name, String user, String password, boolean active) {
+        this.name = name;
+        this.user = user;
+        this.password = password;
+        this.active = active;
+    }
+
+    public void updateUser(String name, String user, String password, LocalDateTime firstLogin, LocalDateTime lastLogin, boolean active) {
+        this.name = name;
+        this.user = user;
+        this.password = password;
+        if (firstLogin != null) this.firstLogin = firstLogin;
+        if (lastLogin != null) this.lastLogin = lastLogin;
+        this.active = active;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() { //controle de acesso por perfis
+        return List.of(new SimpleGrantedAuthority(("ROLE_USER")));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.user;
+    }
 }
