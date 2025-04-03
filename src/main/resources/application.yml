@@ -27,6 +27,11 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
+  hikari:
+      maxLifetime: 900000  # 15 minutos
+      idleTimeout: 600000  # 10 minutos
+      validationTimeout: 3000  # 3 segundos
+      connectionTimeout: 30000
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
