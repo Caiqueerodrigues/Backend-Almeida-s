@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
-import Development.Rodrigues.Almeidas_Cortes.services.TokenService;
 import Development.Rodrigues.Almeidas_Cortes.users.dto.LoginDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @RestController
@@ -33,5 +34,10 @@ public class UserController {
         }
     }
     
-
+    @GetMapping("/not-power")
+    public String notPwer() {
+            System.out.println("JOB chamou aqui");
+            String result = "Tudo Certo";
+        return result;
+    }
 }
