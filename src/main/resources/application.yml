@@ -8,7 +8,7 @@ upload:
     photos: "src/main/resources/photos/"
 
 backend:
-  api: "${API_BACKEND:http://192.168.0.5:3003/}"
+  api: "${API_BACKEND:http://192.168.0.13:3003/}"
 frontEnd:
   api: "${API_FRONTEND:http://localhost:3000/}"
 

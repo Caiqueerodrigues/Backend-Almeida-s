@@ -45,6 +45,7 @@ public class SecuriryConfigurate {
                     config.setAllowedOrigins(List.of("http://localhost:3000", "https://almeidascorte.netlify.app", "http://192.168.0.12:3000"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
+                    config.setExposedHeaders(List.of("Authorization"));
                     config.setAllowCredentials(true);
                     return config;
                 }))
