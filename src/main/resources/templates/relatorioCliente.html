@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Relatório de Vendas</title>
+    <title>Relatório do cliente</title>
     <style>
         .container {
             border: 2px solid #000;
@@ -26,37 +26,19 @@
             display: inline-block; /* Simula flex-item */
             position: relative;
         }
+        .border-top {
+            border-top: 2px dashed #000;
+        }
+        .border-bottom {
+            border-bottom: 2px dashed #000;
+        }
         .separador {
             color: #f00;
             font-weight: bolder;
             font-size: 20px;
         }
-        .container-grade {
-            padding: 10px 10px 0 10px;
-            display: table;
-        }
-        .item {
-            display: inline-block;
-            width: 14%;
-            text-align: center;
-            vertical-align: top;
-            margin-top: 10px;
-        }
-        .numeracao {
-            border-bottom: 2px solid #000;
-            display: block;
-        }
-        .final-text {
-            border-top: 2px solid #000;
-            margin: 25px 0 0 80px;
-            font-weight: bold;
-            text-align: center;
-        }
         .bold {
             font-weight: bold;
-        }
-        .totalPares {
-            padding-top: 0;
         }
         .paragraph {
             margin: 0 0 0 10px;
@@ -65,69 +47,72 @@
         .d-block {
             display: block;
         }
-        .title-pago {
-            /* position: absolute; */
-            font-weight: 500;
+        .pago {
             color: #079C27;
-            /* font-size: 1.5em; */
-            /* right: 10px;
-            top: -10px; */
+        }
+        .devido {
+            color: #ffa600;
         }
     </style>
 </head>
 <body>
-    <div th:each="venda : ${dados}" class="container">
+    <div class="container">
         <div class="container-logo">
             <img 
                 src="https://almeidascorte.netlify.app/images/logo_completo.jpg" 
                 alt="Logo Almeida's Corte" class="logo"
             />
-            <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="'PAGO'"></span><br/>
-            <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="${venda.dataPagamento}"></span>
         </div>
         <div class="content">
-            <!-- <p class="title-pago" th:if="${venda.dataPagamento.contains('/')}">
-                <span>PAGO</span><br/>
-                <span th:text="${venda.dataPagamento}"></span>
-            </p> -->
-            <p class="paragraph">
-                <span th:text="${venda.nomeModelo}"></span>
+            <p style="font-size: 20px; color: #E20148; text-align: center; margin: 0; padding: 0;">ALMEIDA'S CORTES</p>
+            <p class="paragraph" style="text-align: center;">
+                <span class="bold" th:text="${dados[0].nomeCliente}"></span>
                 <span class="separador"> - </span>
-                <span th:text="${venda.color}"></span>
-                <span class="separador"> - </span>
-                <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
-                <span class="separador"> - </span>
-                <span class="bold" th:text="${venda.nomeCliente}"></span>
-                <span class="separador"> - </span>
-                <span th:text="${venda.precoPar} + ' o par'"></span>
+                <span th:text="${periodo}"></span>
             </p>
+            <p class="paragraph" style="text-align: center;">
+                <span th:text="'Total pares ' + ${totalPares}"></span>
+                <span class="separador"> - </span>
+                <span th:text="'Total ' + ${totalDinheiro}"></span>
+                <span class="separador"> - </span>
+                <span  style="color: #079C27;" class="bold" th:text="'Total pago ' + ${totalPago}"></span>
+                <span th:if="${totalDevido > 0}" class="separador"> - </span>
+                <span 
+                    th:if="${totalDevido > 0}" 
+                    style="color: #ffa600;" 
+                    class="bold" 
+                    th:text="'Total devido ' + ${totalDevidoFormatado}"
+                ></span>
+            </p>
+            
+        </div>
+        <div 
+            th:each="venda, iterStat : ${dados}" 
+            th:class="${iterStat.index == 0 ? 'border-top border-bottom' : (iterStat.index == dados.size() - 1 ? '' : 'border-bottom')}" 
+            style="padding: 10px;"
+        >
             <p class="paragraph">
+                <span class="bold" th:text="'Data do Pedido ' + ${venda.dataPedido}"></span>
+                <span class="separador"> - </span>
+                <span class="bold" th:text="${venda.nomeModelo}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.totalPares} + ' pares'"></span>
+                <span class="separador"> - </span>
                 <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
-                <span class="separador"> - </span>
-                <span th:text="'Data do pedido ' + ${venda.dataPedido}"></span>
-                <span class="separador"> - </span>
-                <span th:text="${venda.diaSemana}"></span>
             </p>
-            <p class="paragraph" th:if="${venda.obs}" th:text="'OBS: ' + ${venda.obs}"></p>
-            <div class="container-grade">
-                <div class="item" th:each="entry : ${venda.grade}">
-                    <span class="numeracao" th:text="${entry['numeracao']}"></span>
-                    <span th:text="${entry['valor']}"></span>
-                </div>
-                <div class="item">
-                    <span class="d-block"></span>
-                    <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
-                </div>
-                <div>
-                    <p class="final-text">
-                        <span th:text="${venda.quemAssinou}"></span>
-                        <span class="separador"> - </span> 
-                        <span th:text="${venda.dataRetirada}"></span>
-                        <span class="separador"> - </span> 
-                        <span th:text="${venda.horaRetirada}"></span>
-                    </p>
-                </div>
-            </div>
+            <p class="paragraph">
+                <span th:text="${venda.dataRetirada != 'Pedido não retirado' ? 'Data retirada ' : ''} + ${venda.dataRetirada}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.quemAssinou != 'Pedido não retirado' ? 'Quem retirou ' : ''} + ${venda.quemAssinou}"></span>
+            </p>
+            <p class="paragraph">
+                <span 
+                    th:class="${venda.dataPagamento != 'Pedido não retirado' ? 'pago' : 'devido'}" 
+                    th:text="${venda.dataPagamento != 'Pedido não retirado' ? 'PAGO' : 'DEVIDO'}"
+                ></span>
+                <span th:if="${venda.dataPagamento != 'Pedido não retirado'}" class="separador"> - </span>
+                <span th:if="${venda.dataPagamento != 'Pedido não retirado'}" th:text="'Data do pagamento ' + ${venda.dataPagamento}"></span>
+            </p>
         </div>
     </div>
 </body>

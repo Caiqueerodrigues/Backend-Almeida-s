@@ -1,15 +1,14 @@
 package Development.Rodrigues.Almeidas_Cortes.report;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -125,7 +124,7 @@ public class ReportService {
                 ))
                 .collect(Collectors.toList());
 
-            byte[] response = generateReportFile(dadosReport, frontendApi);
+            byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
             return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,14 +132,46 @@ public class ReportService {
         }
     } 
 
-    public byte[] generateReportFile(List<OrderReport> dados, String frontendApi) throws IOException {
+    public byte[] generateReportFile(
+        List<OrderReport> dados, 
+        ParamsFiltersReports dadosFront, 
+        String dataInicial, 
+        String dataFinal
+    ) throws IOException {
         try {
             Context context = new Context();
             context.setVariable("dados", dados); 
 
-            String htmlContent = templateEngine.process("relatorioCliente", context);
-            System.out.println("RECEBIDO " + dados.get(0).getGrade());
-            // HTML gerado, vamos gerar o PDF com Flying Saucer
+            String htmlContent;
+
+            if(dadosFront.report() == TypesReport.FECHAMENTO_CLIENTE) {
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+                double total = 0, totalPago = 0, totalDevido = 0;
+                int totalPares = 0;
+
+                for (OrderReport order : dados) {
+                    totalPares += order.getTotalPares();
+                    total += Double.parseDouble(order.getTotalDinheiro().replace(",", "."));
+
+                    if(!order.getDataPagamento().equals("Pedido não retirado")) totalPago += Double.parseDouble(order.getTotalDinheiro().replace(",", "."));
+                }
+                
+                totalDevido = total - totalPago;
+                
+                context.setVariable("totalDinheiro", currencyFormat.format(total));
+                context.setVariable("totalPago", currencyFormat.format(totalPago));
+                context.setVariable("totalPares", totalPares);
+                context.setVariable("totalDevido", totalDevido);
+                context.setVariable("totalDevidoFormatado", currencyFormat.format(totalDevido));
+                context.setVariable(
+                    "periodo", "De " + dados.get(0).getDataPedido() + " até " + dados.get(dados.size() - 1).getDataPedido()
+                );
+
+                htmlContent = templateEngine.process("relatorioCliente", context);
+            } else {
+                htmlContent = templateEngine.process("relatorioFicha", context);
+            }
+
             return htmlToPdf(htmlContent);
         } catch (Exception e) {
             e.printStackTrace();
