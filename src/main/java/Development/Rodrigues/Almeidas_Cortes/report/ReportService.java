@@ -120,7 +120,8 @@ public class ReportService {
                     getHoraRetirada(order.getDataRetirada()),
                     order.getModelo().getPreco(),
                     formatDate(order.getDataPagamento()),
-                    order.getObs()
+                    order.getObs(),
+                    dados.quantidadeVias()
                 ))
                 .collect(Collectors.toList());
 

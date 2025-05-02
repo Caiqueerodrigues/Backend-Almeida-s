@@ -51,6 +51,8 @@ public class OrderReport {
     private String dataPagamento;
 
     private String obs;
+
+    private Long quantidadeVias;
     
     public OrderReport(
         Long id, 
@@ -68,7 +70,8 @@ public class OrderReport {
         String horaRetirada,
         Double precoPar,
         String dataPagamento,
-        String obs
+        String obs,
+        Long quantidadeVias
     ) {
         this.id = id;
         this.nomeModelo = modelo.getTipo().toUpperCase();
@@ -86,6 +89,7 @@ public class OrderReport {
         this.precoPar = String.format("%.2f", precoPar);
         this.dataPagamento = dataPagamento;
         this.obs = obs;
+        this.quantidadeVias = quantidadeVias;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {

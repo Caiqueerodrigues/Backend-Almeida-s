@@ -24,7 +24,9 @@ public record ParamsFiltersReports(
     @Enumerated
     TypesSituationReport situation,
 
-    Long idPedido
+    Long idPedido,
+
+    Long quantidadeVias
 ) {
 
 }
