@@ -12,6 +12,7 @@ import Development.Rodrigues.Almeidas_Cortes.*;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.commons.services.MapConverterService;
 import Development.Rodrigues.Almeidas_Cortes.materials.MaterialRepository;
+import Development.Rodrigues.Almeidas_Cortes.materials.dto.CreateMaterialDTO;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.CreateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.FilterDateOrdersDTO;
@@ -25,7 +26,7 @@ public class OrderService {
 
     @Autowired
     OrderRepository repository;
-
+    
     @Autowired
     MaterialRepository materialRepository;
 
@@ -53,7 +54,27 @@ public class OrderService {
     }
 
     public ResponseDTO createOrderService(CreateOrderDTO dados) {
+        String novosMateriais = "";
+        
+        if(dados.tipoRecebido().matches(".*[a-zA-Z].*")) {
+            List<String> materiais = Arrays.asList(dados.tipoRecebido().split(",\\s*"));
+            
+            for (String material : materiais) {
+                if(material.matches(".*[a-zA-Z].*")) {
+                    novosMateriais += consultMaterial(material);
+                } else {
+                    novosMateriais += material + ", ";
+                }
+            };
+        }
+        
         Order newOrder = new Order(dados);
+        if(novosMateriais.length() > 0) {
+            if (novosMateriais.endsWith(", ")) {
+                novosMateriais = novosMateriais.substring(0, novosMateriais.length() - 2);
+            }
+            newOrder.setTipoRecebido(novosMateriais);
+        }
         
         repository.save(newOrder);
 
@@ -61,12 +82,32 @@ public class OrderService {
     }
     
     public ResponseDTO updateOrderService(UpdateOrderDTO dados) {
+        String novosMateriais = "";
+
+        if(dados.tipoRecebido().matches(".*[a-zA-Z].*")) {
+            List<String> materiais = Arrays.asList(dados.tipoRecebido().split(",\\s*"));
+            
+            for (String material : materiais) {
+                if(material.matches(".*[a-zA-Z].*")) {
+                    novosMateriais += consultMaterial(material);
+                } else {
+                    novosMateriais += material + ", ";
+                }
+            };
+        }
+
         Optional<Order> exists = repository.findById(dados.id());
 
         if(exists.isPresent()) {
             Order order = exists.get();
 
             order.updateOrder(dados);
+                if(novosMateriais.length() > 0) {
+                    if (novosMateriais.endsWith(", ")) {
+                        novosMateriais = novosMateriais.substring(0, novosMateriais.length() - 2);
+                    }
+                    order.setTipoRecebido(novosMateriais);
+                }
 
             repository.save(order);
             return new ResponseDTO("", "", "Pedido alterado com sucesso!", "");
@@ -146,5 +187,18 @@ public class OrderService {
 
         LocalDate finalDate = LocalDate.parse(date, formatter);
         return finalDate.atTime(23, 59, 59, 999999000);
+    }
+
+    private String consultMaterial(String nome) {
+        Optional<Material> exists = materialRepository.findByNome(nome.trim());
+        
+        if(exists.isPresent()) {
+            return exists.get().getId() + ", ";
+        } else {
+            Material material = new Material();
+                material.setNome(nome.trim());
+            Material salvo = materialRepository.save(material);
+            return salvo.getId() + ", ";
+        }
     }
 }
