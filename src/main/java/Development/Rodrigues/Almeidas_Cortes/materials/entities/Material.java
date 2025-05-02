@@ -22,16 +22,11 @@ public class Material {
     @Column
     private String nome;
 
-    @Column
-    private boolean ativo;
-
     public Material(CreateMaterialDTO dados) {
         this.nome = dados.nome();
-        this.ativo = dados.ativo();
     }
 
     public void updateMaterial(UpdateMaterialDTO dados) {
         this.nome = dados.nome();
-        this.ativo = dados.ativo();
     }
 }

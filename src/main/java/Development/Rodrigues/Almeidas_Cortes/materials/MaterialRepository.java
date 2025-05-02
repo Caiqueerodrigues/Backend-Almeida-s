@@ -12,7 +12,5 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
 
     Optional<Material> findById(Long id);
 
-    List<Material> findByAtivo(boolean status);
-
     Optional<Material> findByNome(String nome);
 }

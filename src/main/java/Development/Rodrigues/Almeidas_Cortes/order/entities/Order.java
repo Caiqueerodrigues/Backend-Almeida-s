@@ -54,14 +54,8 @@ public class Order {
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
     
-    @Column(name = "metragem_Recebido", columnDefinition = "TEXT")
-    private String metragemRecebido;
-    
     @Column(name = "tipo_Recebido", columnDefinition = "TEXT")
     private String tipoRecebido;
-    
-    @Column(name = "metragem_Finalizado", columnDefinition = "TEXT")
-    private String metragemFinalizado;
     
     @Column(name = "rendimento_Pares_Metro")
     private String rendimentoParesMetro;
@@ -86,9 +80,7 @@ public class Order {
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
-        this.metragemRecebido = dados.metragemRecebido();
         this.tipoRecebido = dados.tipoRecebido();
-        this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
         this.quemAssinou = dados.quemAssinou();
         this.cor = dados.cor();
@@ -106,9 +98,7 @@ public class Order {
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
-        this.metragemRecebido = dados.metragemRecebido();
         this.tipoRecebido = dados.tipoRecebido();
-        this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimento();
         this.quemAssinou = dados.quemAssinou();
         this.cor = dados.cor();

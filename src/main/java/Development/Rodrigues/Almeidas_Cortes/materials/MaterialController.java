@@ -53,18 +53,6 @@ public class MaterialController {
             return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
         }
     }
-
-    @GetMapping("/active")
-    @Operation(summary = "Obtém materiais ativos")
-    public ResponseEntity<ResponseDTO> getMaterialsActive() {
-        try {
-            ResponseDTO response = materialService.getMaterialsActiveService();
-
-            return ResponseEntity.status(200).body(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
-        }
-    }
     
     @PostMapping
     @Transactional

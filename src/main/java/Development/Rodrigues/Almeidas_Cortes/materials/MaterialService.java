@@ -33,13 +33,6 @@ public class MaterialService {
         else return new ResponseDTO("", "", "", "Dados informados incorretos!");
     }
 
-    public ResponseDTO getMaterialsActiveService () {
-        List<Material> ativos = materialRepository.findByAtivo(true);
-
-        if(ativos.size() > 0) return new ResponseDTO(ativos, "", "", "");
-        else return new ResponseDTO("", "", "", "Não existem materials ativos!");
-    }
-
     public ResponseDTO createMaterialService(CreateMaterialDTO dados) {
         if (materialRepository.findByNome(dados.nome()).isEmpty()) {
             materialRepository.save(new Material(dados));

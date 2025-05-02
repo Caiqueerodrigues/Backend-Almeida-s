@@ -11,11 +11,7 @@ public record UpdateMaterialDTO(
 
     @NotBlank
     @Schema(example = "Forro cacharrel")
-    String nome,
-
-    @NotNull
-    @Schema(example = "TRUE")
-    boolean ativo
+    String nome
 ) {
 
 }

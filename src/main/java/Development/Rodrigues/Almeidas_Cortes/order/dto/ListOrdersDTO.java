@@ -19,9 +19,7 @@ public record ListOrdersDTO(
     List<String> cor,
     String obs,
     LocalDateTime dataPagamento,
-    List<String> metragemRecebido,
     List<Object> tipoRecebido,
-    List<String> metragemFinalizado,
     List<String> rendimentoParesMetro
 ) {
 }

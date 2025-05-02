@@ -98,12 +98,6 @@ public class OrderService {
 
         for (Order item : list) {
             Object listGrade = MapConverterService.ConvertStringToObject(item.getGrade());
-            List<String> metragemRecebido = item.getMetragemRecebido() != null 
-                ? new ArrayList<>(Arrays.asList(item.getMetragemRecebido().split(",\\s*"))) 
-                : new ArrayList<>();
-            List<String> metragemFinalizado = item.getMetragemFinalizado() != null 
-                ? new ArrayList<>(Arrays.asList(item.getMetragemFinalizado().split(",\\s*"))) 
-                : new ArrayList<>();
             List<String> rendimentoList = item.getRendimentoParesMetro() != null 
                 ? new ArrayList<>(Arrays.asList(item.getRendimentoParesMetro().split(",\\s*"))) 
                 : new ArrayList<>();
@@ -131,9 +125,7 @@ public class OrderService {
                 item.getTotalPares(),
                 listGrade,item.getObs(),
                 item.getDataPagamento(),
-                metragemRecebido,
                 materialList,
-                metragemFinalizado,
                 rendimentoList,
                 corList
             );

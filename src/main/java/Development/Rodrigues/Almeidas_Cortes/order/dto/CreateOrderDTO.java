@@ -75,14 +75,8 @@ public record CreateOrderDTO(
     @Schema(example = "2025/02/08")
     LocalDateTime dataPagamento,
     
-    @Schema(example = "1.5, 1.8, 30")
-    String metragemRecebido,
-    
     @Schema(example = "15, 18, 30")
     String tipoRecebido,
-    
-    @Schema(example = "0.5, 8, 10")
-    String metragemFinalizado,
     
     @Schema(example = "20, 10, 10")
     String rendimento,

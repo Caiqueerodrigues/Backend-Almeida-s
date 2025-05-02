@@ -53,14 +53,8 @@ public class ListOrder {
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
     
-    @Column(name = "metragem_Recebido")
-    private List<String> metragemRecebido;
-    
     @Column(name = "tipo_Recebido")
     private List<Object> tipoRecebido;
-    
-    @Column(name = "metragem_Finalizado")
-    private List<String> metragemFinalizado;
     
     @Column(name = "rendimento_Pares_Metro")
     private List<String> rendimentoParesMetro;
@@ -80,9 +74,7 @@ public class ListOrder {
         this.grade = dados.grade();
         this.obs = dados.obs();
         this.dataPagamento = dados.dataPagamento();
-        this.metragemRecebido = dados.metragemRecebido();
         this.tipoRecebido = dados.tipoRecebido();
-        this.metragemFinalizado = dados.metragemFinalizado();
         this.rendimentoParesMetro = dados.rendimentoParesMetro();
         this.cor = dados.cor();
     }
