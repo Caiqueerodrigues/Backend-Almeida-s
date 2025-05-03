@@ -21,7 +21,7 @@ public class TablesService {
 
     public ResponseDTO getTablesClientService(Long idClient) {
         List<TableEntity>  tables = tablesRepository.findByClientId(idClient);
-        if (tables.isEmpty()) {
+        if (tables.size() == 0) {
             return new ResponseDTO("", "Nenhuma tabela encontrada!", "", "");
         } else {
             return new ResponseDTO(tables, "", "", "");
