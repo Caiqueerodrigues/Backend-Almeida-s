@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 public record DinamicTableDTO(
-    Long id,
+    String id,
     String nome,
     List<ColumnDTO> columns,
-    List<Map<String, Object>> rows
+    List<Map<String, Object>> rows,
+    Boolean isNew
 ) {
 
 }

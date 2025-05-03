@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
+import Development.Rodrigues.Almeidas_Cortes.tables.dto.CreateTableDTO;
+import Development.Rodrigues.Almeidas_Cortes.tables.dto.DinamicTableDTO;
 import Development.Rodrigues.Almeidas_Cortes.tables.entities.TableEntity;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -16,8 +19,8 @@ public class TablesService {
     @Autowired
     private TablesRepository tablesRepository;
 
-    public ResponseDTO getTablesClient(Long idClient) {
-        Optional<TableEntity> tables = tablesRepository.findByClientId(idClient);
+    public ResponseDTO getTablesClientService(Long idClient) {
+        List<TableEntity>  tables = tablesRepository.findByClientId(idClient);
         if (tables.isEmpty()) {
             return new ResponseDTO("", "Nenhuma tabela encontrada!", "", "");
         } else {
@@ -25,4 +28,35 @@ public class TablesService {
         }
     }
 
+    public ResponseDTO createUpdateTableService(CreateTableDTO dados) {
+        for (DinamicTableDTO table : dados.tables()) {
+            if(table.isNew()) {
+                TableEntity newTable = new TableEntity(dados);
+                tablesRepository.save(newTable);
+            } else {
+                updateTable(table, dados);
+            }
+        }
+
+        if(!dados.idsDeletados().isEmpty()) {
+            deleteTable(dados.idsDeletados());
+        }
+        return new ResponseDTO("", "", "Tabela(s) salva(s) com sucesso!", "");
+    }
+
+    private void updateTable(DinamicTableDTO table, CreateTableDTO dados) {
+        Optional<TableEntity> tableEntity = tablesRepository.findById(Long.parseLong(table.id()));
+        if (tableEntity.isPresent()) {
+            TableEntity existingTable = tableEntity.get();
+            existingTable.updateTableEntity(existingTable.getId(), dados.cliente(), dados.tables());
+            tablesRepository.save(existingTable);
+        }
+    }
+
+    private void deleteTable(List<Long> ids) {
+        List<TableEntity> tablesToDelete = tablesRepository.findAllById(ids);
+        if (!tablesToDelete.isEmpty()) {
+            tablesRepository.deleteAll(tablesToDelete);
+        }
+    }
 }

@@ -12,5 +12,5 @@ public interface TablesRepository extends JpaRepository<TableEntity, Long> {
 
     Optional<TableEntity> findById(Long id);
 
-    Optional<TableEntity> findByClientId(Long clientId);
+    List<TableEntity> findByClientId(Long clientId);
 }

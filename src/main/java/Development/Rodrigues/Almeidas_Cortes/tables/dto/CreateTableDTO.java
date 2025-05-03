@@ -6,11 +6,15 @@ import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
 import jakarta.validation.constraints.NotNull;
 
 public record CreateTableDTO(
+
+    Long id,
     
     @NotNull
     Client cliente,
 
     @NotNull
-    List<DinamicTableDTO> tables
+    List<DinamicTableDTO> tables,
+
+    List<Long> idsDeletados
 ) {
 }

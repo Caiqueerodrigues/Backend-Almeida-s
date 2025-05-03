@@ -1,6 +1,7 @@
 package Development.Rodrigues.Almeidas_Cortes.tables.entities;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,15 +56,19 @@ public class TableEntity {
     public TableEntity(CreateTableDTO dados) {
         this.client = dados.cliente();
         this.tabelas = toJson(dados.tables());
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
         this.updatedAt = null;
     }
 
-    public void updateTableEntity(UpdateTableDTO dados) {
-        this.id = dados.id();
-        this.client = dados.cliente();
-        this.tabelas = toJson(dados.tables());
-        this.updatedAt = LocalDateTime.now();
+    public void updateTableEntity(
+        Long id,
+        Client client,
+        List<DinamicTableDTO> tables 
+    ) {
+        this.id = id;
+        this.client = client;
+        this.tabelas = toJson(tables);
+        this.updatedAt = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
     }
 
     private String toJson(List<DinamicTableDTO> tabelas) {
@@ -76,13 +81,13 @@ public class TableEntity {
         }
     }
 
-    public List<DinamicTableDTO> getTabelas() {
-        try {
-            // Usando Jackson para converter o JSON de volta para a lista de objetos
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(tabelas, objectMapper.getTypeFactory().constructCollectionType(List.class, DinamicTableDTO.class));
-        } catch (Exception e) {
-            throw new RuntimeException("Error converting JSON to List", e);
-        }
-    }
+    // public List<DinamicTableDTO> getTabelas() {
+    //     try {
+    //         // Usando Jackson para converter o JSON de volta para a lista de objetos
+    //         ObjectMapper objectMapper = new ObjectMapper();
+    //         return objectMapper.readValue(tabelas, objectMapper.getTypeFactory().constructCollectionType(List.class, DinamicTableDTO.class));
+    //     } catch (Exception e) {
+    //         throw new RuntimeException("Error converting JSON to List", e);
+    //     }
+    // }
 }
