@@ -22,7 +22,7 @@ public class TablesService {
     public ResponseDTO getTablesClientService(Long idClient) {
         List<TableEntity>  tables = tablesRepository.findByClientId(idClient);
         if (tables.size() == 0) {
-            return new ResponseDTO("", "Nenhuma tabela encontrada!", "", "");
+            return new ResponseDTO("Nenhuma tabela encontrada!", "", "", "");
         } else {
             return new ResponseDTO(tables, "", "", "");
         }
