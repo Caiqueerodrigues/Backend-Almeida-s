@@ -120,12 +120,12 @@
                         <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
                     </div>
                     <div>
-                        <p class="final-text" th:if="${venda.dataRetirada.contains('/')}">
-                            <span th:text="${venda.quemAssinou}"></span>
-                            <span class="separador"> - </span> 
-                            <span th:text="${venda.dataRetirada}"></span>
-                            <span class="separador"> - </span> 
-                            <span th:text="${venda.horaRetirada}"></span>
+                        <p class="final-text">
+                            <span th:text="${venda.dataPagamento.contains('/') ? venda.quemAssinou : ''}"></span>
+                            <span class="separador" th:if="${venda.dataPagamento.contains('/')}"> - </span> 
+                            <span th:text="${venda.dataPagamento.contains('/') ? venda.dataRetirada : ''}"></span>
+                            <span class="separador" th:if="${venda.dataPagamento.contains('/')}"> - </span> 
+                            <span th:text="${venda.dataPagamento.contains('/') ? venda.horaRetirada : ''}"></span>
                         </p>
                     </div>
                 </div>
