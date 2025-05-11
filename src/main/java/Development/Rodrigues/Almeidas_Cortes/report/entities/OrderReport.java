@@ -86,7 +86,7 @@ public class OrderReport {
         this.quemAssinou = quemAssinou;
         this.dataRetirada = dataRetirada;
         this.horaRetirada = horaRetirada;
-        this.precoPar = String.format("%.2f", precoPar);
+        this.precoPar = (String.valueOf(precoPar).matches(".*\\.\\d{3}$")) ? String.format("%.3f", precoPar) : String.format("%.2f", precoPar);
         this.dataPagamento = dataPagamento;
         this.obs = obs;
         this.quantidadeVias = quantidadeVias;
