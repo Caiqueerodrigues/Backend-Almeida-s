@@ -120,7 +120,7 @@
                         <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
                     </div>
                     <div>
-                        <p class="final-text">
+                        <p class="final-text" th:if="${venda.dataRetirada.contains('/)}">
                             <span th:text="${venda.quemAssinou}"></span>
                             <span class="separador"> - </span> 
                             <span th:text="${venda.dataRetirada}"></span>
