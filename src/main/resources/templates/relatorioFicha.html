@@ -123,7 +123,7 @@
                         <p class="final-text">
                             <span th:text="${venda.dataPagamento.contains('/') ? venda.quemAssinou : ''}"></span>
                             <span class="separador" th:if="${venda.dataPagamento.contains('/')}"> - </span> 
-                            <span th:text="${venda.dataPagamento.contains('/') ? venda.dataRetirada : ''}"></span>
+                            <span th:text="${venda.dataPagamento.contains('/') ? venda.dataRetirada : 'Assinatura de quem retirou'}"></span>
                             <span class="separador" th:if="${venda.dataPagamento.contains('/')}"> - </span> 
                             <span th:text="${venda.dataPagamento.contains('/') ? venda.horaRetirada : ''}"></span>
                         </p>
