@@ -20,6 +20,7 @@ public record ListOrdersDTO(
     String obs,
     LocalDateTime dataPagamento,
     List<Object> tipoRecebido,
-    List<String> rendimentoParesMetro
+    List<String> rendimentoParesMetro,
+    String quemAssinou
 ) {
 }

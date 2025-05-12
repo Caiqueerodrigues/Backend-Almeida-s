@@ -168,7 +168,8 @@ public class OrderService {
                 item.getDataPagamento(),
                 materialList,
                 rendimentoList,
-                corList
+                corList,
+                item.getQuemAssinou()
             );
 
             listFormatted.add(newItem);
