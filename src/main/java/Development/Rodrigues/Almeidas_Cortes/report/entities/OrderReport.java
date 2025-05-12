@@ -27,6 +27,8 @@ public class OrderReport {
     private String color;
     
     private Long qtdPecas;
+
+    private Long qtdFacas;
     
     private String nomeCliente;
 
@@ -51,8 +53,10 @@ public class OrderReport {
     private String dataPagamento;
 
     private String obs;
-
+    
     private Long quantidadeVias;
+
+    private String material;
     
     public OrderReport(
         Long id, 
@@ -71,7 +75,9 @@ public class OrderReport {
         Double precoPar,
         String dataPagamento,
         String obs,
-        Long quantidadeVias
+        Long quantidadeVias,
+        Long qtdFacas,
+        String material
     ) {
         this.id = id;
         this.nomeModelo = modelo.getTipo().toUpperCase();
@@ -90,6 +96,8 @@ public class OrderReport {
         this.dataPagamento = dataPagamento;
         this.obs = obs;
         this.quantidadeVias = quantidadeVias;
+        this.qtdFacas = qtdFacas;
+        this.material = material;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {

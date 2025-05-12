@@ -36,6 +36,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByClientId(Long clientId);
 
+    List<Order> findByIdIn(List<Long> ids);
+
     List<Order> findByDataPagamentoIsNotNull();
     List<Order> findByDataPagamentoIsNull();
 

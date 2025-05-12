@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            border: 2px solid #000;
+            padding: 4px;
+            border-radius: 12px;
+            display: table; /* Alternativa ao flex */
+            margin-top: 10px;
+            width: 100%;
+        }
+        .container-logo {
+            margin: 5px 0 0 5px;
+            display: inline-block; /* Simula flex-item */
+            vertical-align: top;
+        }
+        .logo {
+            border-radius: 12px;
+            height: 150px;
+            display: block;
+        }
+        .content {
+            display: inline-block; /* Simula flex-item */
+            position: relative;
+            width: 90%;
+            margin: 10px;
+        }
+        .container-tabelas {
+            display: table;
+        }
+        .tabela {
+            margin: 10px;
+            border: 1px solid #E20148;
+            border-radius: 20px;
+            width: fit-content;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        table {
+            border-spacing: 0 8px;
+        }
+        thead,tfoot {
+            background-color: #c3e7f7;
+        }
+        th, td {
+            border: none;
+            padding: 8px 10px;
+        }
+        tbody > tr:nth-of-type(even) {
+            background-color: rgb(237 238 242);
+        }
+    </style>
+    <title>Relatório tabelas</title>
+</head>
+<body>
+    <div class="container">
+        <div class="container-logo">
+            <img 
+                src="https://almeidascorte.netlify.app/images/logo_completo.jpg" 
+                alt="Logo Almeida's Corte" class="logo"
+            />
+        </div>
+        <div class="content">
+            <p 
+                style="font-size: 20px; 
+                    color: #E20148; 
+                    text-align: center; 
+                    margin: 0; 
+                    padding: 0;"
+            >
+                ALMEIDA'S CORTES
+            </p>
+            <p 
+                style="font-size: 20px; 
+                    color: #000; 
+                    text-align: center; 
+                    margin: 0; 
+                    padding: 0;"
+            >
+                TABELA(s) de NOME CLIENTE
+            </p>
+            <p 
+                style="font-size: 20px; 
+                    color: #000; 
+                    text-align: center; 
+                    margin: 0; 
+                    padding: 0;"
+            >
+                DATA: 00/00/0000
+            </p>
+
+        </div>
+        <div class="container-tabelas">
+            <div class="tabela">
+                <p 
+                    style="font-size: 20px; 
+                        text-align: center;
+                        color: #000;  
+                        margin: 0;
+                    "
+                >
+                    NOME TABELA
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome da coluna</th>
+                            <th>Nome da coluna2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>NOME LINHA</td>
+                            <td>NOME LINHA2</td>
+                        </tr>
+                        <tr>
+                            <td>NOME LINHA</td>
+                            <td>NOME LINHA2</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">DÚVIDAS LIGAR (18)-99706-1227</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tabela">
+                <p 
+                    style="font-size: 20px; 
+                        text-align: center;
+                        color: #000;  
+                        margin: 0;
+                    "
+                >
+                    NOME TABELA
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome da coluna</th>
+                            <th>Nome da coluna2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>NOME LINHA</td>
+                            <td>NOME LINHA2</td>
+                        </tr>
+                        <tr>
+                            <td>NOME LINHA</td>
+                            <td>NOME LINHA2</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">DÚVIDAS LIGAR (18)-99706-1227</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+</body>
+</html>

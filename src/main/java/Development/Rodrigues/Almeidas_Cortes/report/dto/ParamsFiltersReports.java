@@ -2,7 +2,9 @@ package Development.Rodrigues.Almeidas_Cortes.report.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesFilterReport;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesReport;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesSituationReport;
@@ -26,7 +28,9 @@ public record ParamsFiltersReports(
 
     Long idPedido,
 
-    Long quantidadeVias
+    Long quantidadeVias,
+
+    List<Long> idPedidos
 ) {
 
 }

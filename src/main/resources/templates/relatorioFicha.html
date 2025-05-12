@@ -33,11 +33,20 @@
         }
         .container-grade {
             padding: 10px 10px 0 10px;
-            display: table;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+            max-width: 100%;
         }
         .item {
             display: inline-block;
-            width: 14%;
+            text-align: center;
+            vertical-align: top;
+            margin-top: 10px;
+        }
+        .item-total {
+            display: inline-block;
+            width: max-content;
             text-align: center;
             vertical-align: top;
             margin-top: 10px;
@@ -48,7 +57,7 @@
         }
         .final-text {
             border-top: 2px solid #000;
-            margin: 25px 0 0 80px;
+            margin: 25px 0 0 120px;
             font-weight: bold;
             text-align: center;
         }
@@ -92,19 +101,26 @@
                     <span th:text="${venda.dataPagamento}"></span>
                 </p> -->
                 <p class="paragraph">
+                    <span th:text="'ID ' + ${venda.id}"></span>
+                    <span class="separador"> - </span>
                     <span th:text="${venda.nomeModelo}"></span>
+                    <span class="separador"> - </span>
+                    <span th:text="${venda.material}"></span>
                     <span class="separador"> - </span>
                     <span th:text="${venda.color}"></span>
                     <span class="separador"> - </span>
                     <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
                     <span class="separador"> - </span>
+                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACAS'"></span>
+                </p>
+                <p class="paragraph">
                     <span class="bold" th:text="${venda.nomeCliente}"></span>
                     <span class="separador"> - </span>
                     <span th:text="${venda.precoPar} + ' o par'"></span>
+                    <span class="separador"> - </span>
+                    <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
                 </p>
                 <p class="paragraph">
-                    <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
-                    <span class="separador"> - </span>
                     <span th:text="'Data do pedido ' + ${venda.dataPedido}"></span>
                     <span class="separador"> - </span>
                     <span th:text="${venda.diaSemana}"></span>
@@ -115,7 +131,7 @@
                         <span class="numeracao" th:text="${entry['numeracao']}"></span>
                         <span th:text="${entry['valor']}"></span>
                     </div>
-                    <div class="item">
+                    <div class="item-total">
                         <span class="d-block"></span>
                         <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
                     </div>

@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +21,8 @@ import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
+import Development.Rodrigues.Almeidas_Cortes.materials.MaterialRepository;
+import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 import Development.Rodrigues.Almeidas_Cortes.order.OrderRepository;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesReport;
@@ -32,6 +35,9 @@ public class ReportService {
 
     @Autowired
     OrderRepository repository;
+
+    @Autowired
+    MaterialRepository materialRepository;
 
     @Autowired
     private TemplateEngine templateEngine;
@@ -49,7 +55,21 @@ public class ReportService {
     
         boolean paid = dados.situation() == TypesSituationReport.PAGOS;
 
-        if(dados.report() == TypesReport.FICHA_DE_CORTE || dados.report() == TypesReport.CLIENTE) {
+        if(dados.idPedidos().size() > 0) {
+            try {
+                List<Order> consult = repository.findByIdIn(dados.idPedidos());
+
+                if(consult.size() > 0) {
+                    List<OrderReport> dadosReport = createList(consult, dados);
+    
+                    byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
+                    return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else if(dados.report() == TypesReport.FICHA_DE_CORTE || dados.report() == TypesReport.CLIENTE) {
             Optional<Order> consult = repository.findById(dados.idPedido());
 
             if(consult.isPresent()) list.add(consult.get());
@@ -103,8 +123,35 @@ public class ReportService {
         if(list.size() == 0) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
             
         try {
-            List<OrderReport> dadosReport = list.stream()
-                .map(order -> new OrderReport(
+            List<OrderReport> dadosReport = createList(list, dados);
+
+            byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
+            return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    } 
+
+    private List<OrderReport> createList(List<Order> list, ParamsFiltersReports dados) {
+        List<Material> materiaisList = materialRepository.findAll();
+
+        return list.stream()
+            .map(order -> {
+                List<Long> idsRecebidos = Arrays.stream(
+                            Optional.ofNullable(order.getTipoRecebido()).orElse("")
+                            .split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .map(Long::parseLong)
+                        .collect(Collectors.toList());
+
+                String nomesMateriais = materiaisList.stream()
+                    .filter(m -> idsRecebidos.contains(m.getId()))
+                    .map(Material::getNome)
+                    .collect(Collectors.joining(", "));
+
+                return new OrderReport(
                     order.getId(),
                     order.getModelo(),
                     order.getCor(),
@@ -121,17 +168,13 @@ public class ReportService {
                     order.getModelo().getPreco(),
                     formatDate(order.getDataPagamento()),
                     order.getObs(),
-                    dados.quantidadeVias()
-                ))
-                .collect(Collectors.toList());
-
-            byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
-            return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    } 
+                    dados.quantidadeVias(),
+                    order.getModelo().getQtdFaca(),
+                    nomesMateriais
+                );
+            })
+            .collect(Collectors.toList());
+    }
 
     public byte[] generateReportFile(
         List<OrderReport> dados, 
