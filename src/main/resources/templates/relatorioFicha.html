@@ -19,7 +19,7 @@
         }
         .logo {
             border-radius: 12px;
-            height: 150px;
+            height: 100px;
             display: block;
         }
         .content {
@@ -43,6 +43,7 @@
             text-align: center;
             vertical-align: top;
             margin-top: 10px;
+            min-width: 10%;
         }
         .item-total {
             display: inline-block;
@@ -57,9 +58,10 @@
         }
         .final-text {
             border-top: 2px solid #000;
-            margin: 25px 0 0 120px;
+            margin: 25px 0 10px 120px;
             font-weight: bold;
             text-align: center;
+            width: 400px;
         }
         .bold {
             font-weight: bold;
@@ -89,17 +91,16 @@
         <div th:each="venda : ${dados}" class="container">
             <div class="container-logo">
                 <img 
-                    src="https://almeidascorte.netlify.app/images/logo_completo.jpg" 
+                    src="http://localhost:3000/images/leao-sem-fundo.png" 
                     alt="Logo Almeida's Corte" class="logo"
                 />
+                <span style="color: #E91F31; font-size: 14px;">Almeida's Corte</span><br/>
+                <span style="font-size: 10px;">Rua Expedicionários, 233</span><br/>
+                <span style="font-size: 14px; color: #079C27;">(18) 99706-1228</span><br/>
                 <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="'PAGO'"></span><br/>
                 <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="${venda.dataPagamento}"></span>
             </div>
             <div class="content">
-                <!-- <p class="title-pago" th:if="${venda.dataPagamento.contains('/')}">
-                    <span>PAGO</span><br/>
-                    <span th:text="${venda.dataPagamento}"></span>
-                </p> -->
                 <p class="paragraph">
                     <span th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>
@@ -137,9 +138,10 @@
                     </div>
                     <div>
                         <p class="final-text">
-                            <span th:text="${venda.dataRetirada.contains('/') ? venda.quemAssinou : ''}"></span>
-                            <span class="separador" th:if="${venda.dataRetirada.contains('/')}"> - </span> 
-                            <span th:text="${venda.dataRetirada.contains('/') ? venda.dataRetirada : 'Assinatura de quem retirou'}"></span>
+                            <span th:text="${venda.dataRetirada.contains('/') ? venda.quemAssinou : 'Assinatura de quem retirou'}"></span>
+                            <span class="separador"> - </span> 
+                            <span th:if="${!venda.dataRetirada.contains('/')}"> DATA: ____/ ____/ 20___ </span> 
+                            <span th:text="${venda.dataRetirada.contains('/') ? venda.dataRetirada : ''}"></span>
                             <span class="separador" th:if="${venda.dataRetirada.contains('/')}"> - </span> 
                             <span th:text="${venda.dataRetirada.contains('/') ? venda.horaRetirada : ''}"></span>
                         </p>
