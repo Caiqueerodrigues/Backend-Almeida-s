@@ -4,5 +4,6 @@ public enum TypesReport {
     COMPLETO,
     FICHA_DE_CORTE,
     FECHAMENTO_CLIENTE,
-    CLIENTE
+    CLIENTE,
+    FICHAS_GERAIS
 }

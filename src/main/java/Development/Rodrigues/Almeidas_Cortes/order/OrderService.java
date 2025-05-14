@@ -169,7 +169,8 @@ public class OrderService {
                 materialList,
                 rendimentoList,
                 corList,
-                item.getQuemAssinou()
+                item.getQuemAssinou(),
+                item.getQuemCortou()
             );
 
             listFormatted.add(newItem);

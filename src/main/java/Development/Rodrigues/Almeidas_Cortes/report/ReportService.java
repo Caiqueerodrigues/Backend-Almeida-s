@@ -212,7 +212,11 @@ public class ReportService {
                 );
 
                 htmlContent = templateEngine.process("relatorioCliente", context);
-            } else {
+            } else if(dadosFront.report() == TypesReport.FICHAS_GERAIS) {
+                htmlContent = templateEngine.process("relatorioFichasGerais", context);
+            } else if(dadosFront.report() == TypesReport.FICHA_DE_CORTE) {
+                htmlContent = templateEngine.process("relatorioFichaCorte", context);
+            } else{
                 htmlContent = templateEngine.process("relatorioFicha", context);
             }
 

@@ -68,6 +68,9 @@ public class Order {
 
     @Column(name = "data_Retirada")
     private LocalDateTime dataRetirada;
+
+    @Column(name = "quem_cortou")
+    private String quemCortou;
     
     public Order(CreateOrderDTO dados) {
         this.client = dados.client();
@@ -85,6 +88,7 @@ public class Order {
         this.quemAssinou = dados.quemAssinou();
         this.cor = dados.cor();
         this.dataRetirada = dados.dataRetirada();
+        this.quemCortou = dados.quemCortou();
     }
 
     public void updateOrder(UpdateOrderDTO dados) {
@@ -103,5 +107,6 @@ public class Order {
         this.quemAssinou = dados.quemAssinou();
         this.cor = dados.cor();
         this.dataRetirada = dados.dataRetirada();
+        this.quemCortou = dados.quemCortou();
     }
 }

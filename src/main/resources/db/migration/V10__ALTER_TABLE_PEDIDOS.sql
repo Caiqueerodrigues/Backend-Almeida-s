@@ -1,0 +1,2 @@
+ALTER TABLE tab_pedidos
+ADD COLUMN quem_Cortou VARCHAR(50) DEFAULT '';

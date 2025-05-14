@@ -85,7 +85,10 @@ public record CreateOrderDTO(
     String quemAssinou,
     
     @Schema(example = "")
-    LocalDateTime dataRetirada
-) {
+    LocalDateTime dataRetirada,
+    
+    @Schema(example = "Ciclano da silva")
+    String quemCortou
+    ) {
 
 }

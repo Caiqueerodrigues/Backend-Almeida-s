@@ -21,6 +21,7 @@ public record ListOrdersDTO(
     LocalDateTime dataPagamento,
     List<Object> tipoRecebido,
     List<String> rendimentoParesMetro,
-    String quemAssinou
+    String quemAssinou,
+    String quemCortou
 ) {
 }

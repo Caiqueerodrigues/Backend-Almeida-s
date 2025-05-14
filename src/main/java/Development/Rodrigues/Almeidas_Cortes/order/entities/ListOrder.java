@@ -65,6 +65,9 @@ public class ListOrder {
     @Column(name = "quem_Assinou")
     private String quemAssinou;
 
+    @Column(name = "quem_Cortou")
+    private String quemCortou;
+
     public ListOrder(ListOrdersDTO dados) {
         this.id = dados.id();
         this.client = dados.client();
@@ -81,5 +84,6 @@ public class ListOrder {
         this.rendimentoParesMetro = dados.rendimentoParesMetro();
         this.cor = dados.cor();
         this.quemAssinou = dados.quemAssinou();
+        this.quemCortou = dados.quemCortou();
     }
 }
