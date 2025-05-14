@@ -68,6 +68,8 @@ public class ListOrder {
     @Column(name = "quem_Cortou")
     private String quemCortou;
 
+    private String jaFoiPago;
+
     public ListOrder(ListOrdersDTO dados) {
         this.id = dados.id();
         this.client = dados.client();
@@ -85,5 +87,6 @@ public class ListOrder {
         this.cor = dados.cor();
         this.quemAssinou = dados.quemAssinou();
         this.quemCortou = dados.quemCortou();
+        this.jaFoiPago = dados.jaFoiPago();
     }
 }

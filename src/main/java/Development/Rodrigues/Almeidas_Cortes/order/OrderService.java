@@ -170,7 +170,8 @@ public class OrderService {
                 rendimentoList,
                 corList,
                 item.getQuemAssinou(),
-                item.getQuemCortou()
+                item.getQuemCortou(),
+                item.getDataPagamento() != null ? "Sim" : "Não"
             );
 
             listFormatted.add(newItem);
