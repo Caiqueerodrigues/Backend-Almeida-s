@@ -19,7 +19,7 @@
         }
         .logo {
             border-radius: 12px;
-            height: 150px;
+            height: 100px;
             display: block;
         }
         .content {
@@ -59,9 +59,12 @@
     <div class="container" th:each="i : ${#numbers.sequence(1, dados[0].quantidadeVias)}">
         <div class="container-logo">
             <img 
-                src="https://almeidascorte.netlify.app/images/logo_completo.jpg" 
-                alt="Logo Almeida's Corte" class="logo"
-            />
+                    src="https://almeidascorte.netlify.app/images/leao-sem-fundo.png" 
+                    alt="Logo Almeida's Corte" class="logo"
+                />
+                <span style="color: #E91F31; font-size: 14px;">Almeida's Corte</span><br/>
+                <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
+                <span style="font-size: 14px; color: #079C27;">(18) 99706-1227</span><br/>
         </div>
         <div class="content">
             <p style="font-size: 20px; color: #E20148; text-align: center; margin: 0; padding: 0;">ALMEIDA'S CORTES</p>
@@ -74,17 +77,17 @@
                 <span th:text="'Total pares ' + ${totalPares}"></span>
                 <span class="separador"> - </span>
                 <span th:text="'Total ' + ${totalDinheiro}"></span>
-                <span class="separador"> - </span>
+            </p>
+            <p class="paragraph" style="text-align: center;">
                 <span  style="color: #079C27;" class="bold" th:text="'Total pago ' + ${totalPago}"></span>
                 <span th:if="${totalDevido > 0}" class="separador"> - </span>
                 <span 
-                    th:if="${totalDevido > 0}" 
-                    style="color: #ffa600;" 
-                    class="bold" 
-                    th:text="'Total devido ' + ${totalDevidoFormatado}"
+                th:if="${totalDevido > 0}" 
+                style="color: #ffa600;" 
+                class="bold" 
+                th:text="'Total devido ' + ${totalDevidoFormatado}"
                 ></span>
             </p>
-            
         </div>
         <div 
             th:each="venda, iterStat : ${dados}" 
@@ -92,9 +95,13 @@
             style="padding: 10px;"
         >
             <p class="paragraph">
+                <span class="bold" th:text="'ID ' + ${venda.id}"></span>
+                <span class="separador"> - </span>
                 <span class="bold" th:text="'Data do Pedido ' + ${venda.dataPedido}"></span>
                 <span class="separador"> - </span>
                 <span class="bold" th:text="${venda.nomeModelo}"></span>
+                <span class="separador"> - </span>
+                <span class="bold" th:text="${venda.color}"></span>
                 <span class="separador"> - </span>
                 <span th:text="${venda.totalPares} + ' pares'"></span>
                 <span class="separador"> - </span>

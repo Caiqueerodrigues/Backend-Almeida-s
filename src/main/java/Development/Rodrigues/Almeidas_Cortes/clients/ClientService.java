@@ -33,7 +33,7 @@ public class ClientService {
     }
 
     public ResponseDTO getAllClientsActiveService() {
-        List<Client> clients = repository.findByAtivo(true);
+        List<Client> clients = repository.findByAtivoOrderByNomeAsc(true);
 
         if(clients.size() > 0) {
         //     List<DadosBasicosClientDTO> responseList = clients.stream()

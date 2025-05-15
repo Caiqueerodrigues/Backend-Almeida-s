@@ -26,7 +26,7 @@ public class ModelService {
     AnexosService anexosService;
 
     public ResponseDTO getAllModelsClientService(Long id) {
-        List<Model> list = repository.findByClient_Id(id);
+        List<Model> list = repository.findByClient_IdOrderByTipoAsc(id);
         
         if(list.size() > 0) {
             return new ResponseDTO(list, "", "", "");

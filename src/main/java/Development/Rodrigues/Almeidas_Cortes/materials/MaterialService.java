@@ -20,7 +20,7 @@ public class MaterialService {
     MaterialRepository materialRepository;
 
     public ResponseDTO getMaterialsService () {
-        List<Material> exists = materialRepository.findAll();
+        List<Material> exists = materialRepository.findAllByOrderByNomeAsc();
 
         if(exists.size() > 0) return new ResponseDTO(exists, "", "", "");
         else return new ResponseDTO("", "", "", "Não existem materials cadastrados!");

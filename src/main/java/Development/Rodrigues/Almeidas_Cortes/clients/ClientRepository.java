@@ -13,5 +13,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findByNome(String nome);
 
-    List<Client> findByAtivo(boolean ativo);
+    List<Client> findByAtivoOrderByNomeAsc(boolean ativo);
 }

@@ -151,10 +151,12 @@ public class ReportService {
                     .map(Material::getNome)
                     .collect(Collectors.joining(", "));
 
+                    String cores = String.join(", ", order.getCor());
+
                 return new OrderReport(
                     order.getId(),
                     order.getModelo(),
-                    order.getCor(),
+                    cores,
                     order.getTotalPares(),
                     order.getClient(),
                     order.getTotalDinheiro(),

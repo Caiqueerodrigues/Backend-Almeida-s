@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 
 public interface MaterialRepository extends JpaRepository<Material, Long> {
-    List<Material> findAll();
+    List<Material> findAllByOrderByNomeAsc();
 
     Optional<Material> findById(Long id);
 
