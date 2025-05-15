@@ -111,7 +111,7 @@
                     <span class="separador"> - </span>
                     <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
                     <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACAS'"></span>
+                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
                     <span class="separador"> - </span>
                     <span class="bold" th:text="${venda.nomeCliente}"></span>
                     <span class="separador"> - </span>
@@ -175,7 +175,7 @@
                     <span class="separador"> - </span>
                     <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
                     <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACAS'"></span>
+                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
                     <span class="separador"> - </span>
                     <span class="bold" th:text="${venda.nomeCliente}"></span>
                     <span class="separador"> - </span>
@@ -229,7 +229,7 @@
                     <span class="separador"> - </span>
                     <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
                     <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACAS'"></span>
+                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
                     <span class="separador"> - </span>
                     <span class="bold" th:text="${venda.nomeCliente}"></span>
                 </p>

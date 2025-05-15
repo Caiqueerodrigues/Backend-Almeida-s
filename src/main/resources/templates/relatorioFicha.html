@@ -113,7 +113,7 @@
                     <span class="separador"> - </span>
                     <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
                     <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.qtdFacas} ${venda.qtdFacas > 1 ' FACAS' : ' FACA'}"></span>
+                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
                     <span class="separador"> - </span>
                     <span class="bold" th:text="${venda.nomeCliente}"></span>
                     <span class="separador"> - </span>
