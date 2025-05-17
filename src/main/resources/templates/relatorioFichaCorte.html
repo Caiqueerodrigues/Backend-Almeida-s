@@ -90,15 +90,6 @@
     <!-- CORTE -->
     <div>
         <div th:each="venda : ${dados}" class="container">
-            <div class="container-logo">
-                <img 
-                    src="https://almeidascorte.netlify.app/images/leao-sem-fundo.png" 
-                    alt="Logo Almeida's Corte" class="logo"
-                />
-                <span style="color: #E91F31; font-size: 14px; font-weight: 500;">Almeida's Corte</span><br/>
-                <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
-                <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
-            </div>
             <div class="content">
                 <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;">CORTE</p>
                 <p class="paragraph">
@@ -114,8 +105,6 @@
                     <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
                     <span class="separador"> - </span>
                     <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
-                    <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.nomeCliente}"></span>
                 </p>
                 <p class="paragraph">
                     <span th:text="'Data do pedido ' + ${venda.dataPedido}"></span>
