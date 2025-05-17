@@ -10,6 +10,7 @@ import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.CreateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.FilterDateOrdersDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdateOrderDTO;
+import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdatePaymentDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -86,4 +89,25 @@ public class OrderController {
             return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
         }
     }
+
+    @PutMapping("/updatePayment")
+    public ResponseEntity alterStatusPayment(@RequestBody @Valid UpdatePaymentDTO dados) {
+        try {
+            ResponseDTO response = service.updateDatePaymentService(dados);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+        }
+    }
+
+    @GetMapping("/due")
+    public ResponseEntity getOrdersDue() {
+        try {
+            ResponseDTO response = service.getOrdersDueService();
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+        }
+    }
+    
 }

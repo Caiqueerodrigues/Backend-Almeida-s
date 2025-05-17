@@ -17,6 +17,7 @@ import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.CreateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.FilterDateOrdersDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdateOrderDTO;
+import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdatePaymentDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.ListOrder;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.report.dto.ParamsFiltersReports;
@@ -130,6 +131,30 @@ public class OrderService {
         }
 
         return new ResponseDTO("", "", "", "Não existem dados para estas datas");
+    }
+
+    public ResponseDTO updateDatePaymentService(UpdatePaymentDTO dados) {
+        List<Order> orders = repository.findAllById(dados.ids());
+
+        if(orders.size() > 0) {
+            orders.forEach(order -> {
+                order.setDataPagamento(dados.date());
+                repository.save(order);
+            });
+
+            return new ResponseDTO("", "", "Dados salvos com sucesso!", "");
+        }
+        return new ResponseDTO("", "", "", "Dados informados incorretos!");
+    }
+    
+    public ResponseDTO getOrdersDueService() {
+        List<Order> orders = repository.findByDataPagamentoIsNull();
+
+        if(orders.size() > 0) {
+            List<ListOrder> listFormatted = createListOrder(orders);
+            return new ResponseDTO(listFormatted, "", "", "");
+        }
+        return new ResponseDTO("", "", "", "Não existem pedidos pendentes!");
     }
 
     private List<ListOrder> createListOrder(List<Order> list) {
