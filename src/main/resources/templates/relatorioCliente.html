@@ -13,7 +13,7 @@
             width: 100%;
         }
         .container-logo {
-            margin: 5px 0 0 5px;
+            margin: 5px 0 10px 5px;
             display: inline-block; /* Simula flex-item */
             vertical-align: top;
         }
@@ -53,6 +53,31 @@
         .devido {
             color: #ffa600;
         }
+        .container-grade {
+            padding: 10px 10px 0 10px;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+        .item {
+            display: inline-block;
+            text-align: center;
+            vertical-align: top;
+            margin-top: 10px;
+            min-width: 10%;
+        }
+        .item-total {
+            display: inline-block;
+            width: max-content;
+            text-align: center;
+            vertical-align: top;
+            margin-top: 10px;
+        }
+        .numeracao {
+            border-bottom: 2px solid #000;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +89,7 @@
                 />
                 <span style="color: #E91F31; font-size: 14px;">Almeida's Corte</span><br/>
                 <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
-                <span style="font-size: 14px; color: #079C27;">(18) 99706-1227</span><br/>
+                <span style="font-size: 14px; color: #079C27; font-weight: bold;">(18) 99706-1227</span><br/>
         </div>
         <div class="content">
             <p style="font-size: 20px; color: #E20148; text-align: center; margin: 0; padding: 0;">ALMEIDA'S CORTES</p>
@@ -99,14 +124,31 @@
                 <span class="separador"> - </span>
                 <span class="bold" th:text="'Data do Pedido ' + ${venda.dataPedido}"></span>
                 <span class="separador"> - </span>
-                <span class="bold" th:text="${venda.nomeModelo}"></span>
+                <span class="bold" th:text="${venda.nomeModelo}">
+                </span><span class="separador"> - </span>
+                <span th:text="${venda.material}"></span>
                 <span class="separador"> - </span>
                 <span class="bold" th:text="${venda.color}"></span>
-                <span class="separador"> - </span>
+            </p>
+            <p class="paragraph">
                 <span th:text="${venda.totalPares} + ' pares'"></span>
                 <span class="separador"> - </span>
                 <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
+                <span class="separador"> - </span>
+                <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.precoPar} + ' o par'"></span>
             </p>
+            <div class="container-grade">
+                <div class="item" th:each="entry : ${venda.grade}">
+                    <span class="numeracao" th:text="${entry['numeracao']}"></span>
+                    <span th:text="${entry['valor']}"></span>
+                </div>
+                <div class="item-total">
+                    <span class="d-block"></span>
+                    <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
+                </div>
+            </div>
             <p class="paragraph">
                 <span th:text="${venda.dataRetirada != 'Pedido não retirado' ? 'Data retirada ' : ''} + ${venda.dataRetirada}"></span>
                 <span class="separador"> - </span>

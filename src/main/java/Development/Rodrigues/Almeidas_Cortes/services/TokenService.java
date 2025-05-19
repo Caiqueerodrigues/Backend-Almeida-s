@@ -96,5 +96,19 @@ public class TokenService {
             throw new RuntimeException("Erro ao recuperar a expiração do token");
         }
     }
+
+    public long getUserIdFromToken(String token) {
+        try {
+            var algorithm = Algorithm.HMAC256(secret);
+            var verifier = JWT.require(algorithm)
+                    .withIssuer("Almeida's Cortes")
+                    .build();
+            var decodedJWT = verifier.verify(token);
+            
+            return decodedJWT.getClaim("id").asLong();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao recuperar o ID do usuário do token");
+        }
+    }
 }
 

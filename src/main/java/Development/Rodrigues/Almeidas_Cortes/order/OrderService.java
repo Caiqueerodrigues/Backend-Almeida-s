@@ -7,10 +7,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import Development.Rodrigues.Almeidas_Cortes.*;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.commons.services.MapConverterService;
+import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
 import Development.Rodrigues.Almeidas_Cortes.materials.MaterialRepository;
 import Development.Rodrigues.Almeidas_Cortes.materials.dto.CreateMaterialDTO;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
@@ -21,7 +24,9 @@ import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdatePaymentDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.ListOrder;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.report.dto.ParamsFiltersReports;
-
+import Development.Rodrigues.Almeidas_Cortes.users.UserRepository;
+import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
+import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class OrderService {
 
@@ -30,6 +35,12 @@ public class OrderService {
     
     @Autowired
     MaterialRepository materialRepository;
+
+    @Autowired
+    HistoryOrderService historyOrderService;
+
+    @Autowired
+    UserRepository userRepository;
 
     public ResponseDTO getOrderByIdService(Long id) {
         Optional<Order> exists = repository.findById(id);
@@ -55,6 +66,9 @@ public class OrderService {
     }
 
     public ResponseDTO createOrderService(CreateOrderDTO dados) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        
         String novosMateriais = "";
         
         if(dados.tipoRecebido().matches(".*[a-zA-Z].*")) {
@@ -69,7 +83,7 @@ public class OrderService {
             };
         }
         
-        Order newOrder = new Order(dados);
+        Order newOrder = new Order(dados, user);
         if(novosMateriais.length() > 0) {
             if (novosMateriais.endsWith(", ")) {
                 novosMateriais = novosMateriais.substring(0, novosMateriais.length() - 2);
@@ -79,10 +93,15 @@ public class OrderService {
         
         repository.save(newOrder);
 
+        historyOrderService.createHistory(newOrder, "Pedido cadastrado", user);
+
         return new ResponseDTO("", "", "Pedido Registrado com sucesso!", "");
     }
     
     public ResponseDTO updateOrderService(UpdateOrderDTO dados) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
         String novosMateriais = "";
 
         if(dados.tipoRecebido().matches(".*[a-zA-Z].*")) {
@@ -103,12 +122,14 @@ public class OrderService {
             Order order = exists.get();
 
             order.updateOrder(dados);
-                if(novosMateriais.length() > 0) {
-                    if (novosMateriais.endsWith(", ")) {
-                        novosMateriais = novosMateriais.substring(0, novosMateriais.length() - 2);
-                    }
-                    order.setTipoRecebido(novosMateriais);
+            if(novosMateriais.length() > 0) {
+                if (novosMateriais.endsWith(", ")) {
+                    novosMateriais = novosMateriais.substring(0, novosMateriais.length() - 2);
                 }
+                order.setTipoRecebido(novosMateriais);
+            }
+
+            historyOrderService.createHistory(order, "Alteração de pedido", user);
 
             repository.save(order);
             return new ResponseDTO("", "", "Pedido alterado com sucesso!", "");
@@ -134,12 +155,17 @@ public class OrderService {
     }
 
     public ResponseDTO updateDatePaymentService(UpdatePaymentDTO dados) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
         List<Order> orders = repository.findAllById(dados.ids());
 
         if(orders.size() > 0) {
             orders.forEach(order -> {
                 order.setDataPagamento(dados.date());
                 repository.save(order);
+
+                historyOrderService.createHistory(order, "Registrando pagamento", user);
             });
 
             return new ResponseDTO("", "", "Dados salvos com sucesso!", "");
