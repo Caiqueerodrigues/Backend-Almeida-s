@@ -38,7 +38,7 @@ public class MaterialController {
 
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 
@@ -50,7 +50,7 @@ public class MaterialController {
 
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
     
@@ -62,7 +62,7 @@ public class MaterialController {
             ResponseDTO response = materialService.createMaterialService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 
@@ -74,7 +74,7 @@ public class MaterialController {
             ResponseDTO response = materialService.putMaterialService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 

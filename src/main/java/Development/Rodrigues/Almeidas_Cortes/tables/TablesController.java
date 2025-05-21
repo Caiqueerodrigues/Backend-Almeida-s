@@ -29,7 +29,7 @@ public class TablesController {
 
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
     
@@ -40,7 +40,7 @@ public class TablesController {
 
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!" + e, "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage() + e, "", ""));
         }
     }
     

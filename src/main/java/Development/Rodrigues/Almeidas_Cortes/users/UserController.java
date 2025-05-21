@@ -30,7 +30,7 @@ public class UserController {
 
             return ResponseEntity.status(200).body(new ResponseDTO(response, "", "", ""));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Dados informados Incorretos!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
     

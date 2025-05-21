@@ -36,7 +36,7 @@ public class ModelController {
             ResponseDTO response = service.getAllModelsClientService(idClient);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 
@@ -48,7 +48,7 @@ public class ModelController {
             ResponseDTO response = service.createModelClient(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 
@@ -59,7 +59,7 @@ public class ModelController {
             ResponseDTO response = service.getModelIdService(idModel);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
     
@@ -72,7 +72,7 @@ public class ModelController {
             ResponseDTO response = service.updateModelService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!" + e, "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage() + e, "", ""));
         }
     }
 }

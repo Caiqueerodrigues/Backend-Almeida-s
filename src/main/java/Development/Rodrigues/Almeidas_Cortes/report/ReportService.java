@@ -13,6 +13,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
+import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
 import Development.Rodrigues.Almeidas_Cortes.materials.MaterialRepository;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 import Development.Rodrigues.Almeidas_Cortes.order.OrderRepository;
@@ -42,94 +45,102 @@ public class ReportService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
+
     @Value("${frontEnd.api}")
     private String frontendApi; 
 
     public ResponseDTO generateReportService(ParamsFiltersReports dados) {
-        LocalDateTime initialDate = dados.period().size() > 0 ? 
-            dados.period().get(0).withHour(0).withMinute(0).withSecond(0).withNano(0) : null;
-        LocalDateTime finalDate = dados.period().size() > 0 ? 
-            dados.period().get(1).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999) : null;
-
-        List<Order> list = new ArrayList<Order>(); 
+        try {
+            
+            LocalDateTime initialDate = dados.period().size() > 0 ? 
+                dados.period().get(0).withHour(0).withMinute(0).withSecond(0).withNano(0) : null;
+            LocalDateTime finalDate = dados.period().size() > 0 ? 
+                dados.period().get(1).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999) : null;
     
-        boolean paid = dados.situation() == TypesSituationReport.PAGOS;
-
-        if(dados.idPedidos().size() > 0) {
-            try {
-                List<Order> consult = repository.findByIdIn(dados.idPedidos());
-
-                if(consult.size() > 0) {
-                    List<OrderReport> dadosReport = createList(consult, dados);
+            List<Order> list = new ArrayList<Order>(); 
+        
+            boolean paid = dados.situation() == TypesSituationReport.PAGOS;
     
-                    byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
-                    return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
+            if(dados.idPedidos().size() > 0) {
+                try {
+                    List<Order> consult = repository.findByIdIn(dados.idPedidos());
+    
+                    if(consult.size() > 0) {
+                        List<OrderReport> dadosReport = createList(consult, dados);
+        
+                        byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
+                        return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
                 }
+            } else if(dados.report() == TypesReport.FICHA_DE_CORTE || dados.report() == TypesReport.CLIENTE) {
+                Optional<Order> consult = repository.findById(dados.idPedido());
+    
+                if(consult.isPresent()) list.add(consult.get());
+            } else {
+                switch (dados.firstFilter()) {
+                    case CLIENTE:
+                        if(dados.situation() == TypesSituationReport.TODOS) {
+                            list = repository.findByClientId(dados.client());
+                        } else {
+                            list = paid ?
+                            repository.findByClientIdAndDataPagamentoIsNotNull(dados.client()) :
+                            repository.findByClientIdAndDataPagamentoIsNull(dados.client());
+                        }
+                        break;
+                    case PERÍODO:
+                        if(dados.situation() == TypesSituationReport.TODOS) {
+                            list = repository.findByDataPedidoBetween(initialDate, finalDate);
+                        } else {
+                            list = paid ? 
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNull(initialDate, finalDate);
+                        }
+                        break;
+                    case CLIENTE_E_PERÍODO:
+                            list = dados.situation() == TypesSituationReport.TODOS ? 
+                            repository.findByClientId(dados.client()) :
+                            repository.findOrdersByRangeByClientPaidOrNot(initialDate, finalDate, dados.client(), paid);
+                        break;
+                    case SITUAÇÃO:
+                        if(dados.situation() == TypesSituationReport.TODOS) {
+                            list = repository.findAll();
+                        } else {
+                            list = paid ?
+                            repository.findByDataPagamentoIsNotNull() :
+                            repository.findByDataPagamentoIsNull();
+                        }
+                        break;
+                    default:
+                        if(dados.situation() == TypesSituationReport.TODOS) {
+                            list = repository.findByDataPedidoBetween(initialDate, finalDate);
+                        } else {
+                            list = paid ?
+                            repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :
+                            repository.findByDataPedidoBetweenAndDataPagamentoIsNull(initialDate, finalDate);
+                        }
+                        break;
+                }    
+    
+            }
+    
+            if(list.size() == 0) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
+                
+            try {
+                List<OrderReport> dadosReport = createList(list, dados);
+    
+                byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
+                return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-        } else if(dados.report() == TypesReport.FICHA_DE_CORTE || dados.report() == TypesReport.CLIENTE) {
-            Optional<Order> consult = repository.findById(dados.idPedido());
-
-            if(consult.isPresent()) list.add(consult.get());
-        } else {
-            switch (dados.firstFilter()) {
-                case CLIENTE:
-                    if(dados.situation() == TypesSituationReport.TODOS) {
-                        list = repository.findByClientId(dados.client());
-                    } else {
-                        list = paid ?
-                        repository.findByClientIdAndDataPagamentoIsNotNull(dados.client()) :
-                        repository.findByClientIdAndDataPagamentoIsNull(dados.client());
-                    }
-                    break;
-                case PERÍODO:
-                    if(dados.situation() == TypesSituationReport.TODOS) {
-                        list = repository.findByDataPedidoBetween(initialDate, finalDate);
-                    } else {
-                        list = paid ? 
-                            repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :
-                            repository.findByDataPedidoBetweenAndDataPagamentoIsNull(initialDate, finalDate);
-                    }
-                    break;
-                case CLIENTE_E_PERÍODO:
-                        list = dados.situation() == TypesSituationReport.TODOS ? 
-                        repository.findByClientId(dados.client()) :
-                        repository.findOrdersByRangeByClientPaidOrNot(initialDate, finalDate, dados.client(), paid);
-                    break;
-                case SITUAÇÃO:
-                    if(dados.situation() == TypesSituationReport.TODOS) {
-                        list = repository.findAll();
-                    } else {
-                        list = paid ?
-                        repository.findByDataPagamentoIsNotNull() :
-                        repository.findByDataPagamentoIsNull();
-                    }
-                    break;
-                default:
-                    if(dados.situation() == TypesSituationReport.TODOS) {
-                        list = repository.findByDataPedidoBetween(initialDate, finalDate);
-                    } else {
-                        list = paid ?
-                        repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :
-                        repository.findByDataPedidoBetweenAndDataPagamentoIsNull(initialDate, finalDate);
-                    }
-                    break;
-            }    
-
-        }
-
-        if(list.size() == 0) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
-            
-        try {
-            List<OrderReport> dadosReport = createList(list, dados);
-
-            byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
-            return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            log.error("ERRO ao GERAR o RELATÓRIO " + e);
+            throw new RuntimeException("Erro gerar o relatório, tente novamente.");
         }
     } 
 

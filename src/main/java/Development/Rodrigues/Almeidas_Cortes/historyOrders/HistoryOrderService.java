@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,46 +28,57 @@ public class HistoryOrderService {
     @Autowired
     UserRepository userRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
+
     public void createHistory( Order pedido, String operation, User user ) {
-        ZonedDateTime dateBrasilia = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
-        LocalDateTime localDateTimeBrasilia = dateBrasilia.toLocalDateTime();
-
-        HistoryOrders history = new HistoryOrders(pedido, operation, localDateTimeBrasilia, user);
-
-        repository.save(history);
+        try {
+            ZonedDateTime dateBrasilia = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+            LocalDateTime localDateTimeBrasilia = dateBrasilia.toLocalDateTime();
+    
+            HistoryOrders history = new HistoryOrders(pedido, operation, localDateTimeBrasilia, user);
+    
+            repository.save(history);
+        } catch (Exception e) {
+            log.error("ERRO na criação do histórico " + e);
+            throw new RuntimeException("Erro ao inserir os dados no histórico, tente novamente.");
+        }
     }
 
     public ResponseDTO getHistoryOrdersDateService(LocalDateTime date ) {
-        LocalDateTime startOfDay = date.toLocalDate().atStartOfDay();
-        LocalDateTime endOfDay = date.toLocalDate().atTime(23, 59, 59, 999_999_999);
-
-        List<HistoryOrders> list = repository.findByUpdateAtBetween(startOfDay, endOfDay);
-
-        List<ListHistoryOrders> listFinal= new ArrayList<ListHistoryOrders>();
-
-        if (!list.isEmpty()) {
-            list.forEach(item -> {
-                List<String> corList = item.getIdPedido().getCor() != null 
-                    ? new ArrayList<>(Arrays.asList(item.getIdPedido().getCor().split(",\\s*"))) : 
-                    new ArrayList<>();
-
-                listFinal.add(new ListHistoryOrders(
-                    item.getIdPedido().getId(), 
-                    item.getIdPedido().getClient().getNome(),
-                    item.getIdPedido().getTotalDinheiro(),
-                    item.getIdPedido().getModelo().getTipo(),
-                    corList,
-                    item.getIdPedido().getModelo().getPreco(),
-                    item.getUpdateAt(),
-                    item.getIdUser().getName(),
-                    item.getOperation()
-                    )
-                );
-            });
-            return new ResponseDTO(listFinal, "", "", "");
+        try {
+            
+            LocalDateTime startOfDay = date.toLocalDate().atStartOfDay();
+            LocalDateTime endOfDay = date.toLocalDate().atTime(23, 59, 59, 999_999_999);
+    
+            List<HistoryOrders> list = repository.findByUpdateAtBetween(startOfDay, endOfDay);
+    
+            List<ListHistoryOrders> listFinal= new ArrayList<ListHistoryOrders>();
+    
+            if (!list.isEmpty()) {
+                list.forEach(item -> {
+                    List<String> corList = item.getIdPedido().getCor() != null 
+                        ? new ArrayList<>(Arrays.asList(item.getIdPedido().getCor().split(",\\s*"))) : 
+                        new ArrayList<>();
+    
+                    listFinal.add(new ListHistoryOrders(
+                        item.getIdPedido().getId(), 
+                        item.getIdPedido().getClient().getNome(),
+                        item.getIdPedido().getTotalDinheiro(),
+                        item.getIdPedido().getModelo().getTipo(),
+                        corList,
+                        item.getIdPedido().getModelo().getPreco(),
+                        item.getUpdateAt(),
+                        item.getIdUser().getName(),
+                        item.getOperation()
+                        )
+                    );
+                });
+                return new ResponseDTO(listFinal, "", "", "");
+            }
+            return new ResponseDTO("", "", "", "Nenhum histórico encontrado para a data informada.");
+        } catch (Exception e) {
+            log.error("ERRO no get do histórico " + e);
+            throw new RuntimeException("Erro ao obter os dados do histórico, tente novamente.");
         }
-        
-        return new ResponseDTO("", "", "", "Nenhum histórico encontrado para a data informada.");
     }
-
 }

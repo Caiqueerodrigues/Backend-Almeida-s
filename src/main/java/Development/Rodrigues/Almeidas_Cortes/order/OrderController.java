@@ -37,7 +37,7 @@ public class OrderController {
             ResponseDTO response = service.getOrderByIdService(idOrder);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 
@@ -49,7 +49,7 @@ public class OrderController {
             ResponseDTO response = service.getAllOrdersDateService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!" + e, "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage() + e, "", ""));
         }
     }
 
@@ -61,18 +61,19 @@ public class OrderController {
             ResponseDTO response = service.updateOrderService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
     
     @PostMapping("/create-order")
+    @Transactional
     @Operation(summary = "Registra um novo pedido")
     public ResponseEntity createOrder(@RequestBody @Valid CreateOrderDTO dados) {
         try {
             ResponseDTO response = service.createOrderService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
     
@@ -83,17 +84,18 @@ public class OrderController {
             ResponseDTO response = service.getOrderPeriodService(initialDate, finalDate);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 
     @PutMapping("/updatePayment")
+    @Transactional
     public ResponseEntity alterStatusPayment(@RequestBody @Valid UpdatePaymentDTO dados) {
         try {
             ResponseDTO response = service.updateDatePaymentService(dados);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
 
@@ -103,7 +105,7 @@ public class OrderController {
             ResponseDTO response = service.getOrdersDueService();
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!", "", ""));
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
     
