@@ -3,6 +3,7 @@ package Development.Rodrigues.Almeidas_Cortes.report;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public class ReportService {
                         break;
                     case CLIENTE_E_PERÍODO:
                             list = dados.situation() == TypesSituationReport.TODOS ? 
-                            repository.findByClientId(dados.client()) :
+                            repository.findByDataPedidoBetweenAndClientId(initialDate, finalDate, dados.client()) :
                             repository.findOrdersByRangeByClientPaidOrNot(initialDate, finalDate, dados.client(), paid);
                         break;
                     case SITUAÇÃO:
@@ -214,6 +215,10 @@ public class ReportService {
                 }
                 
                 totalDevido = total - totalPago;
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDateTime diaSemanaInicial = LocalDate.parse(dados.get(0).getDataPedido(), formatter).atStartOfDay();
+                LocalDateTime diaSemanaFinal = LocalDate.parse(dados.get(dados.size() - 1).getDataPedido(), formatter).atStartOfDay();
                 
                 context.setVariable("totalDinheiro", currencyFormat.format(total));
                 context.setVariable("totalPago", currencyFormat.format(totalPago));
@@ -221,7 +226,8 @@ public class ReportService {
                 context.setVariable("totalDevido", totalDevido);
                 context.setVariable("totalDevidoFormatado", currencyFormat.format(totalDevido));
                 context.setVariable(
-                    "periodo", "De " + dados.get(0).getDataPedido() + " até " + dados.get(dados.size() - 1).getDataPedido()
+                    "periodo", "De " + 
+                    dados.get(0).getDataPedido() + " - " + getDayOfWeek(diaSemanaInicial) + " até " + dados.get(dados.size() - 1).getDataPedido() + " - " + getDayOfWeek(diaSemanaFinal)
                 );
 
                 htmlContent = templateEngine.process("relatorioCliente", context);

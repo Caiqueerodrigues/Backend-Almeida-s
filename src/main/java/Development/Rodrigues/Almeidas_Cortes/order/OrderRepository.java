@@ -33,6 +33,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByDataPedidoBetweenAndDataPagamentoIsNull(LocalDateTime startDate, LocalDateTime endDate);
     List<Order> findByDataPedidoBetweenAndDataPagamentoIsNotNull(LocalDateTime startDate, LocalDateTime endDate);
+    
+    List<Order> findByDataPedidoBetweenAndClientId(LocalDateTime startDate, LocalDateTime endDate, Long clientId);
 
     List<Order> findByClientId(Long clientId);
 
