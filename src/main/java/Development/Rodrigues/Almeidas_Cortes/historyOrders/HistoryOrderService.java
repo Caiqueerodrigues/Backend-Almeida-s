@@ -50,7 +50,7 @@ public class HistoryOrderService {
             LocalDateTime startOfDay = date.toLocalDate().atStartOfDay();
             LocalDateTime endOfDay = date.toLocalDate().atTime(23, 59, 59, 999_999_999);
     
-            List<HistoryOrders> list = repository.findByUpdateAtBetween(startOfDay, endOfDay);
+            List<HistoryOrders> list = repository.findByUpdateAtBetweenOrderByIdDesc(startOfDay, endOfDay);
     
             List<ListHistoryOrders> listFinal= new ArrayList<ListHistoryOrders>();
     
