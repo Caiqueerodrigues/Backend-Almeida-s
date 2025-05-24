@@ -117,7 +117,7 @@
                     <span class="separador"> - </span>
                     <span class="bold" th:text="${venda.nomeCliente}"></span>
                     <span class="separador"> - </span>
-                    <span th:text="${venda.precoPar} + ' o par'"></span>
+                    <span th:text="'R$ ' + ${venda.precoPar} + ' o par'"></span>
                 </p>
                 <p class="paragraph">
                     <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
