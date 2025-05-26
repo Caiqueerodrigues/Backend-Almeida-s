@@ -25,6 +25,7 @@ import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdatePaymentDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.ListOrder;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
+import Development.Rodrigues.Almeidas_Cortes.order.entities.OrderFront;
 import Development.Rodrigues.Almeidas_Cortes.report.dto.ParamsFiltersReports;
 import Development.Rodrigues.Almeidas_Cortes.users.UserRepository;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
@@ -50,8 +51,28 @@ public class OrderService {
         try {
             Optional<Order> exists = repository.findById(id);
     
-            if(exists.isPresent()) return new ResponseDTO(exists, "", "", "");
-    
+            if(exists.isPresent()) {
+                OrderFront order = new OrderFront(
+                    exists.get().getClient(),
+                    exists.get().getModelo(),
+                    exists.get().getDataPedido(),
+                    exists.get().getDataFinalizado(),
+                    exists.get().getRelatorioCliente(),
+                    exists.get().getTotalDinheiro(),
+                    exists.get().getTotalPares(),
+                    exists.get().getGrade(),
+                    exists.get().getObs(),
+                    exists.get().getDataPagamento(),
+                    exists.get().getTipoRecebido(),
+                    exists.get().getRendimentoParesMetro(),
+                    exists.get().getQuemAssinou(),
+                    exists.get().getCor(),
+                    exists.get().getDataRetirada(),
+                    exists.get().getQuemCortou()
+                );
+                return new ResponseDTO(order, "", "", "");
+            }
+
             return new ResponseDTO("", "Dados informados incorretos!", "", "");
         } catch (Exception e) {
             log.error("ERRO ao obter o pedido por id " + e);
