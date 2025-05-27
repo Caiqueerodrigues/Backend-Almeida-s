@@ -23,6 +23,7 @@ import Development.Rodrigues.Almeidas_Cortes.order.dto.CreateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.FilterDateOrdersDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdatePaymentDTO;
+import Development.Rodrigues.Almeidas_Cortes.order.dto.WithdrawnDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.ListOrder;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.OrderFront;
@@ -30,6 +31,7 @@ import Development.Rodrigues.Almeidas_Cortes.report.dto.ParamsFiltersReports;
 import Development.Rodrigues.Almeidas_Cortes.users.UserRepository;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.With;
 @Service
 public class OrderService {
 
@@ -244,6 +246,27 @@ public class OrderService {
         } catch (Exception e) {
             log.error("ERRO ao obter os pedidos pendentes " + e);
             throw new RuntimeException("Erro ao obter os pedidos pendentes, tente novamente.");
+        }
+    }
+
+    public ResponseDTO updateWithdrawService(WithdrawnDTO dados) {
+        try {
+            List<Order> pedidos = repository.findAllById(dados.ids());
+
+            if(!pedidos.isEmpty()) {
+                for (Order pedido : pedidos) {
+                    pedido.setDataRetirada(dados.dataRetirada());
+                    pedido.setQuemAssinou(dados.quemRetirou());
+                }
+
+                repository.saveAll(pedidos);
+                return new ResponseDTO("", "", "Pedidos alterados com sucesso", "");
+            }
+
+            return new ResponseDTO("", "", "", "Dados informados incorretos!");
+        } catch (Exception e) {
+            log.error("ERRO ao registar a retirada dos pedidos " + e);
+            throw new RuntimeException("Erro ao registar a retirada dos pedidos, tente novamente.");
         }
     }
 

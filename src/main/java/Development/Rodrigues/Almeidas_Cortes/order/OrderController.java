@@ -11,6 +11,7 @@ import Development.Rodrigues.Almeidas_Cortes.order.dto.CreateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.FilterDateOrdersDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdatePaymentDTO;
+import Development.Rodrigues.Almeidas_Cortes.order.dto.WithdrawnDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -109,4 +110,14 @@ public class OrderController {
         }
     }
     
+
+    @PutMapping("/withdrawn")
+    public ResponseEntity withdrawn(@RequestBody @Valid WithdrawnDTO dados ) {
+        try {
+            ResponseDTO response = service.updateWithdrawService(dados);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
+        }
+    }
 }
