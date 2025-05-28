@@ -251,12 +251,16 @@ public class OrderService {
 
     public ResponseDTO updateWithdrawService(WithdrawnDTO dados) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+
             List<Order> pedidos = repository.findAllById(dados.ids());
 
             if(!pedidos.isEmpty()) {
                 for (Order pedido : pedidos) {
                     pedido.setDataRetirada(dados.dataRetirada());
                     pedido.setQuemAssinou(dados.quemRetirou());
+                    historyOrderService.createHistory(pedido, "Registrando retirada de pedido", user);
                 }
 
                 repository.saveAll(pedidos);
