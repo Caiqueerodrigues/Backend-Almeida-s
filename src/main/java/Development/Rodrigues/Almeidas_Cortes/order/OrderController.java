@@ -112,6 +112,7 @@ public class OrderController {
     
 
     @PutMapping("/withdrawn")
+    @Transactional
     public ResponseEntity withdrawn(@RequestBody @Valid WithdrawnDTO dados ) {
         try {
             ResponseDTO response = service.updateWithdrawService(dados);
