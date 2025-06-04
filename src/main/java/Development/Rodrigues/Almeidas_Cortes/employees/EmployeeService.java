@@ -55,7 +55,7 @@ public class EmployeeService {
                     .collect(Collectors.toList());
                 return new ResponseDTO(employeeDTOs, "", "", "");
             }
-            return new ResponseDTO("", "", "", "Nenhum dados encontrado para esta data!");
+            return new ResponseDTO("", "", "", "Nenhum dado encontrado para este período!");
         } catch (Exception e) {
             log.error("ERRO ao obter os dados " + e);
             throw new RuntimeException("Erro ao obter os dados, tente novamente.");
@@ -98,7 +98,7 @@ public class EmployeeService {
             Employee newRegister = new Employee(dados, user, dataHoraBrasilia.dataHoraBrasiliaLocalDateTime());
             repository.save(newRegister);
 
-            return new ResponseDTO("", "Dados salvos com sucesso!", "", "");
+            return new ResponseDTO("", "", "Dados salvos com sucesso!", "");
         } catch (Exception e) {
             log.error("ERRO ao salvar os dados " + e);
             throw new RuntimeException("Erro ao salvar os dados, tente novamente.");
@@ -120,7 +120,7 @@ public class EmployeeService {
                 );
 
                 repository.save(exists);
-                return new ResponseDTO("", "Dados salvos com sucesso!", "", "");
+                return new ResponseDTO("", "", "Dados salvos com sucesso!", "");
             } else {
                 return new ResponseDTO("", "", "", "Funcionário não encontrado!");
             }
@@ -130,7 +130,7 @@ public class EmployeeService {
         }
     }
 
-    public ResponseDTO updateStatusPagamento(List<Long> ids) {
+    public ResponseDTO updateStatusPaymentService(List<Long> ids) {
         try {
             List<Employee> employees = repository.findAllByIdIn(ids);
 
@@ -143,7 +143,7 @@ public class EmployeeService {
                 repository.save(employee);
             }
 
-            return new ResponseDTO("", "Status de pagamento atualizado com sucesso!.", "", "");
+            return new ResponseDTO("", "", "Status de pagamento atualizado com sucesso!", "");
         } catch (Exception e) {
             log.error("Erro ao atualizar os status de pagamento: ", e);
             return new ResponseDTO("", "Erro ao atualizar os dados, tente novamente.", "", "");

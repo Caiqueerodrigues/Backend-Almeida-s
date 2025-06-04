@@ -29,7 +29,7 @@ public class EmployeeController {
 
     @GetMapping("/{dateInicial}/{dateFinal}")
     @Operation(summary = "Buscas todos os registros da data fornecida")
-    public ResponseEntity getAllDate(@PathVariable LocalDate dateInicial, LocalDate dateFinal) {
+    public ResponseEntity getAllDate(@PathVariable LocalDate dateInicial, @PathVariable LocalDate dateFinal) {
         try {
             ResponseDTO resp = employeeService.getAllDateService(dateInicial, dateFinal);
             return ResponseEntity.ok(resp);
@@ -73,12 +73,12 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping("/update-status-pagamento")
+    @PutMapping("/update-status-payment")
     @Transactional
     @Operation(summary = "Altera um Status por lote")
-    public ResponseEntity updateStatusPagamento(@RequestBody List<Long> ids) {
+    public ResponseEntity updateStatusPayment(@RequestBody List<Long> ids) {
         try {
-            ResponseDTO response = employeeService.updateStatusPagamento(ids);
+            ResponseDTO response = employeeService.updateStatusPaymentService(ids);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
