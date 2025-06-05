@@ -61,6 +61,7 @@ public class HistoryOrderService {
                         new ArrayList<>();
     
                     listFinal.add(new ListHistoryOrders(
+                        item.getId(),
                         item.getIdPedido().getId(), 
                         item.getIdPedido().getClient().getNome(),
                         item.getIdPedido().getTotalDinheiro(),

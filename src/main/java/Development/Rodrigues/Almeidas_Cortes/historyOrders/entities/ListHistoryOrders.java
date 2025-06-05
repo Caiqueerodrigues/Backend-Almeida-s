@@ -18,6 +18,8 @@ public class ListHistoryOrders {
     @Id
     private Long id;
 
+    private Long idPedido;
+
     private String nomeCliente;
 
     private double totalDinheiro;
@@ -35,6 +37,7 @@ public class ListHistoryOrders {
     private String operacaoRealizada;
 
     public ListHistoryOrders (
+        Long id,
         Long idPedido,
         String nomeCliente,
         double total,
@@ -45,7 +48,8 @@ public class ListHistoryOrders {
         String nome,
         String operacaoRealizada
     ) {
-        this.id = idPedido;
+        this.id = id;
+        this.idPedido = idPedido;
         this.nomeCliente = nomeCliente;
         this.totalDinheiro = total;
         this.modelo = modelo;
