@@ -88,7 +88,7 @@ public class OrderService {
             LocalDateTime dateInicio = dados.date().withHour(00).withMinute(00).withSecond(00).withNano(000000);
             LocalDateTime dateFim = dados.date().withHour(23).withMinute(59).withSecond(59).withNano(999999);
     
-            List<Order> list = repository.findByDataPedidoBetween(dateInicio, dateFim);
+            List<Order> list = repository.findByDataPedidoBetweenOrderByIdDesc(dateInicio, dateFim);
         
             if(!list.isEmpty()) {
                 List<ListOrder> listFormatted = createListOrder(list);
@@ -193,7 +193,7 @@ public class OrderService {
             LocalDateTime dateInicio = stringToLocalDatetime("initial", initialDateStr);
             LocalDateTime dateFim = stringToLocalDatetime("final", finalDateStr);
     
-            List<Order> list = repository.findByDataPedidoBetween(dateInicio, dateFim);
+            List<Order> list = repository.findByDataPedidoBetweenOrderByIdDesc(dateInicio, dateFim);
     
             if(!list.isEmpty()) {
                 List<ListOrder> listFormatted = createListOrder(list);

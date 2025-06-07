@@ -94,7 +94,7 @@ public class ReportService {
                         break;
                     case PERÍODO:
                         if(dados.situation() == TypesSituationReport.TODOS) {
-                            list = repository.findByDataPedidoBetween(initialDate, finalDate);
+                            list = repository.findByDataPedidoBetweenOrderByIdDesc(initialDate, finalDate);
                         } else {
                             list = paid ? 
                                 repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :
@@ -117,7 +117,7 @@ public class ReportService {
                         break;
                     default:
                         if(dados.situation() == TypesSituationReport.TODOS) {
-                            list = repository.findByDataPedidoBetween(initialDate, finalDate);
+                            list = repository.findByDataPedidoBetweenOrderByIdDesc(initialDate, finalDate);
                         } else {
                             list = paid ?
                             repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :

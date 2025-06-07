@@ -15,7 +15,7 @@ import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(Long id);
 
-    List<Order> findByDataPedidoBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<Order> findByDataPedidoBetweenOrderByIdDesc(LocalDateTime startDate, LocalDateTime endDate);
     
     @Query("SELECT o FROM Order o " +
         "WHERE o.dataPedido BETWEEN :startDate AND :endDate " +
