@@ -184,7 +184,8 @@ public class ReportService {
                     order.getObs(),
                     dados.quantidadeVias(),
                     order.getModelo().getQtdFaca(),
-                    nomesMateriais
+                    nomesMateriais,
+                    order.getModelo().getRendimento()
                 );
             })
             .collect(Collectors.toList());

@@ -26,6 +26,8 @@ public class OrderReport {
     
     private String color;
     
+    private String rendimentoPares;
+
     private Long qtdPecas;
 
     private Long qtdFacas;
@@ -77,7 +79,8 @@ public class OrderReport {
         String obs,
         Long quantidadeVias,
         Long qtdFacas,
-        String material
+        String material,
+        String rendimentoPares
     ) {
         this.id = id;
         this.nomeModelo = modelo.getTipo().toUpperCase();
@@ -98,6 +101,7 @@ public class OrderReport {
         this.quantidadeVias = quantidadeVias;
         this.qtdFacas = qtdFacas;
         this.material = material;
+        this.rendimentoPares = rendimentoPares;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {

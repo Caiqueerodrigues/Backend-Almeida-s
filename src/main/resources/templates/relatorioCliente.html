@@ -133,6 +133,8 @@
             <p class="paragraph">
                 <span class="bold" th:text="${venda.nomeModelo}">
                 </span><span class="separador"> - </span>
+                <span th:text="${venda.rendimentoPares} + ' pares por m²'"></span>
+                <span class="separador"> - </span>
                 <span th:text="${venda.material}"></span>
                 <span class="separador"> - </span>
                 <span class="bold" th:text="${venda.color}"></span>
