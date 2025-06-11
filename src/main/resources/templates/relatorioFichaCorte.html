@@ -116,6 +116,14 @@
                     <span th:text="${venda.diaSemana}"></span>
                 </p>
                 <p class="paragraph" th:if="${venda.obs}" th:text="'OBS: ' + ${venda.obs}"></p>
+                <p class="paragraph" th:if="${venda.obsModelo}">
+                    <span class="bold">Obs. modelo: </span>
+                    <span th:text="${venda.obsModelo}"></span>
+                </p>
+                <p class="paragraph" th:if="${venda.refModelo}">
+                    <span class="bold">Ref. modelo: </span>
+                    <span th:text="${venda.refModelo}"></span>
+                </p>
                 <div class="container-grade">
                     <div class="item" th:each="entry : ${venda.grade}">
                         <span class="numeracao" th:text="${entry['numeracao']}"></span>
