@@ -4,27 +4,31 @@
     <meta charset="UTF-8" />
     <title>Relatório de Ficha(s)</title>
     <style>
+        .container:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
         .container {
             border: 2px solid #000;
             padding: 4px;
             border-radius: 12px;
-            display: table; /* Alternativa ao flex */
             margin-top: 10px;
-            width: 100%;
+            width: 99%;
         }
         .container-logo {
             margin: 5px 0 0 5px;
-            display: inline-block; /* Simula flex-item */
-            vertical-align: top;
+            float: left;
+            width: 120px;
         }
         .logo {
             border-radius: 12px;
             height: 100px;
             display: block;
+            height: 100px;
         }
         .content {
-            display: inline-block; /* Simula flex-item */
-            position: relative;
+            margin-left: 100px;
         }
         .separador {
             color: #f00;
@@ -77,12 +81,13 @@
             display: block;
         }
         .title-pago {
-            /* position: absolute; */
             font-weight: 500;
             color: #079C27;
-            /* font-size: 1.5em; */
-            /* right: 10px;
-            top: -10px; */
+        }
+
+        
+        .obs {
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -117,15 +122,15 @@
                 </p>
                 <p class="paragraph" th:if="${venda.obs}">
                     <span class="bold">Obs. ficha: </span>
-                    <span th:text="${venda.obs}"></span>
+                    <span class="obs" th:text="${venda.obs}"></span>
                 </p>
                 <p class="paragraph" th:if="${venda.obsModelo}">
                     <span class="bold">Obs. modelo: </span>
-                    <span th:text="${venda.obsModelo}"></span>
+                    <span class="obs" th:text="${venda.obsModelo}"></span>
                 </p>
                 <p class="paragraph" th:if="${venda.refModelo}">
                     <span class="bold">Ref. modelo: </span>
-                    <span th:text="${venda.refModelo}"></span>
+                    <span class="obs" th:text="${venda.refModelo}"></span>
                 </p>
                 <div class="container-grade">
                     <div class="item" th:each="entry : ${venda.grade}">
