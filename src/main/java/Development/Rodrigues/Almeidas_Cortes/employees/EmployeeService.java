@@ -34,7 +34,7 @@ public class EmployeeService {
 
     public ResponseDTO getAllDateService( LocalDate dateIinicial, LocalDate dateFinal) {
         try {
-            List<Employee> employees = repository.findAllByDateBetweenOrderByDateAsc(dateIinicial, dateFinal);
+            List<Employee> employees = repository.findAllByDateBetweenOrderByDateDesc(dateIinicial, dateFinal);
 
             if (employees != null && !employees.isEmpty()) {
                 List<EmployeeFront> employeeDTOs = employees.stream()
