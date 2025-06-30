@@ -54,20 +54,51 @@ public class User implements UserDetails {
     @Column(name = "active", nullable = false)
     private boolean active;
     
-    public User(String name, String user, String password, boolean active) {
+    @Column(name = "full_name")
+    private String fullName;
+    
+    @Column(name = "funct")
+    private String function;
+    
+    @Column(name = "photo")
+    private String photo;
+    
+    @Column(name = "sex")
+    private String sex;
+    
+    public User(String name, String user, String password, boolean active, String fullName, String function, String photo, String sex) {
         this.name = name;
         this.user = user;
         this.password = password;
         this.active = active;
+        this.fullName = fullName;
+        this.function = function;
+        this.photo = photo;
+        this.sex = sex;
     }
 
-    public void updateUser(String name, String user, String password, LocalDateTime firstLogin, LocalDateTime lastLogin, boolean active) {
+    public void updateUser(
+        String name, 
+        String user, 
+        String password, 
+        LocalDateTime firstLogin, 
+        LocalDateTime lastLogin, 
+        boolean active,
+        String fullName, 
+        String function, 
+        String photo, 
+        String sex
+    ) {
         this.name = name;
         this.user = user;
         this.password = password;
         if (firstLogin != null) this.firstLogin = firstLogin;
         if (lastLogin != null) this.lastLogin = lastLogin;
         this.active = active;
+        this.fullName = fullName;
+        this.function = function;
+        this.photo = photo;
+        this.sex = sex;
     }
 
     @Override

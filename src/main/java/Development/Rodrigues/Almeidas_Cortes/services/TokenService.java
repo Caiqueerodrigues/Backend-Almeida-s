@@ -28,6 +28,9 @@ public class TokenService {
                 .withClaim("id", user.getId()) //pode ter varios
                 .withClaim("user", user.getUser())
                 .withClaim("name", user.getName())
+                .withClaim("funcao", user.getFunction())
+                .withClaim("sexo", user.getSex())
+                .withClaim("photo", user.getPhoto())
                 .withClaim("refresh_token", dataExpiracao(1)) 
                 .withExpiresAt(dataExpiracao(3)) //expiração do token
                 .sign(algorithm);
@@ -66,6 +69,9 @@ public class TokenService {
             long userId = decodedJWT.getClaim("id").asLong();
             String userName = decodedJWT.getClaim("name").asString();
             String userLogin = decodedJWT.getClaim("user").asString();
+            String function = decodedJWT.getClaim("funcao").asString();
+            String photo = decodedJWT.getClaim("photo").asString();
+            String sexo = decodedJWT.getClaim("sexo").asString();
             Instant originalExpiration = decodedJWT.getExpiresAt().toInstant();
             
             return JWT.create()
@@ -74,6 +80,9 @@ public class TokenService {
                 .withClaim("id", userId)
                 .withClaim("user", userLogin)
                 .withClaim("name", userName)
+                .withClaim("funcao", function)
+                .withClaim("photo", photo)
+                .withClaim("sexo", sexo)
                 .withClaim("refresh_token", dataExpiracao(1))
                 .withExpiresAt(originalExpiration)
                 .sign(algorithm);
