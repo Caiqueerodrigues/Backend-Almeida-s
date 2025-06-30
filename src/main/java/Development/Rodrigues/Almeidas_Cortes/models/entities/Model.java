@@ -58,7 +58,7 @@ public class Model {
         this.tipo = dados.tipo();
         this.preco = dados.preco();
         this.qtdPecasPar = dados.qtdPecasPar();
-        this.refOrdem = dados.ordem();
+        this.refOrdem = dados.refOrdem();
         this.fotos = dados.fotos();
         this.qtdFaca = dados.qtdFaca();
         this.rendimento = dados.rendimento();
