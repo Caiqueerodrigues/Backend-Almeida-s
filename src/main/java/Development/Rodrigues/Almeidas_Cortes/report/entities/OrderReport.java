@@ -63,6 +63,8 @@ public class OrderReport {
     private Long quantidadeVias;
 
     private String material;
+
+    private String unidadeMedida;
     
     public OrderReport(
         Long id, 
@@ -86,7 +88,8 @@ public class OrderReport {
         String material,
         String rendimentoPares,
         String obsModelo,
-        String refModelo
+        String refModelo,
+        String unidadeMedida
     ) {
         this.id = id;
         this.nomeModelo = modelo.getTipo().toUpperCase();
@@ -110,6 +113,7 @@ public class OrderReport {
         this.rendimentoPares = rendimentoPares;
         this.obsModelo = obsModelo;
         this.refModelo = refModelo;
+        this.unidadeMedida = unidadeMedida;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {

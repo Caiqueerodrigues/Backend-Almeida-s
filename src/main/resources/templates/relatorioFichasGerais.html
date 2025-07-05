@@ -15,6 +15,7 @@
             border-radius: 12px;
             margin-top: 10px;
             width: 99%;
+            page-break-inside: avoid; /*não quebrar pagina local errado*/
         }
         .container-logo {
             margin: 5px 0 0 5px;
@@ -41,6 +42,7 @@
             overflow-x: auto;
             white-space: nowrap;
             max-width: 100%;
+            page-break-inside: avoid; /*não quebrar pagina local errado*/
         }
         .item {
             display: inline-block;
@@ -91,205 +93,211 @@
     </style>
 </head>
 <body>
-    <div>
-        <div th:each="venda : ${dados}" class="container" style="padding-bottom: 10px;">
-            <div class="container-logo">
-                <img 
-                    src="https://almeidascorte.netlify.app/images/leao-sem-fundo.png" 
-                    alt="Logo Almeida's Corte" class="logo"
-                />
-                <span style="color: #E91F31; font-size: 14px; font-weight: 500;">Almeida's Corte</span><br/>
-                <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
-                <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
-            </div>
-            <div class="content">
-                <p class="paragraph">
-                    <span th:text="'ID ' + ${venda.id}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.nomeModelo}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.rendimentoPares} + ' pares por metro'"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.material}"></span>
-                </p>
-                <p class="paragraph">
-                    <span th:text="${venda.color}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
-                    <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
-                    <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.nomeCliente}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="'R$ ' + ${venda.precoPar} + ' o par'"></span>
-                </p>
-                <p class="paragraph">
-                    <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="'Data do pedido ' + ${venda.dataPedido}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.diaSemana}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.obs}">
-                    <span class="bold">Obs. ficha: </span>
-                    <span class="obs" th:text="${venda.obs}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.obsModelo}">
-                    <span class="bold">Obs. modelo: </span>
-                    <span class="obs" th:text="${venda.obsModelo}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.refModelo}">
-                    <span class="bold">Ref. modelo: </span>
-                    <span class="obs" th:text="${venda.refModelo}"></span>
-                </p>
-                <div class="container-grade">
-                    <div class="item" th:each="entry : ${venda.grade}">
-                        <span class="numeracao" th:text="${entry['numeracao']}"></span>
-                        <span th:text="${entry['valor']}"></span>
-                    </div>
-                    <div class="item-total">
-                        <span class="d-block"></span>
-                        <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
-                    </div>
-                    <div>
-                        <p class="final-text">
-                            <span th:text="${venda.dataRetirada.contains('/') ? venda.quemAssinou : 'Assinatura de quem retirou'}"></span>
-                            <span class="separador"> - </span> 
-                            <span th:if="${!venda.dataRetirada.contains('/')}"> DATA: ____/ ____/ 20___ </span> 
-                            <span th:text="${venda.dataRetirada.contains('/') ? venda.dataRetirada : ''}"></span>
-                            <span class="separador" th:if="${venda.dataRetirada.contains('/')}"> - </span> 
-                            <span th:text="${venda.dataRetirada.contains('/') ? venda.horaRetirada : ''}"></span>
-                        </p>
-                    </div>
+    <!-- <div> -->
+    <div th:each="venda : ${dados}" class="container" style="padding-bottom: 10px;">
+        <div class="container-logo">
+            <img 
+                src="https://almeidascorte.netlify.app/images/leao-sem-fundo.png" 
+                alt="Logo Almeida's Corte" class="logo"
+            />
+            <span style="color: #E91F31; font-size: 14px; font-weight: 500;">Almeida's Corte</span><br/>
+            <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
+            <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
+        </div>
+        <div class="content">
+            <p class="paragraph">
+                <span th:text="'ID ' + ${venda.id}"></span>
+                <span class="separador"> - </span>
+                <span class="bold" th:text="${venda.nomeCliente}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.nomeModelo}"></span>
+                <span class="separador"> - </span>
+                <span th:if="${venda.rendimentoPares != '0'}" th:text="${venda.rendimentoPares} + ' pares por ' + ${venda.unidadeMedida}"></span>
+                <span th:if="${venda.rendimentoPares == '0'}">Sem rendimento registrado</span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.material}"></span>
+            </p>
+            <p class="paragraph">
+                <span th:text="${venda.color}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                <span class="separador"> - </span>
+                <span th:text="'R$ ' + ${venda.precoPar} + ' o par'"></span>
+            </p>
+            <p class="paragraph">
+                <span class="bold" th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
+                <span class="separador"> - </span>
+                <span>Data do pedido </span>
+                <span class="bold" th:text="${venda.dataPedido}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.diaSemana}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.obs}">
+                <span>Obs. ficha: </span>
+                <span class="obs" th:text="${venda.obs}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.obsModelo}">
+                <span>Obs. modelo: </span>
+                <span class="obs" th:text="${venda.obsModelo}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.refModelo}">
+                <span>Ref. modelo: </span>
+                <span class="obs" th:text="${venda.refModelo}"></span>
+            </p>
+            <div class="container-grade">
+                <div class="item" th:each="entry : ${venda.grade}">
+                    <span class="numeracao" th:text="${entry['numeracao']}"></span>
+                    <span th:text="${entry['valor']}"></span>
+                </div>
+                <div class="item-total">
+                    <span class="d-block"></span>
+                    <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
+                </div>
+                <div>
+                    <p class="final-text">
+                        <span th:text="${venda.dataRetirada.contains('/') ? venda.quemAssinou : 'Assinatura de quem retirou'}"></span>
+                        <span class="separador"> - </span> 
+                        <span th:if="${!venda.dataRetirada.contains('/')}"> DATA: ____/ ____/ 20___ </span> 
+                        <span th:text="${venda.dataRetirada.contains('/') ? venda.dataRetirada : ''}"></span>
+                        <span class="separador" th:if="${venda.dataRetirada.contains('/')}"> - </span> 
+                        <span th:text="${venda.dataRetirada.contains('/') ? venda.horaRetirada : ''}"></span>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
+    <!-- </div> -->
 
     <!-- CLIENTE -->
     <div>
-        <div th:each="venda : ${dados}" class="container" style="padding-bottom: 10px;">
-            <div class="container-logo">
-                <img 
-                    src="https://almeidascorte.netlify.app/images/leao-sem-fundo.png" 
-                    alt="Logo Almeida's Corte" class="logo"
-                />
-                <span style="color: #E91F31; font-size: 14px; font-weight: 500;">Almeida's Corte</span><br/>
-                <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
-                <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
-            </div>
-            <div class="content">
-                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;">CLIENTE</p>
-                <p class="paragraph">
-                    <span th:text="'ID ' + ${venda.id}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.nomeModelo}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.rendimentoPares} + ' pares por metro'"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.material}"></span>
-                </p>
-                <p class="paragraph">
-                    <span th:text="${venda.color}"></span>
-                    <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
-                    <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.nomeCliente}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="'R$ ' + ${venda.precoPar} + ' o par'"></span>
-                </p>
-                <p class="paragraph">
-                    <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="'Data do pedido ' + ${venda.dataPedido}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.diaSemana}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.obs}">
-                    <span class="bold">Obs. ficha: </span>
-                    <span th:text="${venda.obs}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.obsModelo}">
-                    <span class="bold">Obs. modelo: </span>
-                    <span th:text="${venda.obsModelo}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.refModelo}">
-                    <span class="bold">Ref. modelo: </span>
-                    <span th:text="${venda.refModelo}"></span>
-                </p>
-                <div class="container-grade">
-                    <div class="item" th:each="entry : ${venda.grade}">
-                        <span class="numeracao" th:text="${entry['numeracao']}"></span>
-                        <span th:text="${entry['valor']}"></span>
-                    </div>
-                    <div class="item-total">
-                        <span class="d-block"></span>
-                        <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
-                    </div>
+    <div th:each="venda : ${dados}" class="container" style="padding-bottom: 10px;">
+        <div class="container-logo">
+            <img 
+                src="https://almeidascorte.netlify.app/images/leao-sem-fundo.png" 
+                alt="Logo Almeida's Corte" class="logo"
+            />
+            <span style="color: #E91F31; font-size: 14px; font-weight: 500;">Almeida's Corte</span><br/>
+            <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
+            <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
+        </div>
+        <div class="content">
+            <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;">CLIENTE</p>
+            <p class="paragraph">
+                <span th:text="'ID ' + ${venda.id}"></span>
+                <span class="separador"> - </span>
+                <span class="bold" th:text="${venda.nomeCliente}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.nomeModelo}"></span>
+                <span class="separador"> - </span>
+                <span th:if="${venda.rendimentoPares != '0'}" th:text="${venda.rendimentoPares} + ' pares por ' + ${venda.unidadeMedida}"></span>
+                <span th:if="${venda.rendimentoPares == '0'}">Sem rendimento registrado</span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.material}"></span>
+            </p>
+            <p class="paragraph">
+                <span th:text="${venda.color}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                <span class="separador"> - </span>
+                <span th:text="'R$ ' + ${venda.precoPar} + ' o par'"></span>
+            </p>
+            <p class="paragraph">
+                <span class="bold" th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
+                <span class="separador"> - </span>
+                <span>Data do pedido </span>
+                <span class="bold" th:text="${venda.dataPedido}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.diaSemana}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.obs}">
+                <span>Obs. ficha: </span>
+                <span class="obs" th:text="${venda.obs}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.obsModelo}">
+                <span>Obs. modelo: </span>
+                <span class="obs" th:text="${venda.obsModelo}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.refModelo}">
+                <span>Ref. modelo: </span>
+                <span class="obs" th:text="${venda.refModelo}"></span>
+            </p>
+            <div class="container-grade">
+                <div class="item" th:each="entry : ${venda.grade}">
+                    <span class="numeracao" th:text="${entry['numeracao']}"></span>
+                    <span th:text="${entry['valor']}"></span>
+                </div>
+                <div class="item-total">
+                    <span class="d-block"></span>
+                    <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 
     <!-- CORTE -->
-    <div>
-        <div th:each="venda : ${dados}" class="container">
-            <div class="">
-                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;">CORTE</p>
-                <p class="paragraph">
-                    <span th:text="'ID ' + ${venda.id}"></span>
-                    <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.nomeCliente}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.nomeModelo}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.rendimentoPares} + ' pares por metro'"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.material}"></span>
-                </p>
-                <p class="paragraph">
-                    <span th:text="${venda.color}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
-                    <span class="separador"> - </span>
-                    <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
-                </p>
-                <p class="paragraph">
-                    <span th:text="'Data do pedido ' + ${venda.dataPedido}"></span>
-                    <span class="separador"> - </span>
-                    <span th:text="${venda.diaSemana}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.obs}">
-                    <span class="bold">Obs. ficha: </span>
-                    <span th:text="${venda.obs}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.obsModelo}">
-                    <span class="bold">Obs. modelo: </span>
-                    <span th:text="${venda.obsModelo}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.refModelo}">
-                    <span class="bold">Ref. modelo: </span>
-                    <span th:text="${venda.refModelo}"></span>
-                </p>
-                <div class="container-grade">
-                    <div class="item" th:each="entry : ${venda.grade}">
-                        <span class="numeracao" th:text="${entry['numeracao']}"></span>
-                        <span th:text="${entry['valor']}"></span>
-                    </div>
-                    <div class="item-total">
-                        <span class="d-block"></span>
-                        <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
-                    </div>
-                    <div>
-                        <p class="final-text">
-                            <span>Assinatura de quem cortou</span>
-                            <span class="separador"> - </span> 
-                            <span> DATA: ____/ ____/ 20___ </span> 
-                        </p>
-                    </div>
+    <!-- <div> -->
+    <div th:each="venda : ${dados}" class="container">
+        <div class="">
+            <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;">CORTE</p>
+            <p class="paragraph">
+                <span th:text="'ID ' + ${venda.id}"></span>
+                <span class="separador"> - </span>
+                <span class="bold" th:text="${venda.nomeCliente}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.nomeModelo}"></span>
+                <span class="separador"> - </span>
+                <span th:if="${venda.rendimentoPares != '0'}" th:text="${venda.rendimentoPares} + ' pares por ' + ${venda.unidadeMedida}"></span>
+                <span th:if="${venda.rendimentoPares == '0'}">Sem rendimento registrado</span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.material}"></span>
+            </p>
+            <p class="paragraph">
+                <span th:text="${venda.color}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.qtdPecas}  + ' PCS'"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+            </p>
+            <p class="paragraph">
+                <span>Data do pedido </span>
+                <span class="bold" th:text="${venda.dataPedido}"></span>
+                <span class="separador"> - </span>
+                <span th:text="${venda.diaSemana}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.obs}">
+                <span>Obs. ficha: </span>
+                <span class="obs" th:text="${venda.obs}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.obsModelo}">
+                <span>Obs. modelo: </span>
+                <span class="obs" th:text="${venda.obsModelo}"></span>
+            </p>
+            <p class="paragraph" th:if="${venda.refModelo}">
+                <span>Ref. modelo: </span>
+                <span class="obs" th:text="${venda.refModelo}"></span>
+            </p>
+            <div class="container-grade">
+                <div class="item" th:each="entry : ${venda.grade}">
+                    <span class="numeracao" th:text="${entry['numeracao']}"></span>
+                    <span th:text="${entry['valor']}"></span>
+                </div>
+                <div class="item-total">
+                    <span class="d-block"></span>
+                    <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
+                </div>
+                <div>
+                    <p class="final-text">
+                        <span>Assinatura de quem cortou</span>
+                        <span class="separador"> - </span> 
+                        <span> DATA: ____/ ____/ 20___ </span> 
+                    </p>
                 </div>
             </div>
         </div>
+        <!-- </div> -->
     </div>
 </body>
 </html>

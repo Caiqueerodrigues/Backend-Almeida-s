@@ -53,6 +53,9 @@ public class Model {
     @Column(name = "obs", length = 255)
     private String obs;
 
+    @Column(name = "unidade_Medida", length = 100)
+    private String unidadeMedida;
+
     public Model(CreateModelDTO dados) {
         this.client = dados.client();
         this.tipo = dados.tipo();
@@ -64,6 +67,7 @@ public class Model {
         this.rendimento = dados.rendimento();
         this.cronometragem = dados.cronometragem();
         this.obs = dados.obs();
+        this.unidadeMedida = dados.unidadeMedida();
     }
 
     public void updateModel(UpdateModelDTO dados) {
@@ -77,5 +81,6 @@ public class Model {
         this.rendimento = dados.rendimento();
         this.cronometragem = dados.cronometragem();
         this.obs = dados.obs();
+        this.unidadeMedida = dados.unidadeMedida();
     }
 }

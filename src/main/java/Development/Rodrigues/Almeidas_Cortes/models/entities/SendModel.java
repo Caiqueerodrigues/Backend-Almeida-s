@@ -38,6 +38,8 @@ public class SendModel {
 
     private String obs;
 
+    private String tipoMaterial;
+
     public SendModel(
         Long id,
         Client client,
@@ -49,7 +51,8 @@ public class SendModel {
         Long qtdFaca,
         String rendimento,
         String cronometragem,
-        String obs
+        String obs,
+        String tipoMaterial
     ) {
         this.id = id;
         this.client = client;
@@ -62,5 +65,6 @@ public class SendModel {
         this.rendimento = rendimento;
         this.cronometragem = cronometragem;
         this.obs = obs;
+        this.tipoMaterial = tipoMaterial;
     }
 }

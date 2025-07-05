@@ -82,7 +82,8 @@ public class ModelService {
                     model.getQtdFaca(),
                     model.getRendimento(),
                     model.getCronometragem(),
-                    model.getObs()
+                    model.getObs(),
+                    model.getUnidadeMedida()
                 );
     
                 return new ResponseDTO(response, "", "", "");

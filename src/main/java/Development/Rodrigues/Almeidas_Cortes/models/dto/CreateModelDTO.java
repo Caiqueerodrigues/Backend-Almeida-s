@@ -46,7 +46,10 @@ public record CreateModelDTO(
     String cronometragem,
 
     @Schema(example = "12 , 1, 10")
-    String obs
+    String obs,
+
+    @Schema(example = "Metros")
+    String unidadeMedida
 ) {
 
 }

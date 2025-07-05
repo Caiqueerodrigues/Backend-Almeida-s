@@ -105,7 +105,7 @@
             <p class="paragraph" style="text-align: center;">
                 <span th:text="'Total pares ' + ${totalPares}"></span>
                 <span class="separador"> - </span>
-                <span th:text="'Total ' + ${totalDinheiro}"></span>
+                <span class="bold" th:text="'Total ' + ${totalDinheiro}"></span>
             </p>
             <p class="paragraph" style="text-align: center;">
                 <span  style="color: #079C27;" class="bold" th:text="'Total pago ' + ${totalPago}"></span>
@@ -126,14 +126,16 @@
             <p class="paragraph">
                 <span class="bold" th:text="'ID ' + ${venda.id}"></span>
                 <span class="separador"> - </span>
-                <span class="bold" th:text="'Data do Pedido ' + ${venda.dataPedido}"></span>
+                <span>Data do pedido </span>
+                <span class="bold" th:text="${venda.dataPedido}"></span>
                 <span class="separador"> - </span>
                 <span th:text="${venda.diaSemana}"></span>
             </p>
             <p class="paragraph">
                 <span class="bold" th:text="${venda.nomeModelo}">
                 </span><span class="separador"> - </span>
-                <span th:text="${venda.rendimentoPares} + ' pares por metro'"></span>
+                <span th:if="${venda.rendimentoPares != '0'}" th:text="${venda.rendimentoPares} + ' pares por ' + ${venda.unidadeMedida}"></span>
+                <span th:if="${venda.rendimentoPares == '0'}">Sem rendimento registrado</span>
                 <span class="separador"> - </span>
                 <span th:text="${venda.material}"></span>
                 <span class="separador"> - </span>
@@ -142,9 +144,9 @@
             <p class="paragraph">
                 <span th:text="${venda.totalPares} + ' pares'"></span>
                 <span class="separador"> - </span>
-                <span th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
+                <span class="bold" th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
                 <span class="separador"> - </span>
-                <span class="bold" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                <span th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
                 <span class="separador"> - </span>
                 <span th:text="${venda.precoPar} + ' o par'"></span>
             </p>

@@ -163,7 +163,7 @@ public class ReportService {
                     .map(Material::getNome)
                     .collect(Collectors.joining(", "));
 
-                    String cores = String.join(", ", order.getCor());
+                String cores = String.join(", ", order.getCor()).toUpperCase();
 
                 return new OrderReport(
                     order.getId(),
@@ -187,7 +187,8 @@ public class ReportService {
                     nomesMateriais,
                     order.getModelo().getRendimento(),
                     order.getModelo().getObs(),
-                    order.getModelo().getRefOrdem()
+                    order.getModelo().getRefOrdem(),
+                    order.getModelo().getUnidadeMedida()
                 );
             })
             .collect(Collectors.toList());

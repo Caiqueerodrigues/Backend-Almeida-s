@@ -49,7 +49,10 @@ public record UpdateModelDTO(
     String cronometragem,
 
     @Schema(example = "12 peças ao par")
-    String obs
+    String obs,
+
+    @Schema(example = "Metros")
+    String unidadeMedida
 ) {
 
 }
