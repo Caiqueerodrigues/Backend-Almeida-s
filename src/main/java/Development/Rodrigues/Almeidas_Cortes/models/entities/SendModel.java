@@ -38,7 +38,7 @@ public class SendModel {
 
     private String obs;
 
-    private String tipoMaterial;
+    private String unidadeMedida;
 
     public SendModel(
         Long id,
@@ -52,7 +52,7 @@ public class SendModel {
         String rendimento,
         String cronometragem,
         String obs,
-        String tipoMaterial
+        String unidadeMedida
     ) {
         this.id = id;
         this.client = client;
@@ -65,6 +65,6 @@ public class SendModel {
         this.rendimento = rendimento;
         this.cronometragem = cronometragem;
         this.obs = obs;
-        this.tipoMaterial = tipoMaterial;
+        this.unidadeMedida = unidadeMedida;
     }
 }
