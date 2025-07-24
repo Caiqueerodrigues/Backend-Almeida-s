@@ -1,7 +1,13 @@
 package Development.Rodrigues.Almeidas_Cortes.users;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +17,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
+import Development.Rodrigues.Almeidas_Cortes.order.entities.ListOrder;
+import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.services.GetDateHourBrasilia;
 import Development.Rodrigues.Almeidas_Cortes.services.TokenService;
 import Development.Rodrigues.Almeidas_Cortes.users.dto.LoginDTO;
+import Development.Rodrigues.Almeidas_Cortes.users.entities.SendUser;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
 
 @Service
@@ -69,4 +79,70 @@ public class UserService {
     }
 
 
+    public ResponseDTO getUserIdService(Long id) {
+        try {
+            Optional<User> user = repository.findById(id);
+    
+            if(!user.isEmpty()) {
+                User userConfim = user.get();
+                SendUser userSend = new SendUser(
+                    userConfim.getName(),
+                    userConfim.getUser(),
+                    userConfim.isActive(),
+                    userConfim.getFullName(), 
+                    userConfim.getFunction(),
+                    userConfim.getPhoto(),
+                    userConfim.getSex(),
+                    userConfim.getFirstLogin(),
+                    userConfim.getLastLogin()
+                );
+                return new ResponseDTO(userSend,"","","");
+            }
+    
+            return new ResponseDTO("", "", "", "Dados incorretos");
+        } catch (Exception e) {
+            log.error("ERRO ao obter o usuário " + e);
+            throw new RuntimeException("Erro ao obter o usuário, tente novamente.");
+        }
+    }
+    
+    public ResponseDTO updateUserService(
+        Long id, 
+        MultipartFile photo, 
+        String name, 
+        String fullName, 
+        String funct, 
+        String sex, 
+        String user, 
+        String newPassword, 
+        Boolean active
+    ) {
+        try {
+            String folderPath = "src/main/resources/users";
+            File dir = new File(folderPath);
+            if (!dir.exists()) {
+                dir.mkdirs(); // cria se não existir o diretorio
+            }
+
+            // 1. Apagar arquivos antigos que começam com o id
+            File[] arquivos = dir.listFiles((dir1, nome) -> nome.startsWith(id.toString() + "_"));
+            if (arquivos != null) {
+                for (File arquivo : arquivos) {
+                    arquivo.delete();
+                }
+            }
+
+            // 2. Salvar novo arquivo (se houver)
+            if (photo != null && !photo.isEmpty()) {
+                String originalFilename = photo.getOriginalFilename().replace(" ", "-");
+                String novoNome = id + "_" + originalFilename;
+                Path destino = Paths.get(folderPath, novoNome);
+                Files.write(destino, photo.getBytes());
+            }
+            return new ResponseDTO("","","","");
+        } catch (Exception e) {
+            log.error("ERRO ao alterar o usuário " + e);
+            throw new RuntimeException("Erro ao alterar o usuário, tente novamente.");
+        }
+    }
 }
