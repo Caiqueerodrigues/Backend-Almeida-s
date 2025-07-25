@@ -103,4 +103,18 @@ public class AnexoController {
             throw new RuntimeException("Erro ao tentar obter a imagem: " + file, e);
         }
     }
+
+    @GetMapping("/perfil/{file}")
+    public ResponseEntity<Resource> getPhotoUser(@PathVariable String file) {
+        try {
+            Resource response = service.getPhotoPerfilService(file);
+            String contentType = Files.probeContentType(Paths.get(response.getURI()));
+            
+            return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao tentar obter a imagem: " + file, e);
+        }
+    }
 }

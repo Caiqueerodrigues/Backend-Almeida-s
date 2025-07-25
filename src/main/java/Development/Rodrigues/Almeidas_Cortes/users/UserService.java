@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import Development.Rodrigues.Almeidas_Cortes.services.TokenService;
 import Development.Rodrigues.Almeidas_Cortes.users.dto.LoginDTO;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.SendUser;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class UserService {
@@ -46,6 +48,9 @@ public class UserService {
 
     @Autowired
     private GetDateHourBrasilia dataHoraBrasilia;
+
+    @Value("${backend.api}")
+    private String backendApi;
 
     private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
 
@@ -74,10 +79,9 @@ public class UserService {
             return new ResponseDTO(tokenJWT, "", "", "");
         } catch (Exception e) {
             log.error("ERRO ao efetuar o login " + e);
-            throw new RuntimeException("Erroao efetuar o login, tente novamente.");
+            throw new RuntimeException("Erro ao efetuar o login, tente novamente.");
         }
     }
-
 
     public ResponseDTO getUserIdService(Long id) {
         try {
@@ -85,6 +89,11 @@ public class UserService {
     
             if(!user.isEmpty()) {
                 User userConfim = user.get();
+
+                if(!userConfim.getPhoto().contains("/images/")) {
+                    userConfim.setPhoto(backendApi  + "anexo/perfil/" + userConfim.getPhoto());
+                };
+
                 SendUser userSend = new SendUser(
                     userConfim.getName(),
                     userConfim.getUser(),
@@ -115,31 +124,56 @@ public class UserService {
         String sex, 
         String user, 
         String newPassword, 
-        Boolean active
+        Boolean active,
+        HttpServletResponse response
     ) {
         try {
-            String folderPath = "src/main/resources/users";
-            File dir = new File(folderPath);
-            if (!dir.exists()) {
-                dir.mkdirs(); // cria se não existir o diretorio
-            }
+            Optional<User> findUser = repository.findById(id);
+            if(findUser.isPresent()) {
+                User oldUser = findUser.get();
 
-            // 1. Apagar arquivos antigos que começam com o id
-            File[] arquivos = dir.listFiles((dir1, nome) -> nome.startsWith(id.toString() + "_"));
-            if (arquivos != null) {
-                for (File arquivo : arquivos) {
-                    arquivo.delete();
+                if (newPassword != null && !newPassword.trim().isEmpty() && !"null".equalsIgnoreCase(newPassword.trim())) {
+                    oldUser.setPassword(passwordEncoder.encode(newPassword));
                 }
+
+                oldUser.setName(name);
+                oldUser.setFullName(fullName);
+                oldUser.setFunction(funct);
+                oldUser.setSex(sex);
+                oldUser.setUser(user);
+                oldUser.setActive(active);
+
+                if (photo != null && !photo.isEmpty()) {
+                    String folderPath = "src/main/resources/users";
+                    File dir = new File(folderPath);
+                    if (!dir.exists()) {
+                        dir.mkdirs(); // cria se não existir o diretorio
+                    }
+
+                    // 1. Apagar arquivos antigos que começam com o id
+                    File[] arquivos = dir.listFiles((dir1, nome) -> nome.startsWith(id.toString() + "_"));
+                    if (arquivos != null) {
+                        for (File arquivo : arquivos) {
+                            arquivo.delete();
+                        }
+                    }
+
+                    // 2. Salvar novo arquivo
+                    String originalFilename = photo.getOriginalFilename().replace(" ", "-");
+                    String novoNome = id + "_" + originalFilename;
+                    Path destino = Paths.get(folderPath, novoNome);
+                    Files.write(destino, photo.getBytes());
+
+                    oldUser.setPhoto(novoNome);
+                }
+
+                repository.save(oldUser);
+
+                String newToken = tokenService.generateToken(oldUser);
+                response.setHeader("Authorization", "Bearer " + newToken);
             }
 
-            // 2. Salvar novo arquivo (se houver)
-            if (photo != null && !photo.isEmpty()) {
-                String originalFilename = photo.getOriginalFilename().replace(" ", "-");
-                String novoNome = id + "_" + originalFilename;
-                Path destino = Paths.get(folderPath, novoNome);
-                Files.write(destino, photo.getBytes());
-            }
-            return new ResponseDTO("","","","");
+            return new ResponseDTO("","","Dados salvos com sucesso!","");
         } catch (Exception e) {
             log.error("ERRO ao alterar o usuário " + e);
             throw new RuntimeException("Erro ao alterar o usuário, tente novamente.");

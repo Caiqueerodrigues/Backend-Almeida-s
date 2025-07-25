@@ -43,6 +43,9 @@ public class AnexosService {
 
     @Value("${upload.dir.photos}") 
     private String uploadDir;
+
+    @Value("${upload.dir.photosUsers}") 
+    private String photosUserDir;
     
     @Value("${backend.api}")
     private String backendApi; 
@@ -58,6 +61,22 @@ public class AnexosService {
                 return resource;
             } else {
                 throw new RuntimeException("Não foi possível ler o arquivo: " + model + "/" + file);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
+    
+    public Resource getPhotoPerfilService(String fileName) {
+        try {
+            String targetDir = photosUserDir + File.separator + File.separator + fileName;
+            Path path = Paths.get(targetDir);
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Não foi possível ler o arquivo: " + fileName);
             }
         } catch (Exception e) {
             throw new RuntimeException();

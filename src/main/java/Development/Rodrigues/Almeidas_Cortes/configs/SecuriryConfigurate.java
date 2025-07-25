@@ -33,6 +33,7 @@ public class SecuriryConfigurate {
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/cadastrar").permitAll() //para permitir seguir a req sem token
                 .requestMatchers(HttpMethod.GET, "/users/not-power").permitAll()
+                .requestMatchers(HttpMethod.GET, "/anexo/perfil/{file}").permitAll()
                 .requestMatchers(HttpMethod.GET, 
                    "/swagger-ui/**",    // Acesso ao Swagger UI
                     "/v3/api-docs/**",   // Acesso à documentação da API

@@ -6,6 +6,7 @@ server:
 upload:
   dir:
     photos: "src/main/resources/photos/"
+    photosUsers: "src/main/resources/users/"
 
 backend:
   api: "${API_BACKEND:http://192.168.0.11:3003/}"

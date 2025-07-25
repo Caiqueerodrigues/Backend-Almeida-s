@@ -15,6 +15,7 @@ import Development.Rodrigues.Almeidas_Cortes.anexos.dto.ListAnexosDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.dto.VariosAnexosDTO;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.users.dto.LoginDTO;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -67,21 +68,18 @@ public class UserController {
     @Transactional
     public ResponseEntity updateUserController (
         @RequestParam(value = "id", required = true) Long id,
-        @RequestParam(value = "photo", required = true) MultipartFile photo,
+        @RequestParam(value = "photo", required = false) MultipartFile photo,
         @RequestParam(value = "name", required = true) String name,
         @RequestParam(value = "fullName", required = true) String fullName,
         @RequestParam(value = "funct", required = true) String funct,
         @RequestParam(value = "sex", required = true) String sex,
         @RequestParam(value = "user", required = true) String user,
         @RequestParam(value = "newPassword", required = false) String newPassword,
-        @RequestParam(value = "active", required = true) Boolean active
-        ) {
+        @RequestParam(value = "active", required = true) Boolean active,
+        HttpServletResponse resp
+    ) {
         try {
-            String originalFilename = photo.getOriginalFilename().replace(" ", "-");
-            String novoNome = id + "_" + originalFilename;
-            ListAnexosDTO anexo = new ListAnexosDTO(photo, funct, novoNome);
-
-            ResponseDTO response = service.updateUserService(id, photo, name, fullName, funct, sex, user, newPassword, active);
+            ResponseDTO response = service.updateUserService(id, photo, name, fullName, funct, sex, user, newPassword, active, resp);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ResponseDTO("", "Desculpe, tente novamente mais tarde!" +e, "", ""));
