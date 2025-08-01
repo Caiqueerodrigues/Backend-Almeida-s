@@ -36,6 +36,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     List<Order> findByDataPedidoBetweenAndClientId(LocalDateTime startDate, LocalDateTime endDate, Long clientId);
 
+    List<Order> findByClientIdAndDataRetiradaIsNull(Long clientId);
+
     List<Order> findByClientId(Long clientId);
 
     List<Order> findByIdIn(List<Long> ids);

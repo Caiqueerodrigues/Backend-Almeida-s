@@ -109,7 +109,16 @@ public class OrderController {
             return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
-    
+
+    @GetMapping("/undelivered/{idClient}")
+    public ResponseEntity getUndeliveredOrdersController(@PathVariable String idClient) {
+        try {
+            ResponseDTO response = service.getUndeliveredOrdersService(idClient);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
+        }
+    }
 
     @PutMapping("/withdrawn")
     @Transactional
