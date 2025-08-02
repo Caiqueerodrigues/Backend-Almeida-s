@@ -1,5 +1,7 @@
 package Development.Rodrigues.Almeidas_Cortes.anexos;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,6 +52,7 @@ public class AnexosService {
     @Value("${backend.api}")
     private String backendApi; 
 
+    private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
     
     public Resource getPhotoService(String model, String file, String idCliente) {
         try {
@@ -76,9 +79,11 @@ public class AnexosService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
+                log.error("Não foi possível ler o arquivo: " + fileName);
                 throw new RuntimeException("Não foi possível ler o arquivo: " + fileName);
             }
         } catch (Exception e) {
+            log.error("ERRO ao buscar a foto do perfil " + e);
             throw new RuntimeException();
         }
     }
