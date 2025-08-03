@@ -29,6 +29,7 @@ import Development.Rodrigues.Almeidas_Cortes.anexos.dto.VariosAnexosDTO;
 import Development.Rodrigues.Almeidas_Cortes.anexos.entities.Anexo;
 import Development.Rodrigues.Almeidas_Cortes.anexos.entities.SendAnexo;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
+import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
 import Development.Rodrigues.Almeidas_Cortes.models.ModelRepository;
 import Development.Rodrigues.Almeidas_Cortes.models.dto.UpdateModelDTO;
 import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
