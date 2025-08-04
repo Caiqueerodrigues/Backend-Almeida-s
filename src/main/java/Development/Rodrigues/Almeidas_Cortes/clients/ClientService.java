@@ -20,7 +20,7 @@ public class ClientService {
     ClientRepository repository;
 
     public ResponseDTO getAllClientsService() {
-        List<Client> clients = repository.findAll();
+        List<Client> clients = repository.findAllByOrderByNomeAsc();
 
         if(clients.size() > 0) {
             // List<Client> responseList = clients.stream()
