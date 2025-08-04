@@ -211,15 +211,21 @@ public class OrderService {
     public ResponseDTO getUndeliveredOrdersService(String idClient) {
         try {
     
-            List<Order> list = repository.findByClientIdAndDataRetiradaIsNull(Long.parseLong(idClient));
-    
+            List<Order> list;
+            
+            boolean isClient = !idClient.equals("Todos");
+
+            if(isClient) list = repository.findByClientIdAndDataRetiradaIsNull(Long.parseLong(idClient));
+            else list = repository.findByDataRetiradaIsNull();
+
             if(!list.isEmpty()) {
                 List<ListOrder> listFormatted = createListOrder(list);
     
                 return new ResponseDTO(listFormatted,"","","");
             }
     
-            return new ResponseDTO("", "", "", "Não existem dados para este Cliente");
+            String msg = isClient ? "Não existem dados para este Cliente" : "Não existem dados a serem exibidos";
+            return new ResponseDTO("", "", "", msg);
         } catch (Exception e) {
             log.error("ERRO ao obter os pedidos " + e);
             throw new RuntimeException("Erro ao obter os pedidos, tente novamente.");
