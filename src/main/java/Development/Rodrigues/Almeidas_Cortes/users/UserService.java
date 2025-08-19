@@ -30,6 +30,7 @@ import Development.Rodrigues.Almeidas_Cortes.users.dto.LoginDTO;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.SendUser;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UserService {
@@ -54,7 +55,7 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
 
-    public ResponseDTO loginService(LoginDTO dados) {
+    public ResponseDTO loginService(LoginDTO dados, HttpSession session) {
         try {
             
             log.info(passwordEncoder.encode(dados.password())  + " senha tentativa login");
@@ -62,6 +63,10 @@ public class UserService {
             var auth = manager.authenticate(token);
     
             User user = (User) auth.getPrincipal();
+
+            if (session.getAttribute("user") != null) {
+                return new ResponseDTO("", "Você já está logado em outra sessão.", "", "");
+            }
     
             if (!user.isActive()) {
                 return new ResponseDTO("", "Usuário inativo, procure a administração!", "", "");
@@ -76,6 +81,8 @@ public class UserService {
             repository.save(user);
             
             var tokenJWT = tokenService.generateToken(user);
+
+            session.setAttribute("user", user);
             return new ResponseDTO(tokenJWT, "", "", "");
         } catch (Exception e) {
             log.error("ERRO ao efetuar o login " + e);

@@ -41,10 +41,10 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication); //setar o usuario como autenticado
             
-            Instant expires = tokenService.getExpirationTime(tokenJWT);
+            // Instant expires = tokenService.getExpirationTime(tokenJWT);
             
-            String newAccessToken = tokenService.generateRefreshToken(tokenJWT, expires);
-            response.setHeader("Authorization", "Bearer " + newAccessToken); // Retornar novo access token
+            // String newAccessToken = tokenService.generateRefreshToken(tokenJWT, expires);
+            // response.setHeader("Authorization", "Bearer " + newAccessToken); // Retornar novo access token
         }
         
         filterChain.doFilter(request, response);

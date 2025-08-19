@@ -11,7 +11,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 
+import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class TokenService {
@@ -31,16 +33,15 @@ public class TokenService {
                 .withClaim("funcao", user.getFunction())
                 .withClaim("sexo", user.getSex())
                 .withClaim("photo", user.getPhoto())
-                .withClaim("refresh_token", dataExpiracao(1)) 
-                .withExpiresAt(dataExpiracao(3)) //expiração do token
+                .withExpiresAt(dataExpiracao(15)) //expiração do token
                 .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new RuntimeException("Erro ao gerar token");
         }
     }
 
-    private Instant dataExpiracao(Integer hours) {
-        return LocalDateTime.now().plusHours(hours).toInstant(ZoneOffset.of("-03:00"));
+    private Instant dataExpiracao(Integer minutes) {
+        return LocalDateTime.now().plusMinutes(minutes).toInstant(ZoneOffset.of("-03:00"));
     }
 
     public String getSubject(String token) {
@@ -117,6 +118,59 @@ public class TokenService {
             return decodedJWT.getClaim("id").asLong();
         } catch (Exception e) {
             throw new RuntimeException("Erro ao recuperar o ID do usuário do token");
+        }
+    }
+
+    public ResponseDTO replaceToken(String oldToken, HttpSession session) {
+        try {
+
+            if (session.getAttribute("user") != null) {
+                return new ResponseDTO("", "Você já está logado em outra sessão.", "", "");
+            }
+
+            var algorithm = Algorithm.HMAC256(secret);
+            var verifier = JWT.require(algorithm)
+                    .withIssuer("Almeida's Cortes")
+                    .build();
+
+            // Decodificando o token antigo
+            var decodedJWT = verifier.verify(oldToken);
+
+            // Extraindo as informações do token antigo
+            long userId = decodedJWT.getClaim("id").asLong();
+            String subject = decodedJWT.getSubject();
+            String userLogin = decodedJWT.getClaim("user").asString();
+            String userName = decodedJWT.getClaim("name").asString();
+            String function = decodedJWT.getClaim("funcao").asString();
+            String photo = decodedJWT.getClaim("photo").asString();
+            String sexo = decodedJWT.getClaim("sexo").asString();
+
+            // Gerando um novo token JWT com as informações do token antigo
+            String newToken = JWT.create()
+                    .withIssuer("Almeida's Cortes")
+                    .withSubject(subject)
+                    .withClaim("id", userId)
+                    .withClaim("user", userLogin)
+                    .withClaim("name", userName)
+                    .withClaim("funcao", function)
+                    .withClaim("photo", photo)
+                    .withClaim("sexo", sexo)
+                    .withExpiresAt(dataExpiracao(15))  // Definindo uma nova expiração para o token
+                    .sign(algorithm);
+
+            return new ResponseDTO(newToken, "", "", "");
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao trocar o token");
+        }
+    }
+
+    public ResponseDTO logout(HttpSession session) {
+        try {
+            session.invalidate();
+
+            return new ResponseDTO("", "", "", "");
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao trocar o token");
         }
     }
 }
