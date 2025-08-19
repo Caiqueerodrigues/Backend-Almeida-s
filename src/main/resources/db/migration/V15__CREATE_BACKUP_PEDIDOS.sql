@@ -1,0 +1,21 @@
+CREATE TABLE `tab_pedidos_backup` (
+    `id` int NOT NULL,
+    `id_Client` int NOT NULL,
+    `modelo` int NOT NULL,
+    `data_Pedido` datetime DEFAULT NULL,
+    `relatorio_Cliente` varchar(100) DEFAULT NULL,
+    `total_Dinheiro` double NOT NULL,
+    `total_Pares` int NOT NULL,
+    `grade` text NOT NULL,
+    `obs` varchar(255) DEFAULT NULL,
+    `data_Pagamento` datetime DEFAULT NULL,
+    `tipo_Recebido` text NOT NULL,
+    `rendimento_Pares_Metro` varchar(255) DEFAULT NULL,
+    `quem_Assinou` varchar(100) DEFAULT NULL,
+    `data_Finalizado` datetime DEFAULT NULL,
+    `cor` varchar(100) DEFAULT NULL,
+    `data_Retirada` datetime DEFAULT NULL,
+    `quem_Cortou` varchar(50) DEFAULT '',
+    `id_User` int NOT NULL,
+    PRIMARY KEY (`id`)
+)

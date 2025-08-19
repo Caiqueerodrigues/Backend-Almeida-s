@@ -1,4 +1,4 @@
-package Development.Rodrigues.Almeidas_Cortes.order;
+package Development.Rodrigues.Almeidas_Cortes.order.repositories;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +80,28 @@ public class HistoryOrderService {
             return new ResponseDTO("", "", "", "Nenhum histórico encontrado para a data informada.");
         } catch (Exception e) {
             log.error("ERRO no get do histórico " + e);
+            throw new RuntimeException("Erro ao obter os dados do histórico, tente novamente.");
+        }
+    }
+
+    public List<HistoryOrders> getHistoryService(Order idPedido) {
+        try {
+            List<HistoryOrders> history = repository.findByIdPedido(idPedido);
+            
+            if (history.size() > 0) return history;
+            else throw new RuntimeException("Histórico não encontrado para o ID: " + idPedido);
+        } catch (Exception e) {
+            log.error("ERRO no get do histórico " + e);
+            throw new RuntimeException("Erro ao obter os dados do histórico, tente novamente.");
+        }
+    }
+
+    public String deleteHistory(List<HistoryOrders> history) {
+        try {
+            if(history.size() > 0) repository.deleteAll(history);
+            return "Sucesso ao apagar o histórico!";
+        } catch (Exception e) {
+            log.error("ERRO no delete do histórico " + e);
             throw new RuntimeException("Erro ao obter os dados do histórico, tente novamente.");
         }
     }

@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -125,6 +126,17 @@ public class OrderController {
     public ResponseEntity withdrawn(@RequestBody @Valid WithdrawnDTO dados ) {
         try {
             ResponseDTO response = service.updateWithdrawService(dados);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deleteOrderController(@PathVariable String id) {
+        try {
+            ResponseDTO response = service.deleteOrderService(id);
             return ResponseEntity.status(200).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));

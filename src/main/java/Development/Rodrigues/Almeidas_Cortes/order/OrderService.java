@@ -16,6 +16,7 @@ import Development.Rodrigues.Almeidas_Cortes.*;
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.commons.services.MapConverterService;
 import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
+import Development.Rodrigues.Almeidas_Cortes.historyOrders.entities.HistoryOrders;
 import Development.Rodrigues.Almeidas_Cortes.materials.MaterialRepository;
 import Development.Rodrigues.Almeidas_Cortes.materials.dto.CreateMaterialDTO;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
@@ -26,7 +27,10 @@ import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdatePaymentDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.WithdrawnDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.ListOrder;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
+import Development.Rodrigues.Almeidas_Cortes.order.entities.OrderBackup;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.OrderFront;
+import Development.Rodrigues.Almeidas_Cortes.order.repositories.OrderRepository;
+import Development.Rodrigues.Almeidas_Cortes.order.repositories.OrderRepositoryBackup;
 import Development.Rodrigues.Almeidas_Cortes.report.dto.ParamsFiltersReports;
 import Development.Rodrigues.Almeidas_Cortes.users.UserRepository;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
@@ -46,6 +50,9 @@ public class OrderService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    OrderRepositoryBackup orderRepositoryBackup;
 
     private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
 
@@ -135,7 +142,7 @@ public class OrderService {
     
             historyOrderService.createHistory(newOrder, "Pedido cadastrado", user);
     
-            return new ResponseDTO("", "", "Pedido Registrado com sucesso!", "");
+            return new ResponseDTO(newOrder.getId(), "", "Pedido Registrado com sucesso!", "");
         } catch (Exception e) {
             log.error("ERRO ao cadastrar o pedido " + e);
             throw new RuntimeException("Erro ao cadastrar o pedido, tente novamente.");
@@ -294,6 +301,30 @@ public class OrderService {
         } catch (Exception e) {
             log.error("ERRO ao registar a retirada dos pedidos " + e);
             throw new RuntimeException("Erro ao registar a retirada dos pedidos, tente novamente.");
+        }
+    }
+
+    public ResponseDTO deleteOrderService(String id) {
+        Long orderId = Long.parseLong(id);
+
+        try {
+            Order dadosPedido = repository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Dados informados incorretos!"));
+
+            if(dadosPedido.getDataPagamento() != null) return new ResponseDTO("", "", "", "Pedido com data de pagamento Registrado!");
+            
+            OrderBackup backup = new OrderBackup(dadosPedido);
+                orderRepositoryBackup.save(backup);
+            
+            List<HistoryOrders> history = historyOrderService.getHistoryService(dadosPedido);
+                historyOrderService.deleteHistory(history);
+            
+            repository.delete(dadosPedido);
+
+            return new ResponseDTO("", "", "Dados apagados com sucesso!", "");
+        } catch (Exception e) {
+            log.error("ERRO ao apagar o pedido " + e);
+            throw new RuntimeException("Erro ao apagar o pedido, tente novamente.");
         }
     }
 
