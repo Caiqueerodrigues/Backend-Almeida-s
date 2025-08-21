@@ -137,17 +137,17 @@
                     <span class="separador"> - </span>
                     <span th:text="${venda.diaSemana}"></span>
                 </p>
-                <p class="paragraph" th:if="${venda.obs}">
-                    <span>Obs. ficha: </span>
-                    <span class="obs" th:text="${venda.obs}"></span>
-                </p>
-                <p class="paragraph" th:if="${venda.obsModelo}">
-                    <span>Obs. modelo: </span>
-                    <span class="obs" th:text="${venda.obsModelo}"></span>
-                </p>
                 <p class="paragraph" th:if="${venda.refModelo}">
                     <span>Ref. modelo: </span>
                     <span class="obs" th:text="${venda.refModelo}"></span>
+                </p>
+                <p class="paragraph" th:if="${venda.obsModelo}">
+                    <span class="bold">Obs. modelo: </span>
+                    <span class="obs" th:text="${venda.obsModelo}"></span>
+                </p>
+                <p class="paragraph" th:if="${venda.obs}">
+                    <span class="bold">Obs. ficha: </span>
+                    <span class="obs" th:text="${venda.obs}"></span>
                 </p>
                 <div class="container-grade">
                     <div class="item" th:each="entry : ${venda.grade}">

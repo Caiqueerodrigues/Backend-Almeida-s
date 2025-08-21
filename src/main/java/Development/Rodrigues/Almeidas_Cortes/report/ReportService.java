@@ -70,7 +70,7 @@ public class ReportService {
                     if(consult.size() > 0) {
                         List<OrderReport> dadosReport = createList(consult, dados);
         
-                        byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
+                        byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate, "dd/MM/yyyy"), formatDate(finalDate, "dd/MM/yyyy"));
                         return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
                     }
                 } catch (Exception e) {
@@ -133,7 +133,7 @@ public class ReportService {
             try {
                 List<OrderReport> dadosReport = createList(list, dados);
     
-                byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate), formatDate(finalDate));
+                byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate, "dd/MM/yyyy"), formatDate(finalDate, "dd/MM/yyyy"));
                 return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -161,6 +161,7 @@ public class ReportService {
                 String nomesMateriais = materiaisList.stream()
                     .filter(m -> idsRecebidos.contains(m.getId()))
                     .map(Material::getNome)
+                    .map(String::toUpperCase)
                     .collect(Collectors.joining(", "));
 
                 String cores = String.join(", ", order.getCor()).toUpperCase();
@@ -172,15 +173,15 @@ public class ReportService {
                     order.getTotalPares(),
                     order.getClient(),
                     order.getTotalDinheiro(),
-                    formatDate(order.getDataPedido()),
+                    formatDate(order.getDataPedido(),"dd/MM/yyyy 'às' HH:mm"),
                     getDayOfWeek(order.getDataPedido()),
                     order.getGrade(),
                     order.getTotalPares() * order.getModelo().getQtdPecasPar(),
                     order.getQuemAssinou() == null || order.getQuemAssinou().isBlank() ? "Pedido não retirado" : order.getQuemAssinou(),
-                    formatDate(order.getDataRetirada()),
+                    formatDate(order.getDataRetirada(), "dd/MM/yyyy"),
                     getHoraRetirada(order.getDataRetirada()),
                     order.getModelo().getPreco(),
-                    formatDate(order.getDataPagamento()),
+                    formatDate(order.getDataPagamento(), "dd/MM/yyyy"),
                     order.getObs(),
                     dados.quantidadeVias(),
                     order.getModelo().getQtdFaca(),
@@ -262,9 +263,9 @@ public class ReportService {
         return byteArrayOutputStream.toByteArray();
     }
 
-    private static String formatDate(LocalDateTime dataPedido) {
+    private static String formatDate(LocalDateTime dataPedido, String type) {
         if (dataPedido == null) return "Pedido não retirado";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(type);
         return dataPedido.format(formatter);
     }
 
