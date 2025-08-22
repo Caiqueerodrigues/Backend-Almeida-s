@@ -173,6 +173,7 @@ public class ReportService {
                     order.getTotalPares(),
                     order.getClient(),
                     order.getTotalDinheiro(),
+                    formatDate(order.getDataPedido(),"dd/MM/yyyy"),
                     formatDate(order.getDataPedido(),"dd/MM/yyyy 'às' HH:mm"),
                     getDayOfWeek(order.getDataPedido()),
                     order.getGrade(),

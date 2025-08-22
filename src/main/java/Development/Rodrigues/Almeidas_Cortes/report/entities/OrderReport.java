@@ -42,6 +42,8 @@ public class OrderReport {
 
     private String dataPedido;
 
+    private String dataPedidoFormatada;
+
     private String diaSemana;
 
     private List<Map<String, String>> grade;
@@ -74,6 +76,7 @@ public class OrderReport {
         Client cliente, 
         Double totalDinheiro, 
         String dataPedido, 
+        String dataPedidoFormatada, 
         String diaSemana, 
         String grade, 
         Long qtdPecas, 
@@ -98,6 +101,7 @@ public class OrderReport {
         this.nomeCliente = cliente.getNome();
         this.totalDinheiro = String.format("%.2f", totalDinheiro);
         this.dataPedido = dataPedido;
+        this.dataPedidoFormatada = dataPedidoFormatada;
         this.diaSemana = diaSemana;
         this.grade = parseGrades(grade);
         this.totalPares = totalPares;
