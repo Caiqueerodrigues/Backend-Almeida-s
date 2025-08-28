@@ -32,7 +32,7 @@ public class OrderReport {
 
     private String refModelo;
 
-    private Long qtdPecas;
+    private Double qtdPecas;
 
     private Long qtdFacas;
     
@@ -48,7 +48,7 @@ public class OrderReport {
 
     private List<Map<String, String>> grade;
 
-    private Long totalPares;
+    private Double totalPares;
 
     private String quemAssinou;
 
@@ -67,19 +67,21 @@ public class OrderReport {
     private String material;
 
     private String unidadeMedida;
+
+    private Boolean isDublagem;
     
     public OrderReport(
         Long id, 
         Model modelo, 
         String cor, 
-        Long totalPares, 
+        Double totalPares, 
         Client cliente, 
         Double totalDinheiro, 
         String dataPedido, 
         String dataPedidoFormatada, 
         String diaSemana, 
         String grade, 
-        Long qtdPecas, 
+        Double qtdPecas, 
         String quemAssinou, 
         String dataRetirada, 
         String horaRetirada,
@@ -92,7 +94,8 @@ public class OrderReport {
         String rendimentoPares,
         String obsModelo,
         String refModelo,
-        String unidadeMedida
+        String unidadeMedida,
+        Boolean isDublagem
     ) {
         this.id = id;
         this.nomeModelo = modelo.getTipo().toUpperCase();
@@ -118,6 +121,7 @@ public class OrderReport {
         this.obsModelo = obsModelo;
         this.refModelo = refModelo;
         this.unidadeMedida = unidadeMedida;
+        this.isDublagem = isDublagem;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {

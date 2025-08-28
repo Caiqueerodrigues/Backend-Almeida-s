@@ -178,7 +178,8 @@ public class ReportService {
                     getDayOfWeek(order.getDataPedido()),
                     order.getGrade(),
                     order.getTotalPares() * order.getModelo().getQtdPecasPar(),
-                    order.getQuemAssinou() == null || order.getQuemAssinou().isBlank() ? "Pedido não retirado" : order.getQuemAssinou(),
+                    order.getQuemAssinou() == null || order.getQuemAssinou().isBlank() ? 
+                        "Pedido não retirado" : order.getQuemAssinou(),
                     formatDate(order.getDataRetirada(), "dd/MM/yyyy"),
                     getHoraRetirada(order.getDataRetirada()),
                     order.getModelo().getPreco(),
@@ -190,7 +191,8 @@ public class ReportService {
                     order.getModelo().getRendimento(),
                     order.getModelo().getObs(),
                     order.getModelo().getRefOrdem(),
-                    order.getModelo().getUnidadeMedida()
+                    order.getModelo().getUnidadeMedida(),
+                    order.getModelo().getTipo().toLowerCase().contains("dublagem")
                 );
             })
             .collect(Collectors.toList());
@@ -211,7 +213,7 @@ public class ReportService {
             if(dadosFront.report() == TypesReport.FECHAMENTO_CLIENTE) {
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
                 double total = 0, totalPago = 0, totalDevido = 0;
-                int totalPares = 0;
+                double totalPares = 0;
 
                 for (OrderReport order : dados) {
                     totalPares += order.getTotalPares();

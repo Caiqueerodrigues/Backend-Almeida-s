@@ -42,7 +42,7 @@ public class ListOrder {
     private Double totalDinheiro;
 
     @Column(name = "total_Pares", nullable = false)
-    private Long totalPares;
+    private Double totalPares;
     
     @Column(name = "grade", nullable = false)
     private Object grade;

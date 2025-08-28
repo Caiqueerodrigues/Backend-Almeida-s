@@ -103,7 +103,7 @@
                 <span th:text="${dados.size} + ' fichas'"></span>
             </p>
             <p class="paragraph" style="text-align: center;">
-                <span th:text="'Total pares ' + ${totalPares}"></span>
+                <span th:text="'Total pares e/ou metros ' + ${totalPares}"></span>
                 <span class="separador"> - </span>
                 <span class="bold" th:text="'Total ' + ${totalDinheiro}"></span>
             </p>
@@ -142,13 +142,13 @@
                 <span class="bold" th:text="${venda.color}"></span>
             </p>
             <p class="paragraph">
-                <span th:text="${venda.totalPares} + ' pares'"></span>
+                <span th:text="${venda.totalPares} + ${venda.isDublagem ? ' Mts' : ' pares'}"></span>
                 <span class="separador"> - </span>
                 <span class="bold" th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
                 <span class="separador"> - </span>
-                <span th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
-                <span class="separador"> - </span>
-                <span th:text="${venda.precoPar} + ' o par'"></span>
+                <span th:if="${!venda.isDublagem}" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                <span th:if="${!venda.isDublagem}" class="separador"> - </span>
+                <span th:text="${venda.precoPar} + ${venda.isDublagem ? ' o MT' : ' o par'}"></span>
             </p>
             <div class="container-grade">
                 <div class="item" th:each="entry : ${venda.grade}">
@@ -157,7 +157,7 @@
                 </div>
                 <div class="item-total">
                     <span class="d-block"></span>
-                    <span th:text="'= ' + ${venda.totalPares} + ' Pares'"></span>
+                    <span th:text="'= ' + ${venda.totalPares} + ${venda.isDublagem ? ' Mts' : ' Pares'}"></span>
                 </div>
             </div>
             <p class="paragraph">

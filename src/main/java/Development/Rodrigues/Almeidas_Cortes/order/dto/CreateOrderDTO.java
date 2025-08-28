@@ -63,7 +63,7 @@ public record CreateOrderDTO(
 
     @NotNull
     @Schema(example = "1000")
-    Long totalPares,
+    Double totalPares,
     
     @NotBlank
     @Schema(example = "31: 10, 32/33: 12, 34/35: 15")

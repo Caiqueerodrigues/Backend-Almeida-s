@@ -14,7 +14,7 @@ public record ListOrdersDTO(
     LocalDateTime dataFinalizado,
     String relatorioCliente,
     Double totalDinheiro,
-    Long totalPares,
+    Double totalPares,
     String grade,
     List<String> cor,
     String obs,

@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class MapConverterService {
     
-    public static Map<String, Integer> ConvertStringToObject(String input) {
-        Map<String, Integer> map = new HashMap<>();
+    public static Map<String, Double> ConvertStringToObject(String input) {
+        Map<String, Double> map = new HashMap<>();
 
         String[] pairs = input.split(",\\s*");
 
@@ -16,7 +16,7 @@ public class MapConverterService {
             if (keyValue.length == 2) {
                 try {
                     String key = keyValue[0].trim();
-                    int value = Integer.parseInt(keyValue[1].trim());
+                    Double value = Double.parseDouble(keyValue[1].trim());
                     map.put(key, value);
                 } catch (NumberFormatException e) {
                     System.out.println("Erro ao tentar converter a chave ou o valor: " + e.getMessage());
