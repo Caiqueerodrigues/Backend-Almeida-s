@@ -156,7 +156,7 @@
                     </div>
                     <div class="item-total">
                         <span class="d-block"></span>
-                        <span th:text="'= ' + ${venda.totalPares} + ${venda.isDublagem ? ' MTS' : ' Pares'}"></span>
+                        <span th:text="'= ' + ${!venda.isDublagem ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' MTS' : ' Pares'}"></span>
                     </div>
                     <div>
                         <p class="final-text">
