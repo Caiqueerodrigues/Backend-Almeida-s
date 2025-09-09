@@ -192,7 +192,8 @@ public class ReportService {
                     order.getModelo().getObs(),
                     order.getModelo().getRefOrdem(),
                     order.getModelo().getUnidadeMedida(),
-                    order.getModelo().getTipo().toLowerCase().contains("dublagem")
+                    order.getModelo().getTipo().toLowerCase().contains("dublagem"),
+                    order.getModelo().getTipo().toLowerCase().contains("debruagem")
                 );
             })
             .collect(Collectors.toList());
@@ -209,7 +210,7 @@ public class ReportService {
             context.setVariable("dados", dados); 
 
             String htmlContent;
-
+            System.out.println(dados);
             if(dadosFront.report() == TypesReport.FECHAMENTO_CLIENTE) {
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
                 double total = 0, totalPago = 0, totalDevido = 0;

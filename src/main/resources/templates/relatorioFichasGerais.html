@@ -105,6 +105,7 @@
                 <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
             </div>
             <div class="content">
+                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="'ADIMINISTRATIVO' + (${venda.isDublagem ? ' - DUBLAGEM' : (venda.isDebruagem ? ' - DEBRUAGEM' : ' - CORTE')})"></p>
                 <p class="paragraph">
                     <span th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>
@@ -120,10 +121,10 @@
                 <p class="paragraph">
                     <span th:text="${venda.color}"></span>
                     <span class="separador"> - </span>
-                    <span th:text="${venda.qtdPecas}  + ${venda.isDublagem ? ' MTS' : ' PCS'}"></span>
+                    <span th:text="${(venda.isDebruagem OR !venda.isDebruagem AND !venda.isDublagem) ? #numbers.formatDecimal(venda.qtdPecas, 0, '0') : venda.qtdPecas}  + (${venda.isDublagem ? ' MTS' : ' PCS'})"></span>
                     <span class="separador"> - </span>
-                    <span th:if="!venda.isDublagem" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
-                    <span th:if="!venda.isDublagem" class="separador"> - </span>
+                    <span th:if="!venda.isDublagem AND !venda.isDebruagem" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                    <span th:if="!venda.isDublagem AND !venda.isDebruagem" class="separador"> - </span>
                     <span th:text="'R$ ' + ${venda.precoPar} + ${venda.isDublagem ? ' o MT' : ' o par'}"></span>
                 </p>
                 <p class="paragraph">
@@ -153,7 +154,7 @@
                     </div>
                     <div class="item-total">
                         <span class="d-block"></span>
-                        <span th:text="'= ' + ${!venda.isDublagem ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' MTS' : ' Pares'}"></span>
+                        <span th:text="'= ' + ${(venda.isDebruagem OR !venda.isDublagem AND !venda.isDebruagem) ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' MTS' : ' Pares'}"></span>
                     </div>
                     <div>
                         <p class="final-text">
@@ -182,7 +183,7 @@
                 <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
             </div>
             <div class="content">
-                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="'CLIENTE' + ${venda.isDublagem ? ' - DUBLAGEM' : ''}"></p>
+                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="'CLIENTE' + (${venda.isDublagem ? ' - DUBLAGEM' : (venda.isDebruagem ? ' - DEBRUAGEM' : ' - CORTE')})"></p>
                 <p class="paragraph">
                     <span th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>
@@ -198,8 +199,8 @@
                 <p class="paragraph">
                     <span th:text="${venda.color}"></span>
                     <span class="separador"> - </span>
-                    <span th:if="${!venda.isDublagem}" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
-                    <span th:if="${!venda.isDublagem}" class="separador"> - </span>
+                    <span th:if="${!venda.isDublagem AND !venda.isDebruagem}" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                    <span th:if="${!venda.isDublagem AND !venda.isDebruagem}" class="separador"> - </span>
                     <span th:text="'R$ ' + ${venda.precoPar} + ${venda.isDublagem ? ' o MT' : ' o par'}"></span>
                 </p>
                 <p class="paragraph">
@@ -229,7 +230,7 @@
                     </div>
                     <div class="item-total">
                         <span class="d-block"></span>
-                        <span th:text="'= ' + ${!venda.isDublagem ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' MTS' : ' Pares'}"></span>
+                        <span th:text="'= ' + ${(venda.isDebruagem OR !venda.isDublagem AND !venda.isDebruagem) ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' MTS' : ' Pares'}"></span>
                     </div>
                 </div>
             </div>
@@ -239,7 +240,7 @@
         <!-- CORTE -->
         <div class="container">
             <div class="">
-                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="${venda.isDublagem ? 'DUBLAGEM' : 'CORTE'}"></p>
+                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="(${venda.isDublagem ? 'DUBLAGEM' : (venda.isDebruagem ? 'DEBRUAGEM' : 'CORTE')})"></p>
                 <p class="paragraph">
                     <span th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>
@@ -255,9 +256,9 @@
                 <p class="paragraph">
                     <span th:text="${venda.color}"></span>
                     <span class="separador"> - </span>
-                    <span th:text="${venda.qtdPecas}  + ${venda.isDublagem ? ' MTS' : ' PCS'}"></span>
-                    <span th:if="!venda.isDublagem" class="separador"> - </span>
-                    <span th:if="!venda.isDublagem" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                    <span th:text="${(venda.isDebruagem OR !venda.isDebruagem AND !venda.isDublagem) ? #numbers.formatDecimal(venda.qtdPecas, 0, '0') : venda.qtdPecas}  + (${venda.isDublagem ? ' MTS' : ' PCS'})"></span>
+                    <span th:if="!venda.isDublagem AND !venda.isDebruagem" class="separador"> - </span>
+                    <span th:if="!venda.isDublagem AND !venda.isDebruagem" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
                 </p>
                 <p class="paragraph">
                     <span>Data do pedido </span>
@@ -284,7 +285,7 @@
                     </div>
                     <div class="item-total">
                         <span class="d-block"></span>
-                        <span th:text="'= ' + ${!venda.isDublagem ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' Mts' : ' Pares'}"></span>
+                        <span th:text="'= ' + ${(venda.isDebruagem OR !venda.isDublagem AND !venda.isDebruagem) ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' MTS' : ' Pares'}"></span>
                     </div>
                     <div>
                         <p class="final-text">
