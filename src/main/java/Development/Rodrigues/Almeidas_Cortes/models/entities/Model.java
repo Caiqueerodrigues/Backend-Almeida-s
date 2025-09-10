@@ -55,6 +55,9 @@ public class Model {
 
     @Column(name = "unidade_Medida", length = 100)
     private String unidadeMedida;
+    
+    @Column(name = "ativo")
+    private Boolean ativo;
 
     public Model(CreateModelDTO dados) {
         this.client = dados.client();
@@ -68,6 +71,7 @@ public class Model {
         this.cronometragem = dados.cronometragem();
         this.obs = dados.obs();
         this.unidadeMedida = dados.unidadeMedida();
+        this.ativo = true;
     }
 
     public void updateModel(UpdateModelDTO dados) {
@@ -82,5 +86,6 @@ public class Model {
         this.cronometragem = dados.cronometragem();
         this.obs = dados.obs();
         this.unidadeMedida = dados.unidadeMedida();
+        this.ativo = dados.ativo();
     }
 }

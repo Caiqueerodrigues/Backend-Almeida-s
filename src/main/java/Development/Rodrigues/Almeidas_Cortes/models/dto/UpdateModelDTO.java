@@ -52,7 +52,10 @@ public record UpdateModelDTO(
     String obs,
 
     @Schema(example = "Metros")
-    String unidadeMedida
+    String unidadeMedida,
+
+    @Schema(example = "true")
+    Boolean ativo
 ) {
 
 }

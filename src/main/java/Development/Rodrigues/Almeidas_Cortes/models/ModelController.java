@@ -40,6 +40,17 @@ public class ModelController {
         }
     }
 
+    @GetMapping("/client/{idClient}/active")
+    @Operation(summary = "Retorna todos os modelos ativos do cliente")
+    public ResponseEntity getAllModelsClientActiveService(@PathVariable @Valid Long idClient) {
+        try {
+            ResponseDTO response = service.getAllModelsClientActiveService(idClient);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
+        }
+    }
+
     @PostMapping()
     @Transactional
     @Operation(summary = "Cria um modelo para o cliente")

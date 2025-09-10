@@ -40,6 +40,8 @@ public class SendModel {
 
     private String unidadeMedida;
 
+    private Boolean ativo;
+
     public SendModel(
         Long id,
         Client client,
@@ -52,7 +54,8 @@ public class SendModel {
         String rendimento,
         String cronometragem,
         String obs,
-        String unidadeMedida
+        String unidadeMedida,
+        Boolean ativo
     ) {
         this.id = id;
         this.client = client;
@@ -66,5 +69,6 @@ public class SendModel {
         this.cronometragem = cronometragem;
         this.obs = obs;
         this.unidadeMedida = unidadeMedida;
+        this.ativo = ativo;
     }
 }

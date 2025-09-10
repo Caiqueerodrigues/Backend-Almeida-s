@@ -46,6 +46,21 @@ public class ModelService {
         }
     }
 
+    public ResponseDTO getAllModelsClientActiveService(Long id) {
+        try {
+            List<Model> list = repository.findByClient_IdAndAtivoIsTrueOrderByTipoAsc(id);
+            
+            if(list.size() > 0) {
+                return new ResponseDTO(list, "", "", "");
+            } 
+    
+            return new ResponseDTO("", "", "", "Não existem modelos ativo para este cliente!");
+        } catch (Exception e) {
+            log.error("ERRO ao buscas os modelos ativos" + e);
+            throw new RuntimeException("Erro ao buscar os modelos ativos do cliente, tente novamente.");
+        }
+    }
+
     public ResponseDTO createModelClient(CreateModelDTO dados) {
         try {
             Model newModel = new Model(dados);
@@ -83,7 +98,8 @@ public class ModelService {
                     model.getRendimento(),
                     model.getCronometragem(),
                     model.getObs(),
-                    model.getUnidadeMedida()
+                    model.getUnidadeMedida(),
+                    model.getAtivo()
                 );
     
                 return new ResponseDTO(response, "", "", "");
