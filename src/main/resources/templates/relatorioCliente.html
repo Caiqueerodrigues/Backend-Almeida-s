@@ -150,6 +150,10 @@
                 <span th:if="${!venda.isDublagem AND !venda.isDebruagem}" class="separador"> - </span>
                 <span th:text="${venda.precoPar} + ${venda.isDublagem ? ' o MT' : ' o par'}"></span>
             </p>
+            <p class="paragraph" th:if="${venda.obs}">
+                <span class="bold">Obs. ficha: </span>
+                <span class="obs" th:text="${venda.obs}"></span>
+            </p>
             <div class="container-grade">
                 <div class="item" th:each="entry : ${venda.grade}">
                     <span class="numeracao" th:text="${entry['numeracao']}"></span>
