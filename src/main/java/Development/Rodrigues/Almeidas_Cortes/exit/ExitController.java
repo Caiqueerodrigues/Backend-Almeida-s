@@ -3,6 +3,7 @@ package Development.Rodrigues.Almeidas_Cortes.exit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.DeleteExchange;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
 import Development.Rodrigues.Almeidas_Cortes.exit.dto.CreateExitDTO;
@@ -49,7 +50,7 @@ public class ExitController {
     }
 
     @PutMapping
-    public ResponseEntity updateExistsDayController(@RequestBody UpdateExitDTO dados) {
+    public ResponseEntity updateExistController(@RequestBody UpdateExitDTO dados) {
         try {
             ResponseDTO response = service.updateExitService(dados);
             return ResponseEntity.status(200).body(response);
@@ -57,6 +58,14 @@ public class ExitController {
             return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
-    
 
+    @DeleteExchange("/{id}")
+    public ResponseEntity deleteExistController(@PathVariable @Valid Long id) {
+        try {
+            ResponseDTO response = service.deleteExitService(id);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
+        }
+    }
 }

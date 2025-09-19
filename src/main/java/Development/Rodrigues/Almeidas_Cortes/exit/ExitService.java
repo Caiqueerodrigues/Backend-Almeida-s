@@ -1,6 +1,9 @@
 package Development.Rodrigues.Almeidas_Cortes.exit;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,7 +22,6 @@ import Development.Rodrigues.Almeidas_Cortes.exit.dto.UpdateExitDTO;
 import Development.Rodrigues.Almeidas_Cortes.exit.entities.Exit;
 import Development.Rodrigues.Almeidas_Cortes.exit.entities.SendExit;
 import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
-import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
 
 @Service
@@ -33,7 +35,7 @@ public class ExitService {
         try {
             LocalDate date = LocalDate.parse(dados.date());
             
-            List<Exit> exist = repository.findByDataCompra(date);
+            List<Exit> exist = repository.findByDataCompraAndDeletedIsFalse(date);
 
             if(!exist.isEmpty()) {
                 List<SendExit> newList = exist.stream()
@@ -42,10 +44,10 @@ public class ExitService {
 
                 return new ResponseDTO(newList, "", "", "");
             }
-            return new ResponseDTO("", "", "", "Nenhuma saída registrada para a data informada.");
+            return new ResponseDTO("", "", "", "Nenhum Lançamento registrado para a data informada.");
         } catch (Exception e) {
-            log.error("ERRO ao buscas os modelos " + e);
-            throw new RuntimeException("Erro ao buscar as saídas, tente novamente.");
+            log.error("ERRO ao buscas os lançamentos " + e);
+            throw new RuntimeException("Erro ao buscar os lançamento, tente novamente.");
         }
     }
 
@@ -79,9 +81,9 @@ public class ExitService {
         }
     }
 
-        public ResponseDTO updateExitService(UpdateExitDTO dados) {
+    public ResponseDTO updateExitService(UpdateExitDTO dados) {
         try {
-            Optional<Exit> exitOp = repository.findById(dados.id());
+            Optional<Exit> exitOp = repository.findByIdAndDeletedIsFalse(dados.id());
             
             if (exitOp.isPresent()) {
                 Exit exit = exitOp.get();
@@ -98,4 +100,25 @@ public class ExitService {
         }
     }
 
+    public ResponseDTO deleteExitService(Long id) {
+        try {
+            Optional<Exit> exitOp = repository.findByIdAndDeletedIsFalse(id);
+
+            if (exitOp.isPresent()) {
+                Exit exit = exitOp.get();
+                exit.setDeleted(true);
+                ZonedDateTime utcMinus3 = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+                LocalDateTime dateDeleted = utcMinus3.toLocalDateTime();
+                exit.setDateDeleted(dateDeleted);
+                
+                repository.save(exit);
+                return new ResponseDTO("", "", "Lançamento deletado com sucesso!", "");
+            } else {
+                return new ResponseDTO("", "Lançamento não encontrado ou já deletado!", "", "");
+            }
+        } catch (Exception e) {
+            log.error("ERRO ao deletar o lançamento " + e);
+            throw new RuntimeException("Erro ao deletar o lançamento, tente novamente.");
+        }
+    }
 }

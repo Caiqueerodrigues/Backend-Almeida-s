@@ -42,7 +42,13 @@ public class Exit {
     @ManyToOne
     @JoinColumn(name = "id_User")
     private User user;
-
+    
+    @Column(name= "deleted")
+    private Boolean deleted;
+    
+    @Column(name= "date_Deleted")
+    private LocalDateTime dateDeleted;
+    
     public Exit(CreateExitDTO dados, User user) {
         this.dataRegistro = LocalDateTime.now(ZoneId.of("UTC-3"));
         this.dataCompra = dados.dataCompra();
