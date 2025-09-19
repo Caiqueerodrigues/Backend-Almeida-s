@@ -7,9 +7,6 @@ import Development.Rodrigues.Almeidas_Cortes.exit.enums.TipoServico;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record CreateExitDTO(
-    @Schema(example = "2025-09-09 00:00:00.000")
-    LocalDateTime dataRegistro,
-
     @Schema(example = "2025-09-09")
     LocalDate dataCompra,
     
@@ -17,7 +14,7 @@ public record CreateExitDTO(
     Double valorCompra,
     
     @Schema(example = "Corte")
-    TipoServico TipoServico,
+    TipoServico tipoServico,
     
     @Schema(example = "O que foi comprado")
     String anotacoes

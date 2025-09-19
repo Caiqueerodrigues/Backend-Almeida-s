@@ -1,0 +1,2 @@
+ALTER TABLE tab_exit
+MODIFY COLUMN anotacoes VARCHAR(255) NOT NULL;

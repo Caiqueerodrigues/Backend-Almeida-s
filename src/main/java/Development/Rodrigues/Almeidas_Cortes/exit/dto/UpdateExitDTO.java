@@ -10,9 +10,6 @@ public record UpdateExitDTO(
     @Schema(example = "1")
     Long id,
 
-    @Schema(example = "2025-09-09 00:00:00.000")
-    LocalDateTime dataRegistro,
-
     @Schema(example = "2025-09-09")
     LocalDate dataCompra,
     
@@ -20,7 +17,7 @@ public record UpdateExitDTO(
     Double valorCompra,
     
     @Schema(example = "Corte")
-    TipoServico TipoServico,
+    TipoServico tipoServico,
     
     @Schema(example = "O que foi comprado")
     String anotacoes

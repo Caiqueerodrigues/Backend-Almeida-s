@@ -2,10 +2,12 @@ package Development.Rodrigues.Almeidas_Cortes.exit.entities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import Development.Rodrigues.Almeidas_Cortes.exit.dto.UpdateExitDTO;
 import Development.Rodrigues.Almeidas_Cortes.exit.dto.CreateExitDTO;
 import Development.Rodrigues.Almeidas_Cortes.exit.enums.TipoServico;
+import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,24 +33,29 @@ public class Exit {
     private Double valorCompra;
     
     @Column(name= "tipo_Servico")
+    @Enumerated(EnumType.STRING) 
     private TipoServico TipoServico;
     
     @Column(name= "anotacoes")
     private String anotacoes;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_User")
+    private User user;
 
-    public Exit(CreateExitDTO dados) {
-        this.dataRegistro = dados.dataRegistro();
+    public Exit(CreateExitDTO dados, User user) {
+        this.dataRegistro = LocalDateTime.now(ZoneId.of("UTC-3"));
         this.dataCompra = dados.dataCompra();
         this.valorCompra = dados.valorCompra();
-        this.TipoServico = dados.TipoServico();
+        this.TipoServico = dados.tipoServico();
         this.anotacoes = dados.anotacoes();
+        this.user = user;
     }
 
     public void updateExit(UpdateExitDTO dados) {
-        this.dataRegistro = dados.dataRegistro();
         this.dataCompra = dados.dataCompra();
         this.valorCompra = dados.valorCompra();
-        this.TipoServico = dados.TipoServico();
+        this.TipoServico = dados.tipoServico();
         this.anotacoes = dados.anotacoes();
     }
 }

@@ -1,0 +1,3 @@
+ALTER TABLE tab_exit
+ADD COLUMN id_User INT NOT NULL,
+ADD CONSTRAINT fk_user FOREIGN KEY (id_User) REFERENCES tab_users(id);
