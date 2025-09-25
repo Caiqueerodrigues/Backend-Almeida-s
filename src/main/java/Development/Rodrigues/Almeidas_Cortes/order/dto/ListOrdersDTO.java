@@ -23,6 +23,7 @@ public record ListOrdersDTO(
     List<String> rendimentoParesMetro,
     String quemAssinou,
     String quemCortou,
-    String jaFoiPago
+    String jaFoiPago,
+    String categoria
 ) {
 }

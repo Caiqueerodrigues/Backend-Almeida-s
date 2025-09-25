@@ -7,6 +7,7 @@ import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.CreateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.UpdateOrderDTO;
 import Development.Rodrigues.Almeidas_Cortes.users.entities.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -72,10 +73,13 @@ public class Order {
 
     @Column(name = "quem_cortou")
     private String quemCortou;
-
+    
     @ManyToOne
     @JoinColumn(name = "id_User", nullable = false)
     private User user;
+    
+    @Column(name = "categoria")
+    String categoria;
     
     public Order(CreateOrderDTO dados, User user) {
         this.client = dados.client();
@@ -94,6 +98,8 @@ public class Order {
         this.cor = dados.cor();
         this.dataRetirada = dados.dataRetirada();
         this.quemCortou = dados.quemCortou();
+        this.categoria = dados.categoria();
+        this.categoria = dados.categoria();
         this.user = user;
     }
 
@@ -113,6 +119,7 @@ public class Order {
         this.quemAssinou = dados.quemAssinou();
         this.cor = dados.cor();
         this.dataRetirada = dados.dataRetirada();
+        this.categoria = dados.categoria();
         this.quemCortou = dados.quemCortou();
     }
 }

@@ -77,7 +77,8 @@ public class OrderService {
                     exists.get().getQuemAssinou(),
                     exists.get().getCor(),
                     exists.get().getDataRetirada(),
-                    exists.get().getQuemCortou()
+                    exists.get().getQuemCortou(),
+                    exists.get().getCategoria()
                 );
                 return new ResponseDTO(order, "", "", "");
             }
@@ -367,7 +368,8 @@ public class OrderService {
                 corList,
                 item.getQuemAssinou(),
                 item.getQuemCortou(),
-                item.getDataPagamento() != null ? "Sim" : "Não"
+                item.getDataPagamento() != null ? "Sim" : "Não",
+                item.getCategoria()
             );
 
             listFormatted.add(newItem);

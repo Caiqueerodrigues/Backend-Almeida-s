@@ -8,6 +8,7 @@ import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 import Development.Rodrigues.Almeidas_Cortes.models.entities.Model;
 import Development.Rodrigues.Almeidas_Cortes.order.dto.ListOrdersDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -69,6 +70,9 @@ public class ListOrder {
     private String quemCortou;
 
     private String jaFoiPago;
+    
+    @Schema(example = "Corte")
+    String categoria;
 
     public ListOrder(ListOrdersDTO dados) {
         this.id = dados.id();
@@ -88,5 +92,6 @@ public class ListOrder {
         this.quemAssinou = dados.quemAssinou();
         this.quemCortou = dados.quemCortou();
         this.jaFoiPago = dados.jaFoiPago();
+        this.categoria = dados.categoria();
     }
 }

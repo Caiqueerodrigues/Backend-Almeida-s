@@ -69,6 +69,9 @@ public class OrderFront {
 
     @Column(name = "quem_cortou")
     private String quemCortou;
+
+    @Column(name = "categoria")
+    private String categoria;
     
     public OrderFront(
         Client client,
@@ -86,7 +89,8 @@ public class OrderFront {
         String quemAssinou,
         String cor,
         LocalDateTime dataRetirada,
-        String quemCortou
+        String quemCortou,
+        String categoria
     ) {
         this.client = client;
         this.modelo = modelo;
@@ -104,5 +108,6 @@ public class OrderFront {
         this.cor = cor;
         this.dataRetirada = dataRetirada;
         this.quemCortou = quemCortou;
+        this.categoria = categoria;
     }
 }
