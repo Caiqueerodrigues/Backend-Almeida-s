@@ -20,7 +20,7 @@ security:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DATABASE_HOST:localhost}:3306/${DATABASE_DATABASE:Almeidas_Cortes}?createDatabaseIfNotExist=true&serverTimezone=GMT-3
+    url: jdbc:mysql://${DATABASE_HOST:localhost}:3306/${DATABASE_DATABASE:Almeidas_Cortes}?createDatabaseIfNotExist=true&serverTimezone=GMT-3&autoReconnect=true
     username: ${DATABASE_USERNAME:root}
     password: ${DATABASE_PASSWORD:1234}
   servlet:
@@ -33,6 +33,7 @@ spring:
       idleTimeout: 600000  # 10 minutos
       validationTimeout: 3000  # 3 segundos
       connectionTimeout: 30000
+      connection-test-query: "SELECT 1"
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
