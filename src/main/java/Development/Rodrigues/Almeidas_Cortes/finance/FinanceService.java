@@ -46,7 +46,7 @@ public class FinanceService {
                     .map(date -> String.format("%02d/%02d", date.getDayOfMonth(), date.getMonthValue()))
                     .toList();
 
-                FinanceGraph bar = exitTreatment(exits, orders, labels);
+                FinanceGraph bar = exitTreatment(exits, orders, labels, initialDate);
                 return new ResponseDTO(bar, "", "", "");
             }
 
@@ -57,70 +57,62 @@ public class FinanceService {
         }
     }
 
-    private FinanceGraph exitTreatment(List<Exit> dados, List<Order> orders, List<String> labels) {
+    private FinanceGraph exitTreatment(List<Exit> dados, List<Order> orders, List<String> labels, LocalDate initialDate) {
+        List<LocalDate> dias = initialDate.datesUntil(initialDate.plusDays(labels.size()))
+            .toList();
 
         // LINE
-        List<Double> exits = labels.stream()
-            .map(label -> {
-                int dia = Integer.parseInt(label.substring(0, 2));
+        List<Double> exits = dias.stream()
+            .map(date -> {
                 double sum = dados.stream()
-                    .filter(exit -> exit.getDataCompra().getDayOfMonth() == dia)
+                    .filter(exit -> exit.getDataCompra().isEqual(date))
                     .map(Exit::getValorCompra)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
             })
             .toList();
-
-        List<Double> ordersValues = labels.stream()
-            .map(label -> {
-                int dia = Integer.parseInt(label.substring(0, 2));
+        List<Double> ordersValues = dias.stream()
+            .map(date -> {
                 double sum = orders.stream()
-                    .filter(order -> order.getDataPedido().getDayOfMonth() == dia)
+                    .filter(order -> order.getDataPedido().toLocalDate().isEqual(date))
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
             })
             .toList();
-
         Double totalExits = round2(exits.stream().reduce(0.0, Double::sum));
         Double totalOrders = round2(ordersValues.stream().reduce(0.0, Double::sum));
-
         List<FinanceGraph.GraphData> dataLine = List.of(
             new FinanceGraph.GraphData("Receitas R$ " + String.format("%.2f", totalOrders), ordersValues),
             new FinanceGraph.GraphData("Despesas R$ " + String.format("%.2f", totalExits), exits)
         );
 
         // BAR
-        List<Double> ordersCortes = labels.stream()
-            .map(label -> {
-                int dia = Integer.parseInt(label.substring(0, 2));
+        List<Double> ordersCortes = dias.stream()
+            .map(date -> {
                 double sum = orders.stream()
                     .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Corte)) &&
-                                    order.getDataPedido().getDayOfMonth() == dia)
+                                    order.getDataPedido().toLocalDate().isEqual(date))
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
             })
             .toList();
-
-        List<Double> ordersDebruagem = labels.stream()
-            .map(label -> {
-                int dia = Integer.parseInt(label.substring(0, 2));
+        List<Double> ordersDebruagem = dias.stream()
+            .map(date -> {
                 double sum = orders.stream()
                     .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Debruagem)) &&
-                                    order.getDataPedido().getDayOfMonth() == dia)
+                                    order.getDataPedido().toLocalDate().isEqual(date))
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
             })
             .toList();
-
-        List<Double> ordersDublagem = labels.stream()
-            .map(label -> {
-                int dia = Integer.parseInt(label.substring(0, 2));
+        List<Double> ordersDublagem = dias.stream()
+            .map(date -> {
                 double sum = orders.stream()
                     .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Dublagem)) &&
-                                    order.getDataPedido().getDayOfMonth() == dia)
+                                    order.getDataPedido().toLocalDate().isEqual(date))
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
