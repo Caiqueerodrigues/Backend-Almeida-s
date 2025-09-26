@@ -98,6 +98,7 @@ public class FinanceService {
                 return round2(sum);
             })
             .toList();
+        Double totalCortesBar = round2(ordersCortes.stream().reduce(0.0, Double::sum));
         List<Double> ordersDebruagem = dias.stream()
             .map(date -> {
                 double sum = orders.stream()
@@ -108,6 +109,7 @@ public class FinanceService {
                 return round2(sum);
             })
             .toList();
+        Double totalDebruagemBar = round2(ordersDebruagem.stream().reduce(0.0, Double::sum));
         List<Double> ordersDublagem = dias.stream()
             .map(date -> {
                 double sum = orders.stream()
@@ -118,11 +120,12 @@ public class FinanceService {
                 return round2(sum);
             })
             .toList();
+        Double totalDublagemBar = round2(ordersDublagem.stream().reduce(0.0, Double::sum));
 
         List<FinanceGraph.GraphData> dataBar = List.of(
-            new FinanceGraph.GraphData("Corte", ordersCortes),
-            new FinanceGraph.GraphData("Debruagem", ordersDebruagem),
-            new FinanceGraph.GraphData("Dublagem", ordersDublagem)
+            new FinanceGraph.GraphData("Corte R$ " + String.format("%.2f", totalCortesBar), ordersCortes),
+            new FinanceGraph.GraphData("Debruagem R$ " + String.format("%.2f", totalDebruagemBar), ordersDebruagem),
+            new FinanceGraph.GraphData("Dublagem R$ " + String.format("%.2f", totalDublagemBar), ordersDublagem)
         );
 
         // PIE
