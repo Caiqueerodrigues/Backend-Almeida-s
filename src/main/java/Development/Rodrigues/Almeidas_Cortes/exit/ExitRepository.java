@@ -9,8 +9,8 @@ import java.time.LocalDate;
 
 
 public interface ExitRepository extends JpaRepository<Exit, Long> {
-    List<Exit> findByDataCompraAndDeletedIsFalse(LocalDate dataCompra);
-    Optional<Exit> findByIdAndDeletedIsFalse(Long id);
+    List<Exit> findByDataCompraAndDeletedIsNull(LocalDate dataCompra);
+    Optional<Exit> findByIdAndDeletedIsNull(Long id);
 
-    List<Exit> findByDataCompraBetweenAndDeletedIsFalse(LocalDate initialDate, LocalDate finalDate);
+    List<Exit> findByDataCompraBetweenAndDeletedIsNull(LocalDate initialDate, LocalDate finalDate);
 }
