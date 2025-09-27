@@ -35,7 +35,7 @@ public class ExitService {
         try {
             LocalDate date = LocalDate.parse(dados.date());
             
-            List<Exit> exist = repository.findByDataCompraAndDeletedIsNull(date);
+            List<Exit> exist = repository.findByDataCompraAndDeletedIsFalse(date);
 
             if(!exist.isEmpty()) {
                 List<SendExit> newList = exist.stream()
@@ -83,7 +83,7 @@ public class ExitService {
 
     public ResponseDTO updateExitService(UpdateExitDTO dados) {
         try {
-            Optional<Exit> exitOp = repository.findByIdAndDeletedIsNull(dados.id());
+            Optional<Exit> exitOp = repository.findByIdAndDeletedIsFalse(dados.id());
             
             if (exitOp.isPresent()) {
                 Exit exit = exitOp.get();
@@ -102,7 +102,7 @@ public class ExitService {
 
     public ResponseDTO deleteExitService(Long id) {
         try {
-            Optional<Exit> exitOp = repository.findByIdAndDeletedIsNull(id);
+            Optional<Exit> exitOp = repository.findByIdAndDeletedIsFalse(id);
 
             if (exitOp.isPresent()) {
                 Exit exit = exitOp.get();
