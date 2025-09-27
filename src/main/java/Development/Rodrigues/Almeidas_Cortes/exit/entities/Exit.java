@@ -55,6 +55,7 @@ public class Exit {
         this.valorCompra = dados.valorCompra();
         this.TipoServico = dados.tipoServico();
         this.anotacoes = dados.anotacoes();
+        this.deleted = false;
         this.user = user;
     }
 
