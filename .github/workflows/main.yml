@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: "Baixar o código"
       - uses: actions/checkout@v5
 
       - name: Docker Login
