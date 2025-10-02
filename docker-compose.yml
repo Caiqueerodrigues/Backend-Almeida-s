@@ -15,7 +15,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   app:
-    build: .
+    image: caiqueerodrigues/almeidas:latest
     container_name: almeidas_app
     depends_on:
       - db
