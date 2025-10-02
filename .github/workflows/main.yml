@@ -58,18 +58,6 @@ jobs:
             caiqueerodrigues/almeidas:latest
             caiqueerodrigues/almeidas:${{ github.event.head_commit.message | slugify }}
 
-      - name: Instalar Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-
-      - name: Rodar Docker Compose
-        run: |
-          docker-compose -f docker-compose.yml up -d
-
-      - name: Limpar imagens antigas
-        run: docker system prune -af
-
 
 # name: "Deploy VPS"
 # on:
