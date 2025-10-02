@@ -1,5 +1,4 @@
-# name: CI
-
+# name: "Deploy VPS"
 # on:
 #   push:
 #     branches: [develop]
@@ -27,40 +26,78 @@
 #           tags: |
 #             caiqueerodrigues/almeidas:v1
 #             caiqueerodrigues/almeidas:latest
-# name: CI
+#             caiqueerodrigues/almeidas:${{ github.sha }}
 
 name: "Deploy VPS"
 on:
   push:
-    branches: 
-      - develop
+    branches: [develop]
 
 jobs:
-  build_deploy:
+  CI:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Baixar o código"
-        uses: actions/checkout@v5.0.0
+      - name: Baixar o código
+        uses: actions/checkout@v5
 
-      - name: "Copiar docker-compose.yml para o servidor"
-        uses: appleboy/scp-action@master
+      - name: Docker Login
+        uses: docker/login-action@v3.6.0
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_SSH_PASSWORD }}
-          source: "docker-compose.yml"
-          target: "/almeidas"
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
 
-      - name: "Deploy via SSH"
-        uses: appleboy/ssh-action@master
-        timeout-minutes: 60
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v6.18.0
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_SSH_PASSWORD }}
-          script: |
-            cd /almeidas
-            docker-compose pull
-            docker-compose down
-            docker-compose up -d
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            caiqueerodrigues/almeidas:v1
+            caiqueerodrigues/almeidas:latest
+            caiqueerodrigues/almeidas:${{ github.sha }}
+
+      - name: Rodar Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d
+
+      - name: Limpar imagens antigas
+        run: docker system prune -af
+
+
+# name: "Deploy VPS"
+# on:
+#   push:
+#     branches: 
+#       - develop
+
+# jobs:
+#   build_deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: "Baixar o código"
+#         uses: actions/checkout@v5.0.0
+
+#       - name: "Copiar docker-compose.yml para o servidor"
+#         uses: appleboy/scp-action@master
+#         with:
+#           host: ${{ secrets.VPS_HOST }}
+#           username: ${{ secrets.VPS_USER }}
+#           password: ${{ secrets.VPS_SSH_PASSWORD }}
+#           source: "docker-compose.yml"
+#           target: "/almeidas"
+
+#       - name: "Deploy via SSH"
+#         uses: appleboy/ssh-action@master
+#         timeout-minutes: 60
+#         with:
+#           host: ${{ secrets.VPS_HOST }}
+#           username: ${{ secrets.VPS_USER }}
+#           password: ${{ secrets.VPS_SSH_PASSWORD }}
+#           script: |
+#             cd /almeidas
+#             docker-compose pull
+#             docker-compose down
+#             docker-compose up -d

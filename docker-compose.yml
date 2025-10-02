@@ -27,7 +27,7 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: um2tres4
       API_BACKEND: http://localhost:3003/
-      API_FRONTEND: http://localhost:3000/
+      API_FRONTEND: https://almeidascorte.netlify.app/
     restart: always
 
 volumes:
