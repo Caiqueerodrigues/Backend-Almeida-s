@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: almeidas_db
+    environment:
+      MYSQL_ROOT_PASSWORD: um2tres4
+      MYSQL_DATABASE: Almeidas_Cortes
+      MYSQL_PASSWORD: um2tres4
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  app:
+    build: .
+    container_name: almeidas_app
+    depends_on:
+      - db
+    ports:
+      - "3003:3003"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_DATABASE: Almeidas_Cortes
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: um2tres4
+      API_BACKEND: http://localhost:3003/
+      API_FRONTEND: http://localhost:3000/
+    restart: always
+
+volumes:
+  db_data:

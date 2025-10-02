@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y tzdata && \
 
 ENV TZ=America/Sao_Paulo
 
-EXPOSE 1000
+EXPOSE 3003
 
 COPY --from=build /app/target/Almeidas_Cortes-0.0.1-SNAPSHOT.jar app.jar
 

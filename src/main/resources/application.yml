@@ -20,9 +20,9 @@ security:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DATABASE_HOST:localhost}:3306/${DATABASE_DATABASE:Almeidas_Cortes}?createDatabaseIfNotExist=true&serverTimezone=GMT-3&autoReconnect=true
+    url: jdbc:mysql://${DATABASE_HOST:db}:3306/${DATABASE_DATABASE:Almeidas_Cortes}
     username: ${DATABASE_USERNAME:root}
-    password: ${DATABASE_PASSWORD:1234}
+    password: ${DATABASE_PASSWORD:um2tres4}
   servlet:
     multipart:
       enabled: true
