@@ -35,7 +35,7 @@ public class FinanceService {
 
     public ResponseDTO getFinanceDataService(LocalDate initialDate, LocalDate finalDate) {
         try {
-            List<Exit> exits = exitRepository.findByDataCompraBetweenAndDeletedIsFalse(initialDate , finalDate);
+            List<Exit> exits = exitRepository.findByDataCompraBetweenAndDeletedIsFalseOrderByDataCompra(initialDate , finalDate);
 
             LocalDateTime startDateTime = initialDate.atStartOfDay();
             LocalDateTime endDateTime = finalDate.atTime(23, 59, 59, 999_999_999);

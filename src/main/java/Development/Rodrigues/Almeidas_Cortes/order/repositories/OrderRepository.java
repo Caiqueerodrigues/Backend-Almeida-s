@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import Development.Rodrigues.Almeidas_Cortes.clients.entities.Client;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 
 
@@ -16,6 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(Long id);
 
     List<Order> findByDataPedidoBetweenOrderByIdDesc(LocalDateTime startDate, LocalDateTime endDate);
+    List<Order> findByDataPedidoBetweenAndCategoriaOrderByIdDesc(LocalDateTime startDate, LocalDateTime endDate, String categoria);
     
     @Query("SELECT o FROM Order o " +
         "WHERE o.dataPedido BETWEEN :startDate AND :endDate " +
@@ -33,7 +33,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByDataPedidoBetweenAndDataPagamentoIsNull(LocalDateTime startDate, LocalDateTime endDate);
     List<Order> findByDataPedidoBetweenAndDataPagamentoIsNotNull(LocalDateTime startDate, LocalDateTime endDate);
-    
+
+    List<Order> findByDataPedidoBetweenAndDataPagamentoIsNullAndCategoria(LocalDateTime startDate, LocalDateTime endDate, String categoria);
+    List<Order> findByDataPedidoBetweenAndDataPagamentoIsNotNullAndCategoria(LocalDateTime startDate, LocalDateTime endDate, String categoria);
     List<Order> findByDataPedidoBetweenAndClientId(LocalDateTime startDate, LocalDateTime endDate, Long clientId);
 
     List<Order> findByClientIdAndDataRetiradaIsNull(Long clientId);
