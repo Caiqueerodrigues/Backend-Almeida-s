@@ -1,15 +1,51 @@
+# version: '2.2'
+
+# services:
+#   db:
+#   image: mysql:8.0
+#   container_name: almeidas_db
+#   environment:
+#     MYSQL_ROOT_PASSWORD: um2tres4
+#     MYSQL_DATABASE: Almeidas_Cortes
+#     MYSQL_USER: almeidas
+#     MYSQL_PASSWORD: um2tres4
+#     MYSQL_ROOT_HOST: '%'
+#     ports:
+#       - "3307:3306"
+#     volumes:
+#       - db_data:/var/lib/mysql
+#     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+#   app:
+#     image: caiqueerodrigues/almeidas:latest
+#     container_name: almeidas_app
+#     depends_on:
+#       - db
+#     ports:
+#       - "3003:3003"
+#     environment:
+#     DATABASE_HOST: db
+#     DATABASE_DATABASE: Almeidas_Cortes
+#     DATABASE_USERNAME: almeidas
+#     DATABASE_PASSWORD: um2tres4
+#     API_BACKEND: http://localhost:3003/
+#     API_FRONTEND: https://almeidascorte.netlify.app/
+#   restart: always
+
+# volumes:
+#   db_data:
 version: '2.2'
 
 services:
   db:
-  image: mysql:8.0
-  container_name: almeidas_db
-  environment:
-    MYSQL_ROOT_PASSWORD: um2tres4
-    MYSQL_DATABASE: Almeidas_Cortes
-    MYSQL_USER: almeidas
-    MYSQL_PASSWORD: um2tres4
-    MYSQL_ROOT_HOST: '%'
+    image: mysql:8.0
+    container_name: almeidas_db
+    environment:
+      MYSQL_ROOT_PASSWORD: um2tres4
+      MYSQL_DATABASE: Almeidas_Cortes
+      MYSQL_USER: almeidas
+      MYSQL_PASSWORD: um2tres4
+      MYSQL_ROOT_HOST: '%'
     ports:
       - "3307:3306"
     volumes:
@@ -24,13 +60,13 @@ services:
     ports:
       - "3003:3003"
     environment:
-    DATABASE_HOST: db
-    DATABASE_DATABASE: Almeidas_Cortes
-    DATABASE_USERNAME: almeidas
-    DATABASE_PASSWORD: um2tres4
-    API_BACKEND: http://localhost:3003/
-    API_FRONTEND: https://almeidascorte.netlify.app/
-  restart: always
+      DATABASE_HOST: db
+      DATABASE_DATABASE: Almeidas_Cortes
+      DATABASE_USERNAME: almeidas
+      DATABASE_PASSWORD: um2tres4
+      API_BACKEND: http://localhost:3003/
+      API_FRONTEND: https://almeidascorte.netlify.app/
+    restart: always
 
 volumes:
   db_data:
