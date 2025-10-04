@@ -34,7 +34,7 @@ public class Exit {
     
     @Column(name= "tipo_Servico")
     @Enumerated(EnumType.STRING) 
-    private TipoServico TipoServico;
+    private TipoServico tipoServico;
     
     @Column(name= "anotacoes")
     private String anotacoes;
@@ -53,7 +53,7 @@ public class Exit {
         this.dataRegistro = LocalDateTime.now(ZoneId.of("UTC-3"));
         this.dataCompra = dados.dataCompra();
         this.valorCompra = dados.valorCompra();
-        this.TipoServico = dados.tipoServico();
+        this.tipoServico = dados.tipoServico();
         this.anotacoes = dados.anotacoes();
         this.deleted = false;
         this.user = user;
@@ -62,7 +62,7 @@ public class Exit {
     public void updateExit(UpdateExitDTO dados) {
         this.dataCompra = dados.dataCompra();
         this.valorCompra = dados.valorCompra();
-        this.TipoServico = dados.tipoServico();
+        this.tipoServico = dados.tipoServico();
         this.anotacoes = dados.anotacoes();
     }
 }

@@ -4,12 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
+import Development.Rodrigues.Almeidas_Cortes.exit.enums.TipoServico;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesFilterReport;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesReport;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesSituationReport;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotNull;
 
 public record ParamsFiltersReports(
 
@@ -30,7 +29,11 @@ public record ParamsFiltersReports(
 
     Long quantidadeVias,
 
-    List<Long> idPedidos
+    List<Long> idPedidos,
+
+    String category,
+
+    String tipo
 ) {
 
 }

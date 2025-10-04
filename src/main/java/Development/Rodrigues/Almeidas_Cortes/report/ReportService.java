@@ -24,14 +24,19 @@ import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import Development.Rodrigues.Almeidas_Cortes.commons.dto.ResponseDTO;
+import Development.Rodrigues.Almeidas_Cortes.exit.ExitRepository;
+import Development.Rodrigues.Almeidas_Cortes.exit.entities.Exit;
+import Development.Rodrigues.Almeidas_Cortes.exit.enums.TipoServico;
 import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
 import Development.Rodrigues.Almeidas_Cortes.materials.MaterialRepository;
 import Development.Rodrigues.Almeidas_Cortes.materials.entities.Material;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
 import Development.Rodrigues.Almeidas_Cortes.order.repositories.OrderRepository;
+import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesFilterReport;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesReport;
 import Development.Rodrigues.Almeidas_Cortes.report.Enums.TypesSituationReport;
 import Development.Rodrigues.Almeidas_Cortes.report.dto.ParamsFiltersReports;
+import Development.Rodrigues.Almeidas_Cortes.report.entities.ExitReport;
 import Development.Rodrigues.Almeidas_Cortes.report.entities.OrderReport;
 
 @Service
@@ -39,6 +44,9 @@ public class ReportService {
 
     @Autowired
     OrderRepository repository;
+
+    @Autowired
+    ExitRepository exitRepository;
 
     @Autowired
     MaterialRepository materialRepository;
@@ -60,6 +68,7 @@ public class ReportService {
                 dados.period().get(1).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999) : null;
     
             List<Order> list = new ArrayList<Order>(); 
+            List<Exit> listExits = new ArrayList<Exit>(); 
         
             boolean paid = dados.situation() == TypesSituationReport.PAGOS;
     
@@ -70,7 +79,7 @@ public class ReportService {
                     if(consult.size() > 0) {
                         List<OrderReport> dadosReport = createList(consult, dados);
         
-                        byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate, "dd/MM/yyyy"), formatDate(finalDate, "dd/MM/yyyy"));
+                        byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate, "dd/MM/yyyy"), formatDate(finalDate, "dd/MM/yyyy"), listExits);
                         return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
                     }
                 } catch (Exception e) {
@@ -115,6 +124,38 @@ public class ReportService {
                             repository.findByDataPagamentoIsNull();
                         }
                         break;
+                    case CATEGORIA_SERVIÇO:
+                        if(dados.tipo().equals("Somente Serviços") || dados.tipo().equals("Serviços e Saídas")) {
+                            if(dados.situation() == TypesSituationReport.TODOS) {
+                                list = repository.findByDataPedidoBetweenAndCategoriaOrderByIdDesc(
+                                    initialDate, 
+                                    finalDate, 
+                                    dados.category()
+                                );
+                            } else {
+                                list = paid ?
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNotNullAndCategoria(
+                                    initialDate, 
+                                    finalDate, 
+                                    dados.category()
+                                ) :
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNullAndCategoria(
+                                    initialDate, 
+                                    finalDate, 
+                                    dados.category()
+                                );
+                            }
+                        }
+
+                        if(dados.tipo().equals("Saídas") || dados.tipo().equals("Serviços e Saídas")) {
+                            TipoServico tipoServico = TipoServico.valueOf(dados.category());
+                            listExits = exitRepository.findByDataCompraBetweenAndDeletedIsFalseAndTipoServicoOrderByDataCompra(
+                                initialDate != null ? initialDate.toLocalDate() : null,
+                                finalDate != null ? finalDate.toLocalDate() : null,
+                                tipoServico
+                            );
+                        }
+                        break;
                     default:
                         if(dados.situation() == TypesSituationReport.TODOS) {
                             list = repository.findByDataPedidoBetweenOrderByIdDesc(initialDate, finalDate);
@@ -128,12 +169,14 @@ public class ReportService {
     
             }
     
-            if(list.size() == 0) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
+            if(list.size() == 0 && dados.firstFilter() != TypesFilterReport.CATEGORIA_SERVIÇO) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
+
+            if(dados.firstFilter() == TypesFilterReport.CATEGORIA_SERVIÇO && listExits.size() == 0) return new ResponseDTO("", "", "", "Não existem saídas para o filtro selecionado");
                 
             try {
-                List<OrderReport> dadosReport = createList(list, dados);
+                List<OrderReport> dadosReport = list.size() > 0 ? createList(list, dados) : new ArrayList<>();
     
-                byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate, "dd/MM/yyyy"), formatDate(finalDate, "dd/MM/yyyy"));
+                byte[] response = generateReportFile(dadosReport, dados, formatDate(initialDate, "dd/MM/yyyy"), formatDate(finalDate, "dd/MM/yyyy"), listExits);
                 return new ResponseDTO(Base64.getEncoder().encodeToString(response), "", "", "");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -203,31 +246,40 @@ public class ReportService {
         List<OrderReport> dados, 
         ParamsFiltersReports dadosFront, 
         String dataInicial, 
-        String dataFinal
+        String dataFinal,
+        List<Exit> listExits
     ) throws IOException {
         try {
             Context context = new Context();
             context.setVariable("dados", dados); 
 
             String htmlContent;
-            System.out.println(dados);
-            if(dadosFront.report() == TypesReport.FECHAMENTO_CLIENTE) {
+            
+            if(dadosFront.report() == TypesReport.FECHAMENTO_CLIENTE || dadosFront.report() == TypesReport.CATEGORIA) {
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
                 double total = 0, totalPago = 0, totalDevido = 0;
                 double totalPares = 0;
-
-                for (OrderReport order : dados) {
-                    totalPares += order.getTotalPares();
-                    total += Double.parseDouble(order.getTotalDinheiro().replace(",", "."));
-
-                    if(!order.getDataPagamento().equals("Pedido não retirado")) totalPago += Double.parseDouble(order.getTotalDinheiro().replace(",", "."));
-                }
                 
-                totalDevido = total - totalPago;
-
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDateTime diaSemanaInicial = LocalDate.parse(dados.get(0).getDataPedido(), formatter).atStartOfDay();
-                LocalDateTime diaSemanaFinal = LocalDate.parse(dados.get(dados.size() - 1).getDataPedido(), formatter).atStartOfDay();
+                
+                LocalDateTime diaSemanaInicial, diaSemanaFinal;
+                
+                if(!dados.isEmpty()) {
+                    diaSemanaInicial = LocalDate.parse(dados.get(0).getDataPedido(), formatter).atStartOfDay();
+                    diaSemanaFinal = LocalDate.parse(dados.get(dados.size() - 1).getDataPedido(), formatter).atStartOfDay();
+                    
+                    for (OrderReport order : dados) {
+                        totalPares += order.getTotalPares();
+                        total += Double.parseDouble(order.getTotalDinheiro().replace(",", "."));
+                        
+                        if(!order.getDataPagamento().equals("Pedido não retirado")) totalPago += Double.parseDouble(order.getTotalDinheiro().replace(",", "."));
+                    }
+
+                    totalDevido = total - totalPago;
+                } else {
+                    diaSemanaInicial = listExits.get(0).getDataCompra().atStartOfDay();
+                    diaSemanaFinal = listExits.get(listExits.size() - 1).getDataCompra().atStartOfDay();
+                }
                 
                 context.setVariable("totalDinheiro", currencyFormat.format(total));
                 context.setVariable("totalPago", currencyFormat.format(totalPago));
@@ -236,10 +288,32 @@ public class ReportService {
                 context.setVariable("totalDevidoFormatado", currencyFormat.format(totalDevido));
                 context.setVariable(
                     "periodo", "De " + 
-                    dados.get(0).getDataPedido() + " - " + getDayOfWeek(diaSemanaInicial) + " até " + dados.get(dados.size() - 1).getDataPedido() + " - " + getDayOfWeek(diaSemanaFinal)
+                    (dados.isEmpty() ? listExits.get(0).getDataCompra().format(formatter) : dados.get(0).getDataPedido()) + " - " + getDayOfWeek(diaSemanaInicial) + " até " + (dados.isEmpty() ? listExits.get(listExits.size() - 1).getDataCompra().format(formatter) : dados.get(dados.size() - 1).getDataPedido()) + " - " + getDayOfWeek(diaSemanaFinal)
                 );
 
-                htmlContent = templateEngine.process("relatorioCliente", context);
+                if(dadosFront.report() == TypesReport.CATEGORIA) {
+                    Double totalSaidas = 0.0;
+                    List<ExitReport> exitsReport = new ArrayList<>();
+                    for(Exit exit: listExits) {
+                        totalSaidas += exit.getValorCompra();
+                        exitsReport.add(
+                            new ExitReport(
+                                exit.getId(),
+                                formatDate(exit.getDataRegistro(),"dd/MM/yyyy 'às' HH:mm"),
+                                formatDate(exit.getDataCompra().atStartOfDay(),"dd/MM/yyyy"),
+                                exit.getValorCompra(), 
+                                exit.getAnotacoes(), 
+                                exit.getUser().getName(),
+                                getDayOfWeek(exit.getDataCompra().atStartOfDay())
+                            )
+                        );
+                    }
+                    context.setVariable("listaSaidas", exitsReport);
+                    context.setVariable("totalSaidas", currencyFormat.format(totalSaidas));
+                    htmlContent = templateEngine.process("relatorioCategoria", context);
+                } else {
+                    htmlContent = templateEngine.process("relatorioCliente", context);
+                }
             } else if(dadosFront.report() == TypesReport.FICHAS_GERAIS) {
                 htmlContent = templateEngine.process("relatorioFichasGerais", context);
             } else if(dadosFront.report() == TypesReport.FICHA_DE_CORTE) {

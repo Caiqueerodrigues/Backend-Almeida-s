@@ -27,7 +27,7 @@ public class SendExit {
     private Double valorCompra;
     
     @Enumerated(EnumType.STRING) 
-    private TipoServico TipoServico;
+    private TipoServico tipoServico;
     
     private String anotacoes;
     
@@ -38,7 +38,7 @@ public class SendExit {
         this.dataRegistro = dados.getDataRegistro();
         this.dataCompra = dados.getDataCompra();
         this.valorCompra = dados.getValorCompra();
-        this.TipoServico = dados.getTipoServico();
+        this.tipoServico = dados.getTipoServico();
         this.anotacoes = dados.getAnotacoes();
         this.user = dados.getUser().getFullName();
     }
