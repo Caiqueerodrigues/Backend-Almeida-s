@@ -30,6 +30,7 @@ public class SecuriryConfigurate {
             .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> 
             authz
+                .requestMatchers(HttpMethod.OPTIONS).permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/cadastrar").permitAll() //para permitir seguir a req sem token
                 .requestMatchers(HttpMethod.GET, "/users/not-power").permitAll()
