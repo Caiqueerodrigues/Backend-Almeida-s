@@ -2,14 +2,14 @@ version: '2.2'
 
 services:
   db:
-  image: mysql:8.0
-  container_name: almeidas_db
-  environment:
-    MYSQL_ROOT_PASSWORD: um2tres4
-    MYSQL_DATABASE: Almeidas_Cortes
-    MYSQL_USER: almeidas
-    MYSQL_PASSWORD: um2tres4
-    MYSQL_ROOT_HOST: '%'
+    image: mysql:8.0
+    container_name: almeidas_db
+    environment:
+      MYSQL_ROOT_PASSWORD: um2tres4
+      MYSQL_DATABASE: Almeidas_Cortes
+      MYSQL_USER: almeidas
+      MYSQL_PASSWORD: um2tres4
+      MYSQL_ROOT_HOST: '%'
     ports:
       - "3307:3306"
     volumes:
