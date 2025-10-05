@@ -24,13 +24,13 @@ services:
     ports:
       - "3003:3003"
     environment:
-    DATABASE_HOST: db
-    DATABASE_DATABASE: Almeidas_Cortes
-    DATABASE_USERNAME: root
-    DATABASE_PASSWORD: um2tres4
-    API_BACKEND: http://localhost:3003/
-    API_FRONTEND: https://almeidascorte.netlify.app/
-  restart: always
+      DATABASE_HOST: db
+      DATABASE_DATABASE: Almeidas_Cortes
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: um2tres4
+      API_BACKEND: http://localhost:3003/
+      API_FRONTEND: https://almeidascorte.netlify.app/
+    restart: always
 
 volumes:
   db_data:
