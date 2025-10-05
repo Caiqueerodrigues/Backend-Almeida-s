@@ -18,6 +18,7 @@ services:
 
   app:
     image: caiqueerodrigues/almeidas:latest
+    # build: . // BUILDAR LOCAL 
     container_name: almeidas_app
     depends_on:
       - db
@@ -29,7 +30,7 @@ services:
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: um2tres4
       API_BACKEND: http://localhost:3003/
-      API_FRONTEND: https://almeidascorte.netlify.app/
+      API_FRONTEND: http://frontend:3000/
     restart: always
 
 volumes:

@@ -44,7 +44,15 @@ public class SecuriryConfigurate {
                 .anyRequest().authenticated()) //todas as outras precisan do token
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:3000", "https://almeidascorte.netlify.app", "http://192.168.0.12:3000", "https://almeidas-vps.netlify.app"));
+                    config.setAllowedOrigins(List.of(
+                        "http://localhost:3000", 
+                        "http://localhost:3003", 
+                        "https://almeidascorte.netlify.app", 
+                        "http://192.168.0.12:3000", 
+                        "https://almeidas-vps.netlify.app",
+                        "http://frontend:3000",
+                        "http://app:3003"
+                    ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setExposedHeaders(List.of("Authorization"));
