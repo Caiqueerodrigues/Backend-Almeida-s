@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: um2tres4
       MYSQL_DATABASE: Almeidas_Cortes
-      MYSQL_USER: almeidas
+      MYSQL_USER: root
       MYSQL_PASSWORD: um2tres4
       MYSQL_ROOT_HOST: '%'
     ports:
