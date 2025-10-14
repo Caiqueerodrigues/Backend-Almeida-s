@@ -12,6 +12,7 @@ public class FinanceGraph {
     private List<GraphData> dataLine;
     private List<GraphData> dataBar;
     private List<Double> dataPie;
+    private List<GraphData> dataPaidBar;
 
     @Getter
     @Setter

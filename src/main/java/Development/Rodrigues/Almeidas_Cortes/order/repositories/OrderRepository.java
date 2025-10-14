@@ -15,6 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(Long id);
 
     List<Order> findByDataPedidoBetweenOrderByIdDesc(LocalDateTime startDate, LocalDateTime endDate);
+    List<Order> findByDataPedidoBetweenAndDataPagamentoIsNotNullOrderByIdDesc(LocalDateTime startDate, LocalDateTime endDate);
     List<Order> findByDataPedidoBetweenAndCategoriaOrderByIdDesc(LocalDateTime startDate, LocalDateTime endDate, String categoria);
     
     @Query("SELECT o FROM Order o " +

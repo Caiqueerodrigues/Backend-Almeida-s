@@ -40,13 +40,14 @@ public class FinanceService {
             LocalDateTime startDateTime = initialDate.atStartOfDay();
             LocalDateTime endDateTime = finalDate.atTime(23, 59, 59, 999_999_999);
             List<Order> orders = orderRepository.findByDataPedidoBetweenOrderByIdDesc(startDateTime , endDateTime);
+            List<Order> ordersPaid = orderRepository.findByDataPedidoBetweenAndDataPagamentoIsNotNullOrderByIdDesc(startDateTime , endDateTime);
 
             if(!exits.isEmpty() || !orders.isEmpty()) {
                 List<String> labels = initialDate.datesUntil(finalDate.plusDays(1))
                     .map(date -> String.format("%02d/%02d", date.getDayOfMonth(), date.getMonthValue()))
                     .toList();
 
-                FinanceGraph bar = exitTreatment(exits, orders, labels, initialDate);
+                FinanceGraph bar = exitTreatment(exits, orders, ordersPaid, labels, initialDate);
                 return new ResponseDTO(bar, "", "", "");
             }
 
@@ -57,7 +58,7 @@ public class FinanceService {
         }
     }
 
-    private FinanceGraph exitTreatment(List<Exit> dados, List<Order> orders, List<String> labels, LocalDate initialDate) {
+    private FinanceGraph exitTreatment(List<Exit> dados, List<Order> orders, List<Order> ordersPaid, List<String> labels, LocalDate initialDate) {
         List<LocalDate> dias = initialDate.datesUntil(initialDate.plusDays(labels.size()))
             .toList();
 
@@ -128,6 +129,47 @@ public class FinanceService {
             new FinanceGraph.GraphData("Dublagem R$ " + String.format("%.2f", totalDublagemBar), ordersDublagem)
         );
 
+        // BAR PAID
+        List<Double> ordersCortesPaid = dias.stream()
+            .map(date -> {
+                double sum = ordersPaid.stream()
+                    .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Corte)) &&
+                                    order.getDataPedido().toLocalDate().isEqual(date))
+                    .map(Order::getTotalDinheiro)
+                    .reduce(0.0, Double::sum);
+                return round2(sum);
+            })
+            .toList();
+        Double totalCortesPaidBar = round2(ordersCortesPaid.stream().reduce(0.0, Double::sum));
+        List<Double> ordersDebruagemPaid = dias.stream()
+            .map(date -> {
+                double sum = ordersPaid.stream()
+                    .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Debruagem)) &&
+                                    order.getDataPedido().toLocalDate().isEqual(date))
+                    .map(Order::getTotalDinheiro)
+                    .reduce(0.0, Double::sum);
+                return round2(sum);
+            })
+            .toList();
+        Double totalDebruagemPaidBar = round2(ordersDebruagemPaid.stream().reduce(0.0, Double::sum));
+        List<Double> ordersDublagemPaid = dias.stream()
+            .map(date -> {
+                double sum = ordersPaid.stream()
+                    .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Dublagem)) &&
+                                    order.getDataPedido().toLocalDate().isEqual(date))
+                    .map(Order::getTotalDinheiro)
+                    .reduce(0.0, Double::sum);
+                return round2(sum);
+            })
+            .toList();
+        Double totalDublagemPaidBar = round2(ordersDublagemPaid.stream().reduce(0.0, Double::sum));
+
+        List<FinanceGraph.GraphData> dataPaidBar = List.of(
+            new FinanceGraph.GraphData("Corte R$ " + String.format("%.2f", totalCortesPaidBar), ordersCortesPaid),
+            new FinanceGraph.GraphData("Debruagem R$ " + String.format("%.2f", totalDebruagemPaidBar), ordersDebruagemPaid),
+            new FinanceGraph.GraphData("Dublagem R$ " + String.format("%.2f", totalDublagemPaidBar), ordersDublagemPaid)
+        );
+
         // PIE
         double totalDublagem = round2(
             dados.stream()
@@ -149,7 +191,7 @@ public class FinanceService {
         );
         List<Double> dataPie = List.of(totalCorte, totalDebruagem, totalDublagem);
 
-        return new FinanceGraph(labels, dataLine, dataBar, dataPie);
+        return new FinanceGraph(labels, dataLine, dataBar, dataPie, dataPaidBar);
     }
 
     private Double round2(Double value) {
