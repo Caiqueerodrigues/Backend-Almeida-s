@@ -17,7 +17,8 @@ public class CorsConfig implements WebMvcConfigurer {
                 "https://almeidas-vps.netlify.app",
                 "http://frontend:3000",
                 "http://app:3003",
-                "http://191.252.217.3:3000"
+                "http://191.252.217.3:3000",
+                "https://almeidas.app.br"
                 )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
