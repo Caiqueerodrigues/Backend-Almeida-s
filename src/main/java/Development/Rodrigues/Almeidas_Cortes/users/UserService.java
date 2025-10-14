@@ -64,9 +64,10 @@ public class UserService {
     
             User user = (User) auth.getPrincipal();
 
-            if (session.getAttribute("user") != null) {
-                return new ResponseDTO("", "Você já está logado em outra sessão.", "", "");
-            }
+            //permitir somente um login por user
+            // if (session.getAttribute("user") != null) {
+            //     return new ResponseDTO("", "Você já está logado em outra sessão.", "", "");
+            // }
     
             if (!user.isActive()) {
                 return new ResponseDTO("", "Usuário inativo, procure a administração!", "", "");
