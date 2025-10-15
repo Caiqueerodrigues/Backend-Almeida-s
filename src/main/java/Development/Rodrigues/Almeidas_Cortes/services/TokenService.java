@@ -33,7 +33,7 @@ public class TokenService {
                 .withClaim("funcao", user.getFunction())
                 .withClaim("sexo", user.getSex())
                 .withClaim("photo", user.getPhoto())
-                .withExpiresAt(dataExpiracao(15)) //expiração do token
+                .withExpiresAt(dataExpiracao(60)) //expiração do token
                 .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new RuntimeException("Erro ao gerar token");
