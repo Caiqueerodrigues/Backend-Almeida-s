@@ -171,8 +171,15 @@ public class ReportService {
     
             if(list.size() == 0 && dados.firstFilter() != TypesFilterReport.CATEGORIA_SERVIÇO) return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
 
-            if(dados.firstFilter() == TypesFilterReport.CATEGORIA_SERVIÇO && listExits.size() == 0) return new ResponseDTO("", "", "", "Não existem saídas para o filtro selecionado");
-                
+            if(dados.firstFilter() == TypesFilterReport.CATEGORIA_SERVIÇO) {
+                if(dados.tipo().equals("Saídas") && listExits.size() == 0) {
+                    return new ResponseDTO("", "", "", "Não existem saídas para o filtro selecionado");
+                } else if(dados.tipo().equals("Somente Serviços") && list.size() == 0) {
+                    return new ResponseDTO("", "", "", "Não existem pedidos para o filtro selecionado");
+                } else if(dados.tipo().equals("Serviços e Saídas") && list.size() == 0 && listExits.size() == 0) {
+                    return new ResponseDTO("", "", "", "Não existem pedidos ou saídas para o filtro selecionado");
+                }
+            }
             try {
                 List<OrderReport> dadosReport = list.size() > 0 ? createList(list, dados) : new ArrayList<>();
     
@@ -261,6 +268,11 @@ public class ReportService {
                 double totalPares = 0;
                 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                DateTimeFormatter geradoFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
+
+                String geradoEm = java.time.ZonedDateTime.now(java.time.ZoneOffset.ofHours(-3)).format(geradoFormatter);
+                
+                context.setVariable("geradoEm", geradoEm);
                 
                 LocalDateTime diaSemanaInicial, diaSemanaFinal;
                 

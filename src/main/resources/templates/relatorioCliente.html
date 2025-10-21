@@ -78,13 +78,16 @@
             border-bottom: 2px solid #000;
             display: block;
         }
+        .underline {
+            border-bottom: 1px solid #000;
+        }
     </style>
 </head>
 <body>
     <div class="container" th:each="i : ${#numbers.sequence(1, dados[0].quantidadeVias)}">
         <div class="container-logo">
             <img 
-                    src="http://191.252.217.3:3000/images/leao-sem-fundo.png" 
+                    src="https://almeidas.app.br/images/leao-sem-fundo.png" 
                     alt="Logo Almeida's Corte" class="logo"
                 />
                 <span style="color: #E91F31; font-size: 14px;">Almeida's Corte</span><br/>
@@ -93,6 +96,9 @@
         </div>
         <div class="content">
             <p style="font-size: 20px; color: #E20148; text-align: center; margin: 0; padding: 0;">ALMEIDA'S CORTES</p>
+            <p class="paragraph" style="text-align: center; margin-bottom: 5px;">
+                <span class="underline" th:text="'Gerado em: ' + ${geradoEm}"></span>
+            </p>
             <p class="paragraph" style="text-align: center;">
                 <span class="bold" th:text="${dados[0].nomeCliente}"></span>
             </p>

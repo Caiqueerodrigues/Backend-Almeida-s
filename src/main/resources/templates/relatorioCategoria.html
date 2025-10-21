@@ -8,13 +8,13 @@
             border: 2px solid #000;
             padding: 4px;
             border-radius: 12px;
-            display: table; /* Alternativa ao flex */
+            display: table;
             margin-top: 10px;
             width: 100%;
         }
         .container-logo {
             margin: 5px 0 10px 5px;
-            display: inline-block; /* Simula flex-item */
+            display: inline-block;
             vertical-align: top;
         }
         .logo {
@@ -23,7 +23,7 @@
             display: block;
         }
         .content {
-            display: inline-block; /* Simula flex-item */
+            display: inline-block;
             position: relative;
         }
         .border-top {
@@ -31,6 +31,10 @@
         }
         .border-bottom {
             border-bottom: 2px dashed #000;
+        }
+        .border-x {
+            border-left: 2px dashed #000;
+            border-right: 2px dashed #000;
         }
         .separador {
             color: #f00;
@@ -78,23 +82,30 @@
             border-bottom: 2px solid #000;
             display: block;
         }
+        .underline {
+            border-bottom: 1px solid #000;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="container-logo">
             <img 
-                    src="http://191.252.217.3:3000/images/leao-sem-fundo.png" 
-                    alt="Logo Almeida's Corte" class="logo"
-                />
-                <span style="color: #E91F31; font-size: 14px;">Almeida's Corte</span><br/>
-                <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
-                <span style="font-size: 14px; color: #079C27; font-weight: bold;">(18) 99706-1227</span><br/>
+                src="https://almeidas.app.br/images/leao-sem-fundo.png" 
+                alt="Logo Almeida's Corte" class="logo"
+            />
+            <span style="color: #E91F31; font-size: 14px;">Almeida's Corte</span><br/>
+            <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
+            <span style="font-size: 14px; color: #079C27; font-weight: bold;">(18) 99706-1227</span><br/>
         </div>
+
         <div class="content">
             <p style="font-size: 20px; color: #E20148; text-align: center; margin: 0; padding: 0;">ALMEIDA'S CORTES</p>
             <p class="paragraph" style="text-align: center;">
                 <span class="bold">Relatório de Serviços e Saídas</span>
+            </p>
+            <p class="paragraph" style="text-align: center; margin-bottom: 5px;">
+                <span class="underline" th:text="'Gerado em: ' + ${geradoEm}"></span>
             </p>
             <p class="paragraph">
                 <span th:text="${periodo}"></span>
@@ -108,25 +119,110 @@
                 <span class="bold" th:text="'Total Pedidos' + ${totalDinheiro}"></span>
             </p>
             <p class="paragraph" style="text-align: center;">
-                <span  style="color: #079C27;" class="bold" th:text="'Total pedidos ' + ${totalDinheiro}"></span>
+                <span style="color: #079C27;" class="bold" th:text="'Total pedidos ' + ${totalDinheiro}"></span>
                 <span class="separador"> - </span>
-                <span 
-                    style="color: #ffa600;" 
-                    class="bold" 
-                    th:text="'Total Saídas ' + ${totalSaidas}"
-                ></span>
+                <span style="color: #ffa600;" class="bold" th:text="'Total Saídas ' + ${totalSaidas}"></span>
             </p>
         </div>
 
-        <div th:if="${dados.size() > 0}">
+        <!-- AMBOS: PEDIDOS E SAÍDAS -->
+        <div 
+            th:if="${dados.size() > 0 and listaSaidas.size() > 0}" 
+            style="display: table; width: 100%;"
+        >
+            <!-- COLUNA: PEDIDOS -->
+            <div style="display: table-cell; vertical-align: top; padding: 10px; width: 50%;">
+                <p class="paragraph" style="text-align: center;">
+                    <span style="color: #079C27;" class="bold">PEDIDOS</span>
+                </p>
+                <div 
+                    th:each="venda, iterStat : ${dados}" 
+                    th:class="${iterStat.index == 0 ? 'border-top border-bottom border-x' : 'border-bottom border-x' }" 
+                    style="padding: 10px;"
+                >
+                    <p class="paragraph">
+                        <span class="bold" th:text="'ID ' + ${venda.id}"></span>
+                        <span class="separador"> - </span>
+                        <span th:text="${venda.nomeCliente}"></span>
+                    </p>
+                    <p class="paragraph">
+                        <span>Data do pedido </span>
+                        <span class="bold" th:text="${venda.dataPedido}"></span>
+                        <span class="separador"> - </span>
+                        <span th:text="${venda.diaSemana}"></span>
+                    </p>
+                    <p class="paragraph">
+                        <span th:text="${!venda.isDublagem AND !venda.isDebruagem ? #numbers.formatDecimal(venda.totalPares, 0, '0') : venda.totalPares} + ${venda.isDublagem ? ' Mts' : ' pares'}"></span>
+                        <span class="separador"> - </span>
+                        <span class="bold" th:text="'Total R$ ' + ${venda.totalDinheiro}"></span>
+                        <span class="separador"> - </span>
+                        <span th:if="${!venda.isDublagem AND !venda.isDebruagem}" th:text="${venda.qtdFacas}  + ' FACA' + ${venda.qtdFacas > 1 ? 'S' : ''}"></span>
+                        <span th:if="${!venda.isDublagem AND !venda.isDebruagem}" class="separador"> - </span>
+                        <span th:text="${venda.precoPar} + ${venda.isDublagem ? ' o MT' : ' o par'}"></span>
+                    </p>
+                    <p class="paragraph">
+                        <span 
+                            th:class="${venda.dataPagamento != 'Pedido não retirado' ? 'pago' : 'devido'}" 
+                            th:text="${venda.dataPagamento != 'Pedido não retirado' ? 'PAGO' : 'DEVIDO'}"
+                        ></span>
+                        <span th:if="${venda.dataPagamento != 'Pedido não retirado'}" class="separador"> - </span>
+                        <span th:if="${venda.dataPagamento != 'Pedido não retirado'}" th:text="'Data do pagamento ' + ${venda.dataPagamento}"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- COLUNA: SAÍDAS -->
+            <div style="display: table-cell; vertical-align: top; padding: 10px; width: 50%">
+                <p class="paragraph" style="text-align: center;">
+                    <span style="color: #ffa600;" class="bold">SAIDAS</span>
+                </p>
+                <div
+                    th:each="saida, iterStat : ${listaSaidas}"
+                    th:class="${iterStat.index == 0 ? 'border-top border-bottom border-x' : 'border-bottom border-x' }"
+                    style="padding: 10px;"
+                >
+                    <p class="paragraph">
+                        <span class="bold" th:text="'ID ' + ${saida.id}"></span>
+                        <span class="separador"> - </span>
+                        <span>Data da Saída </span>
+                        <span class="separador"> - </span>
+                        <span class="bold" th:text="${saida.dataCompra}"></span>
+                        <span class="separador"> - </span>
+                        <span>VALOR </span>
+                        <span class="separador"> - </span>
+                        <span class="bold" th:text="'R$ ' + ${saida.valorCompra}"></span>
+                        <span th:text="${saida.diaDaSemana}"></span>
+                    </p>
+                    <p class="paragraph">
+                        <span>Data do Registro</span>
+                        <span class="separador"> - </span>
+                        <span class="bold" th:text="${saida.dataRegistro}"></span>
+                        <span class="separador"> - </span>
+                        <span>Quem Cadastrou</span>
+                        <span class="separador"> - </span>
+                        <span class="bold" th:text="${saida.nameUser}"></span>
+                    </p>
+                    <p class="paragraph" style="text-align: center; color: #f00;">
+                        <span class="bold">Anotações da Saída</span>
+                    </p>
+                    <p class="paragraph">
+                        <span th:text="${saida.anotacoes}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOMENTE PEDIDOS -->
+        <div th:if="${dados.size() > 0 and listaSaidas.size() == 0}">
             <p class="paragraph" style="text-align: center;">
-                <span  style="color: #079C27;" class="bold">PEDIDOS</span>
+                <span style="color: #079C27;" class="bold">PEDIDOS</span>
             </p>
             <div 
                 th:each="venda, iterStat : ${dados}" 
-                th:class="${iterStat.index == 0 ? 'border-top border-bottom' : (iterStat.index == dados.size() - 1 ? '' : 'border-bottom')}" 
+                th:class="${iterStat.index == 0 ? dados.size() > 1 ? 'border-bottom border-top' : 'border-top' : (iterStat.index == dados.size() - 1 ? '' : 'border-bottom')}" 
                 style="padding: 10px;"
             >
+                
                 <p class="paragraph">
                     <span class="bold" th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>
@@ -157,12 +253,14 @@
             </div>
         </div>
 
-        <div th:if="${listaSaidas.size() > 0}">
+        <!-- SOMENTE SAÍDAS -->
+        <div th:if="${listaSaidas.size() > 0 and dados.size() == 0}">
             <p class="paragraph" style="text-align: center;">
-                <span  style="color: #ffa600;" class="bold">SAIDAS</span>
+                <span style="color: #ffa600;" class="bold">SAIDAS</span>
             </p>
             <div
-                th:each="saida, iterStat : ${listaSaidas}" 
+                th:each="saida, iterStat : ${listaSaidas}"
+                th:class="${iterStat.index == 0 ? (listaSaidas.size() > 1 ? 'border-bottom border-top' : 'border-top') : (iterStat.index == listaSaidas.size() - 1 ? '' : 'border-bottom')}"
                 style="padding: 10px;"
             >
                 <p class="paragraph">
