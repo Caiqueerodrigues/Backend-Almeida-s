@@ -129,6 +129,10 @@
             th:class="${iterStat.index == 0 ? 'border-top border-bottom' : (iterStat.index == dados.size() - 1 ? '' : 'border-bottom')}" 
             style="padding: 10px;"
         >
+            <p 
+                style="text-align: center; color: #E91F31; font-size: 18px; margin: 0; padding: 0;" 
+                class="bold"
+                th:text="${venda.categoria}"></p>
             <p class="paragraph">
                 <span class="bold" th:text="'ID ' + ${venda.id}"></span>
                 <span class="separador"> - </span>

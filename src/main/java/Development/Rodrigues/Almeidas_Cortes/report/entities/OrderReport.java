@@ -71,6 +71,8 @@ public class OrderReport {
     private Boolean isDublagem;
 
     private Boolean isDebruagem;
+
+    private String categoria;
     
     public OrderReport(
         Long id, 
@@ -98,7 +100,8 @@ public class OrderReport {
         String refModelo,
         String unidadeMedida,
         Boolean isDublagem,
-        Boolean isDebruagem
+        Boolean isDebruagem,
+        String categoria
     ) {
         this.id = id;
         this.nomeModelo = modelo.getTipo().toUpperCase();
@@ -126,6 +129,7 @@ public class OrderReport {
         this.unidadeMedida = unidadeMedida;
         this.isDublagem = isDublagem;
         this.isDebruagem = isDebruagem;
+        this.categoria = categoria;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {

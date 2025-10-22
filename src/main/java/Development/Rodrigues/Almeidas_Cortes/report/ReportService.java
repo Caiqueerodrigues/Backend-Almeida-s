@@ -243,7 +243,8 @@ public class ReportService {
                     order.getModelo().getRefOrdem(),
                     order.getModelo().getUnidadeMedida(),
                     order.getModelo().getTipo().toLowerCase().contains("dublagem"),
-                    order.getModelo().getTipo().toLowerCase().contains("debruagem")
+                    order.getModelo().getTipo().toLowerCase().contains("debruagem"),
+                    order.getCategoria()
                 );
             })
             .collect(Collectors.toList());
@@ -273,6 +274,7 @@ public class ReportService {
                 String geradoEm = java.time.ZonedDateTime.now(java.time.ZoneOffset.ofHours(-3)).format(geradoFormatter);
                 
                 context.setVariable("geradoEm", geradoEm);
+                context.setVariable("categoria", dadosFront.tipo());
                 
                 LocalDateTime diaSemanaInicial, diaSemanaFinal;
                 
