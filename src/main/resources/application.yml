@@ -9,9 +9,9 @@ upload:
     photosUsers: "${UPLOAD_DIR_PHOTOS_USERS:/almeidas/photosUsers}"
 
 backend:
-  api: "${API_BACKEND:http://192.168.1.17:3003/}"
+  api: "${API_BACKEND:https://almeidas.app.br/api}"
 frontEnd:
-  api: "${API_FRONTEND:http://localhost:3000/}"
+  api: "${API_FRONTEND:https://almeidas.app.br/}"
 
 security:
   token:
