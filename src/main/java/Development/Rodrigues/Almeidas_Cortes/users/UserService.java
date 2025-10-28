@@ -53,6 +53,9 @@ public class UserService {
     @Value("${backend.api}")
     private String backendApi;
 
+    @Value("${upload.dir.photosUsers}") 
+    private String photosUserDir;
+
     private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
 
     public ResponseDTO loginService(LoginDTO dados, HttpSession session) {
@@ -152,7 +155,7 @@ public class UserService {
                 oldUser.setActive(active);
 
                 if (photo != null && !photo.isEmpty()) {
-                    String folderPath = "src/main/resources/users";
+                    String folderPath = photosUserDir;
                     File dir = new File(folderPath);
                     if (!dir.exists()) {
                         dir.mkdirs(); // cria se não existir o diretorio

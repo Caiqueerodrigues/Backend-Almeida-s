@@ -31,7 +31,12 @@ services:
       DATABASE_PASSWORD: um2tres4
       API_BACKEND: http://localhost:3003/
       API_FRONTEND: http://frontend:3000/
+      UPLOAD_DIR_PHOTOS: /anexos
+      UPLOAD_DIR_PHOTOS_USERS: /photosUsers
     restart: always
+    volumes:
+      - /almeidas/anexos:/anexos
+      - /almeidas/photosUsers:/photosUsers
 
 volumes:
   db_data:
