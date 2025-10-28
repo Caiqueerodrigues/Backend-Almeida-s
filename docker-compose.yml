@@ -29,8 +29,8 @@ services:
       DATABASE_DATABASE: Almeidas_Cortes
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: um2tres4
-      API_BACKEND: http://localhost:3003/
-      API_FRONTEND: http://frontend:3000/
+      API_BACKEND: https://almeidas.app.br/api
+      API_FRONTEND: https://almeidas.app.br/
       UPLOAD_DIR_PHOTOS: /anexos
       UPLOAD_DIR_PHOTOS_USERS: /photosUsers
     restart: always
