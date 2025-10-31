@@ -171,6 +171,12 @@ public class FinanceService {
         );
 
         // PIE
+        double totalGeral = round2(
+            dados.stream()
+                .filter(exit -> TipoServico.Geral.equals(exit.getTipoServico()))
+                .map(Exit::getValorCompra)
+                .reduce(0.0, Double::sum)
+        );
         double totalDublagem = round2(
             dados.stream()
                 .filter(exit -> TipoServico.Dublagem.equals(exit.getTipoServico()))
@@ -189,7 +195,7 @@ public class FinanceService {
                 .map(Exit::getValorCompra)
                 .reduce(0.0, Double::sum)
         );
-        List<Double> dataPie = List.of(totalCorte, totalDebruagem, totalDublagem);
+        List<Double> dataPie = List.of(totalGeral, totalCorte, totalDebruagem, totalDublagem);
 
         return new FinanceGraph(labels, dataLine, dataBar, dataPie, dataPaidBar);
     }
