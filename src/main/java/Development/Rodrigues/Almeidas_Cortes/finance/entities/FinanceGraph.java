@@ -13,6 +13,7 @@ public class FinanceGraph {
     private List<GraphData> dataBar;
     private List<Double> dataPie;
     private List<GraphData> dataPaidBar;
+    private List<GraphData> dataReceiveBar;
 
     @Getter
     @Setter

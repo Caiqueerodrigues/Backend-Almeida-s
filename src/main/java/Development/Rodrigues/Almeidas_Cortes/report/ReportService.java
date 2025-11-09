@@ -262,8 +262,8 @@ public class ReportService {
             context.setVariable("dados", dados); 
 
             String htmlContent;
-            
-            if(dadosFront.report() == TypesReport.FECHAMENTO_CLIENTE || dadosFront.report() == TypesReport.CATEGORIA) {
+
+            if(dadosFront.report() == TypesReport.FECHAMENTO_CLIENTE || dadosFront.report() == TypesReport.CATEGORIA || (dadosFront.report() == TypesReport.COMPLETO && dadosFront.firstFilter() == TypesFilterReport.PERÍODO)) {
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
                 double total = 0, totalPago = 0, totalDevido = 0;
                 double totalPares = 0;
@@ -296,6 +296,7 @@ public class ReportService {
                 }
                 
                 context.setVariable("totalDinheiro", currencyFormat.format(total));
+                context.setVariable("totalPagoNumber", totalPago);
                 context.setVariable("totalPago", currencyFormat.format(totalPago));
                 context.setVariable("totalPares", totalPares);
                 context.setVariable("totalDevido", totalDevido);
@@ -325,6 +326,8 @@ public class ReportService {
                     context.setVariable("listaSaidas", exitsReport);
                     context.setVariable("totalSaidas", currencyFormat.format(totalSaidas));
                     htmlContent = templateEngine.process("relatorioCategoria", context);
+                } else if(dadosFront.firstFilter() == TypesFilterReport.PERÍODO) {
+                    htmlContent = templateEngine.process("relatorioPeriodo", context);
                 } else {
                     htmlContent = templateEngine.process("relatorioCliente", context);
                 }
