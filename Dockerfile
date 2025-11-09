@@ -7,10 +7,10 @@ COPY . .
 
 RUN mvn clean install
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-alpine
 
-# Instala fuso horário correto no sistema (opcional, mas bom para consistência de logs e ferramentas internas)
-RUN apt-get update && apt-get install -y tzdata && \
+# Instala fuso horário correto no Alpine
+RUN apk add --no-cache tzdata && \
     ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
     echo "America/Sao_Paulo" > /etc/timezone
 
