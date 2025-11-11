@@ -74,8 +74,8 @@ public class FinanceService {
             .toList();
         List<Double> ordersValues = dias.stream()
             .map(date -> {
-                double sum = orders.stream()
-                    .filter(order -> order.getDataPedido().toLocalDate().isEqual(date))
+                double sum = ordersPaid.stream()
+                    .filter(order -> order.getDataPagamento().toLocalDate().isEqual(date))
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
