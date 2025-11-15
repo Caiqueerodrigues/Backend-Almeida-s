@@ -174,7 +174,8 @@ public class FinanceService {
         List<Double> ordersCortesReceive = dias.stream()
             .map(date -> {
                 double sum = orders.stream()
-                    .filter(order -> (order.getDataPagamento() == null) && order.getDataPedido().toLocalDate().isEqual(date))
+                    .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Corte)) &&
+                            order.getDataPedido().toLocalDate().isEqual(date) && order.getDataPagamento() == null)
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
@@ -185,7 +186,7 @@ public class FinanceService {
             .map(date -> {
                 double sum = orders.stream()
                     .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Debruagem)) &&
-                                    (order.getDataPagamento() == null) && order.getDataPedido().toLocalDate().isEqual(date))
+                                    order.getDataPedido().toLocalDate().isEqual(date) && order.getDataPagamento() == null)
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
@@ -196,7 +197,7 @@ public class FinanceService {
             .map(date -> {
                 double sum = orders.stream()
                     .filter(order -> order.getCategoria().equals(String.valueOf(TipoServico.Dublagem)) &&
-                                    (order.getDataPagamento() == null) && order.getDataPedido().toLocalDate().isEqual(date))
+                                    order.getDataPedido().toLocalDate().isEqual(date) && order.getDataPagamento() == null)
                     .map(Order::getTotalDinheiro)
                     .reduce(0.0, Double::sum);
                 return round2(sum);
