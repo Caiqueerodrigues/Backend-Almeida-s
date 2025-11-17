@@ -34,8 +34,9 @@ public class ExitService {
     public ResponseDTO getExistsDayService(SearchDateDTO dados) {
         try {
             LocalDate date = LocalDate.parse(dados.date());
+            LocalDate dateFinal = LocalDate.parse(dados.dateFinal());
             
-            List<Exit> exist = repository.findByDataCompraAndDeletedIsFalse(date);
+            List<Exit> exist = repository.findByDataCompraBetweenAndDeletedIsFalse(date, dateFinal);
 
             if(!exist.isEmpty()) {
                 List<SendExit> newList = exist.stream()

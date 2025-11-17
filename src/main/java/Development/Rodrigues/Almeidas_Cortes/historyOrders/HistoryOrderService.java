@@ -71,7 +71,8 @@ public class HistoryOrderService {
                         item.getIdPedido().getModelo().getPreco(),
                         item.getUpdateAt(),
                         item.getIdUser().getName(),
-                        item.getOperation()
+                        item.getOperation(),
+                        item.getIdPedido().getCategoria()
                         )
                     );
                 });

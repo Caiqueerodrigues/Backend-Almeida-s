@@ -1,8 +1,6 @@
 package Development.Rodrigues.Almeidas_Cortes.historyOrders.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -36,6 +34,8 @@ public class ListHistoryOrders {
 
     private String operacaoRealizada;
 
+    private String categoria;
+
     public ListHistoryOrders (
         Long id,
         Long idPedido,
@@ -46,7 +46,8 @@ public class ListHistoryOrders {
         double preco,
         LocalDateTime data,
         String nome,
-        String operacaoRealizada
+        String operacaoRealizada,
+        String categoria
     ) {
         this.id = id;
         this.idPedido = idPedido;
@@ -58,5 +59,6 @@ public class ListHistoryOrders {
         this.horaModificacao = data.toString().split("T")[1];
         this.nomeUsuario = nome;
         this.operacaoRealizada = operacaoRealizada;
+        this.categoria = categoria;
     }
 }

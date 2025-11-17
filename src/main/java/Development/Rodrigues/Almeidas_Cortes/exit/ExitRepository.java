@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 
 public interface ExitRepository extends JpaRepository<Exit, Long> {
-    List<Exit> findByDataCompraAndDeletedIsFalse(LocalDate dataCompra);
+    List<Exit> findByDataCompraBetweenAndDeletedIsFalse(LocalDate initialDate, LocalDate finalDate);
     Optional<Exit> findByIdAndDeletedIsFalse(Long id);
 
     List<Exit> findByDataCompraBetweenAndDeletedIsFalseOrderByDataCompra(LocalDate initialDate, LocalDate finalDate);
