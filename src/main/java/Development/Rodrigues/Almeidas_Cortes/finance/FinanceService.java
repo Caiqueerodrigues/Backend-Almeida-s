@@ -39,8 +39,8 @@ public class FinanceService {
 
             LocalDateTime startDateTime = initialDate.atStartOfDay();
             LocalDateTime endDateTime = finalDate.atTime(23, 59, 59, 999_999_999);
-            List<Order> orders = orderRepository.findByDataPedidoBetweenOrderByIdDesc(startDateTime , endDateTime);
-            List<Order> ordersPaid = orderRepository.findByDataPagamentoBetweenOrderByIdDesc(startDateTime , endDateTime);
+            List<Order> orders = orderRepository.findByDataPedidoBetweenAndExcluidoIsFalseOrderByIdDesc(startDateTime , endDateTime);
+            List<Order> ordersPaid = orderRepository.findByDataPagamentoBetweenAndExcluidoIsFalseOrderByIdDesc(startDateTime , endDateTime);
 
             if(!exits.isEmpty() || !orders.isEmpty()) {
                 List<String> labels = initialDate.datesUntil(finalDate.plusDays(1))

@@ -2,6 +2,7 @@ package Development.Rodrigues.Almeidas_Cortes.order;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,6 +61,10 @@ public class OrderService {
         try {
             Optional<Order> exists = repository.findById(id);
     
+            if(exists.isPresent() && exists.get().getExcluido()) {
+                return new ResponseDTO("", "", "", "Pedido Excluído, não é possível visualizar os dados!");
+            }
+
             if(exists.isPresent()) {
                 OrderFront order = new OrderFront(
                     exists.get().getClient(),
@@ -96,7 +101,7 @@ public class OrderService {
             LocalDateTime dateInicio = dados.date().withHour(00).withMinute(00).withSecond(00).withNano(000000);
             LocalDateTime dateFim = dados.date().withHour(23).withMinute(59).withSecond(59).withNano(999999);
     
-            List<Order> list = repository.findByDataPedidoBetweenOrderByIdDesc(dateInicio, dateFim);
+            List<Order> list = repository.findByDataPedidoBetweenAndExcluidoIsFalseOrderByIdDesc(dateInicio, dateFim);
         
             if(!list.isEmpty()) {
                 List<ListOrder> listFormatted = createListOrder(list);
@@ -201,7 +206,7 @@ public class OrderService {
             LocalDateTime dateInicio = stringToLocalDatetime("initial", initialDateStr);
             LocalDateTime dateFim = stringToLocalDatetime("final", finalDateStr);
     
-            List<Order> list = repository.findByDataPedidoBetweenOrderByIdDesc(dateInicio, dateFim);
+            List<Order> list = repository.findByDataPedidoBetweenAndExcluidoIsFalseOrderByIdDesc(dateInicio, dateFim);
     
             if(!list.isEmpty()) {
                 List<ListOrder> listFormatted = createListOrder(list);
@@ -223,8 +228,8 @@ public class OrderService {
             
             boolean isClient = !idClient.equals("Todos");
 
-            if(isClient) list = repository.findByClientIdAndDataRetiradaIsNull(Long.parseLong(idClient));
-            else list = repository.findByDataRetiradaIsNull();
+            if(isClient) list = repository.findByClientIdAndDataRetiradaIsNullAndExcluidoIsFalse(Long.parseLong(idClient));
+            else list = repository.findByDataRetiradaIsNullAndExcluidoIsFalse();
 
             if(!list.isEmpty()) {
                 List<ListOrder> listFormatted = createListOrder(list);
@@ -266,7 +271,7 @@ public class OrderService {
     
     public ResponseDTO getOrdersDueService() {
         try {
-            List<Order> orders = repository.findByDataPagamentoIsNull();
+            List<Order> orders = repository.findByDataPagamentoIsNullAndExcluidoIsFalse();
     
             if(orders.size() > 0) {
                 List<ListOrder> listFormatted = createListOrder(orders);
@@ -306,6 +311,9 @@ public class OrderService {
     }
 
     public ResponseDTO deleteOrderService(String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        
         Long orderId = Long.parseLong(id);
 
         try {
@@ -313,14 +321,13 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Dados informados incorretos!"));
 
             if(dadosPedido.getDataPagamento() != null) return new ResponseDTO("", "", "", "Pedido com data de pagamento Registrado!");
+
+            ZoneId brasiliaZone = ZoneId.of("America/Sao_Paulo");
+
+            dadosPedido.registrarExclusao(LocalDateTime.now(brasiliaZone), user);
+            repository.save(dadosPedido);
             
-            OrderBackup backup = new OrderBackup(dadosPedido);
-                orderRepositoryBackup.save(backup);
-            
-            List<HistoryOrders> history = historyOrderService.getHistoryService(dadosPedido);
-                historyOrderService.deleteHistory(history);
-            
-            repository.delete(dadosPedido);
+            historyOrderService.createHistory(dadosPedido, "Pedido apagado", user);
 
             return new ResponseDTO("", "", "Dados apagados com sucesso!", "");
         } catch (Exception e) {

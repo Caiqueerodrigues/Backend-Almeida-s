@@ -50,7 +50,7 @@ public class Order {
     @Column(name = "grade", nullable = false, columnDefinition = "TEXT")
     private String grade;
     
-    @Column(name = "obs", length = 255)
+    @Column(name = "obs", length = 2000)
     private String obs;
 
     @Column(name = "data_pagamento")
@@ -80,6 +80,16 @@ public class Order {
     
     @Column(name = "categoria")
     String categoria;
+
+    @Column(name = "excluido")
+    private Boolean excluido = false;
+
+    @Column(name= "data_Exclusao")
+    private LocalDateTime dataExclusao;
+
+    @ManyToOne
+    @JoinColumn(name= "quem_Excluiu")
+    private User quemExcluiu;
     
     public Order(CreateOrderDTO dados, User user) {
         this.client = dados.client();
@@ -121,5 +131,11 @@ public class Order {
         this.dataRetirada = dados.dataRetirada();
         this.categoria = dados.categoria();
         this.quemCortou = dados.quemCortou();
+    }
+
+    public void registrarExclusao(LocalDateTime date, User user) {
+        this.excluido = true;
+        this.dataExclusao = date;
+        this.quemExcluiu = user;
     }
 }

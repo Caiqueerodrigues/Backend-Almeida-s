@@ -94,25 +94,25 @@ public class ReportService {
                 switch (dados.firstFilter()) {
                     case CLIENTE:
                         if(dados.situation() == TypesSituationReport.TODOS) {
-                            list = repository.findByClientId(dados.client());
+                            list = repository.findByClientIdAndExcluidoIsFalse(dados.client());
                         } else {
                             list = paid ?
-                            repository.findByClientIdAndDataPagamentoIsNotNull(dados.client()) :
-                            repository.findByClientIdAndDataPagamentoIsNull(dados.client());
+                            repository.findByClientIdAndDataPagamentoIsNotNullAndExcluidoIsFalse(dados.client()) :
+                            repository.findByClientIdAndDataPagamentoIsNullAndExcluidoIsFalse(dados.client());
                         }
                         break;
                     case PERÍODO:
                         if(dados.situation() == TypesSituationReport.TODOS) {
-                            list = repository.findByDataPedidoBetweenOrderByIdDesc(initialDate, finalDate);
+                            list = repository.findByDataPedidoBetweenAndExcluidoIsFalseOrderByIdDesc(initialDate, finalDate);
                         } else {
                             list = paid ? 
-                                repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :
-                                repository.findByDataPedidoBetweenAndDataPagamentoIsNull(initialDate, finalDate);
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNotNullAndExcluidoIsFalse(initialDate, finalDate) :
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNullAndExcluidoIsFalse(initialDate, finalDate);
                         }
                         break;
                     case CLIENTE_E_PERÍODO:
                             list = dados.situation() == TypesSituationReport.TODOS ? 
-                            repository.findByDataPedidoBetweenAndClientId(initialDate, finalDate, dados.client()) :
+                            repository.findByDataPedidoBetweenAndClientIdAndExcluidoIsFalse(initialDate, finalDate, dados.client()) :
                             repository.findOrdersByRangeByClientPaidOrNot(initialDate, finalDate, dados.client(), paid);
                         break;
                     case SITUAÇÃO:
@@ -120,26 +120,26 @@ public class ReportService {
                             list = repository.findAll();
                         } else {
                             list = paid ?
-                            repository.findByDataPagamentoIsNotNull() :
-                            repository.findByDataPagamentoIsNull();
+                            repository.findByDataPagamentoIsNotNullAndExcluidoIsFalse() :
+                            repository.findByDataPagamentoIsNullAndExcluidoIsFalse();
                         }
                         break;
                     case CATEGORIA_SERVIÇO:
                         if(dados.tipo().equals("Somente Serviços") || dados.tipo().equals("Serviços e Saídas")) {
                             if(dados.situation() == TypesSituationReport.TODOS) {
-                                list = repository.findByDataPedidoBetweenAndCategoriaOrderByIdDesc(
+                                list = repository.findByDataPedidoBetweenAndCategoriaAndExcluidoIsFalseOrderByIdDesc(
                                     initialDate, 
                                     finalDate, 
                                     dados.category()
                                 );
                             } else {
                                 list = paid ?
-                                repository.findByDataPedidoBetweenAndDataPagamentoIsNotNullAndCategoria(
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNotNullAndCategoriaAndExcluidoIsFalse(
                                     initialDate, 
                                     finalDate, 
                                     dados.category()
                                 ) :
-                                repository.findByDataPedidoBetweenAndDataPagamentoIsNullAndCategoria(
+                                repository.findByDataPedidoBetweenAndDataPagamentoIsNullAndCategoriaAndExcluidoIsFalse(
                                     initialDate, 
                                     finalDate, 
                                     dados.category()
@@ -158,11 +158,11 @@ public class ReportService {
                         break;
                     default:
                         if(dados.situation() == TypesSituationReport.TODOS) {
-                            list = repository.findByDataPedidoBetweenOrderByIdDesc(initialDate, finalDate);
+                            list = repository.findByDataPedidoBetweenAndExcluidoIsFalseOrderByIdDesc(initialDate, finalDate);
                         } else {
                             list = paid ?
-                            repository.findByDataPedidoBetweenAndDataPagamentoIsNotNull(initialDate, finalDate) :
-                            repository.findByDataPedidoBetweenAndDataPagamentoIsNull(initialDate, finalDate);
+                            repository.findByDataPedidoBetweenAndDataPagamentoIsNotNullAndExcluidoIsFalse(initialDate, finalDate) :
+                            repository.findByDataPedidoBetweenAndDataPagamentoIsNullAndExcluidoIsFalse(initialDate, finalDate);
                         }
                         break;
                 }    
