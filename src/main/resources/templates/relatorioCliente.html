@@ -126,10 +126,10 @@
                 <span  style="color: #079C27;" class="bold" th:text="'Total pago ' + ${totalPago}"></span>
                 <span th:if="${totalDevido > 0}" class="separador"> - </span>
                 <span 
-                th:if="${totalDevido > 0}" 
-                style="color: #ffa600;" 
-                class="bold" 
-                th:text="'Total devido ' + ${totalDevidoFormatado}"
+                    th:if="${totalDevido > 0}" 
+                    style="color: #ffa600;" 
+                    class="bold" 
+                    th:text="'Total devido ' + ${totalDevidoFormatado}"
                 ></span>
             </p>
         </div>

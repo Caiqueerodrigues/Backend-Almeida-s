@@ -244,7 +244,7 @@ public class ReportService {
                     order.getModelo().getUnidadeMedida(),
                     order.getModelo().getTipo().toLowerCase().contains("dublagem"),
                     order.getModelo().getTipo().toLowerCase().contains("debruagem"),
-                    order.getCategoria()
+                    order.getCategoria().toUpperCase()
                 );
             })
             .collect(Collectors.toList());

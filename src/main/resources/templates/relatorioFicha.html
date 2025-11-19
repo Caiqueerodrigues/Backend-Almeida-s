@@ -108,7 +108,11 @@
                 <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="${venda.dataPagamento}"></span>
             </div>
             <div class="content">
-                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="'CLIENTE' + (${venda.isDublagem ? ' - DUBLAGEM' : (venda.isDebruagem ? ' - DEBRUAGEM' : ' - CORTE')})"></p>
+                <p 
+                    class="paragraph" 
+                    style="color:  #E91F31; text-align: center; font-weight: bolder;" 
+                    th:text="'CLIENTE - ' + ${venda.categoria}"
+                    ></p>
                 <p class="paragraph">
                     <span th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>

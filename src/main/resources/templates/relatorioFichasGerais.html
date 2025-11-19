@@ -105,7 +105,11 @@
                 <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
             </div>
             <div class="content">
-                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="'ADIMINISTRATIVO' + (${venda.isDublagem ? ' - DUBLAGEM' : (venda.isDebruagem ? ' - DEBRUAGEM' : ' - CORTE')})"></p>
+                <p 
+                    class="paragraph" 
+                    style="color:  #E91F31; text-align: center; font-weight: bolder;" 
+                    th:text="'ADMINISTRATIVO - ' + ${venda.categoria}"
+                ></p>
                 <p class="paragraph">
                     <span th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>
@@ -183,7 +187,11 @@
                 <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
             </div>
             <div class="content">
-                <p class="paragraph" style="color:  #E91F31; text-align: center; font-weight: bolder;" th:text="'CLIENTE' + (${venda.isDublagem ? ' - DUBLAGEM' : (venda.isDebruagem ? ' - DEBRUAGEM' : ' - CORTE')})"></p>
+                <p 
+                    class="paragraph" 
+                    style="color:  #E91F31; text-align: center; font-weight: bolder;" 
+                    th:text="'CLIENTE - ' + ${venda.categoria}"
+                    ></p>
                 <p class="paragraph">
                     <span th:text="'ID ' + ${venda.id}"></span>
                     <span class="separador"> - </span>
