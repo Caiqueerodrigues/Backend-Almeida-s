@@ -61,7 +61,6 @@ public class ReportService {
 
     public ResponseDTO generateReportService(ParamsFiltersReports dados) {
         try {
-            
             LocalDateTime initialDate = dados.period().size() > 0 ? 
                 dados.period().get(0).withHour(0).withMinute(0).withSecond(0).withNano(0) : null;
             LocalDateTime finalDate = dados.period().size() > 0 ? 
@@ -86,10 +85,12 @@ public class ReportService {
                     e.printStackTrace();
                     return null;
                 }
+                
             } else if(dados.report() == TypesReport.FICHA_DE_CORTE || dados.report() == TypesReport.CLIENTE) {
                 Optional<Order> consult = repository.findById(dados.idPedido());
     
                 if(consult.isPresent()) list.add(consult.get());
+                
             } else {
                 switch (dados.firstFilter()) {
                     case CLIENTE:
