@@ -229,6 +229,7 @@ public class ReportService {
                     getDayOfWeek(order.getDataPedido()),
                     order.getGrade(),
                     order.getTotalPares() * order.getModelo().getQtdPecasPar(),
+                    order.getQuemCortou(),
                     order.getQuemAssinou() == null || order.getQuemAssinou().isBlank() ? 
                         "Pedido não retirado" : order.getQuemAssinou(),
                     formatDate(order.getDataRetirada(), "dd/MM/yyyy"),

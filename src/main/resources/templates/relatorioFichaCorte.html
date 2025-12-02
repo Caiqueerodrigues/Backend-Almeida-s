@@ -150,9 +150,10 @@
                     </div>
                     <div>
                         <p class="final-text">
+                            <p th:text="${venda.quemConcluiu != null ? venda.quemConcluiu : ''}" class="border-bottom"></p>
                             <span>Assinatura de quem concluiu</span>
                             <span class="separador"> - </span> 
-                            <span> DATA: ____/ ____/ 20___ </span> 
+                            <span th:text="${venda.quemConcluiu != null ? venda.dataPedidoFormatada : venda.dataDefault }"></span>
                         </p>
                     </div>
                 </div>

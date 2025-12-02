@@ -50,6 +50,8 @@ public class OrderReport {
 
     private Double totalPares;
 
+    private String quemConcluiu;
+
     private String quemAssinou;
 
     private String dataRetirada;
@@ -73,6 +75,8 @@ public class OrderReport {
     private Boolean isDebruagem;
 
     private String categoria;
+
+    private String dataDefault = "DATA: ____/ ____/ 20___ ";
     
     public OrderReport(
         Long id, 
@@ -86,6 +90,7 @@ public class OrderReport {
         String diaSemana, 
         String grade, 
         Double qtdPecas, 
+        String quemConcluiu,
         String quemAssinou, 
         String dataRetirada, 
         String horaRetirada,
@@ -130,6 +135,7 @@ public class OrderReport {
         this.isDublagem = isDublagem;
         this.isDebruagem = isDebruagem;
         this.categoria = categoria;
+        this.quemConcluiu = quemConcluiu;
     }
 
     private List<Map<String, String>> parseGrades(String gradeString) {
