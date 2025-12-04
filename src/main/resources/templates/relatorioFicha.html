@@ -83,10 +83,16 @@
             display: block;
         }
         .title-pago {
-            font-weight: 500;
-            color: #079C27;
+            position: absolute;
+            margin: -5% 0 0 50%;
+            right: 25px;
+            font-family: Arial, sans-serif;
+            font-size: 35px;
+            font-weight: 700;
+            color: #c6c6c6;
+            opacity: 0.3;
+            z-index: -1;
         }
-
         
         .obs {
             word-wrap: break-word;
@@ -104,8 +110,10 @@
                 <span style="color: #E91F31; font-size: 14px;">Almeida's Corte</span><br/>
                 <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
                 <span style="font-size: 14px; color: #079C27;">(18) 99706-1227</span><br/>
-                <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="'PAGO'"></span><br/>
-                <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="${venda.dataPagamento}"></span>
+                <p class="title-pago" th:if="${venda.dataPagamento.contains('/')}" >
+                    <span th:text="'PAGO'"></span><br/>
+                    <span th:text="${venda.dataPagamento}"></span>
+                </p>
             </div>
             <div class="content">
                 <p 
