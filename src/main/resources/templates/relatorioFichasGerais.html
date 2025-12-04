@@ -88,7 +88,7 @@
         }
         .title-pago {
             font-weight: 500;
-            color: #079C27;
+            color: #4db6ac;
         }
 
         .obs {
@@ -107,6 +107,8 @@
                 <span style="color: #E91F31; font-size: 14px; font-weight: 500;">Almeida's Corte</span><br/>
                 <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
                 <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
+                <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="'PAGO'"></span><br/>
+                <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="${venda.dataPagamento}"></span>
             </div>
             <div class="content">
                 <p 
@@ -190,6 +192,8 @@
                 <span style="color: #E91F31; font-size: 14px; font-weight: 500;">Almeida's Corte</span><br/>
                 <span style="font-size: 10px;">Rua Expedicionário, 233</span><br/>
                 <span style="font-size: 14px; color: #079C27; font-weight: 500;">(18) 99706-1227</span><br/>
+                <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="'PAGO'"></span><br/>
+                <span class="title-pago" th:if="${venda.dataPagamento.contains('/')}" th:text="${venda.dataPagamento}"></span>
             </div>
             <div class="content">
                 <p 
