@@ -3,10 +3,12 @@ package Development.Rodrigues.Almeidas_Cortes.finance;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import Development.Rodrigues.Almeidas_Cortes.exit.ExitRepository;
 import Development.Rodrigues.Almeidas_Cortes.exit.entities.Exit;
 import Development.Rodrigues.Almeidas_Cortes.exit.enums.TipoServico;
 import Development.Rodrigues.Almeidas_Cortes.finance.entities.FinanceGraph;
+import Development.Rodrigues.Almeidas_Cortes.finance.entities.FinanceGraph.DetailsGraphCategory;
 import Development.Rodrigues.Almeidas_Cortes.finance.entities.FinanceGraph.GraphData;
 import Development.Rodrigues.Almeidas_Cortes.historyOrders.HistoryOrderService;
 import Development.Rodrigues.Almeidas_Cortes.order.entities.Order;
@@ -238,7 +241,33 @@ public class FinanceService {
         );
         List<Double> dataPie = List.of(totalGeral, totalCorte, totalDebruagem, totalDublagem);
 
-        return new FinanceGraph(labels, dataLine, dataBar, dataPie, dataPaidBar, dataReceiveBar);
+        List<DetailsGraphCategory> detailsCategory = new ArrayList<>();
+        detailsCategory.add(buildDetailsGraphCategory(TipoServico.Corte, ordersPaid, orders, dados));
+        detailsCategory.add(buildDetailsGraphCategory(TipoServico.Debruagem, ordersPaid, orders, dados));
+        detailsCategory.add(buildDetailsGraphCategory(TipoServico.Dublagem, ordersPaid, orders, dados));
+        detailsCategory.add(buildDetailsGraphCategory(TipoServico.Geral, ordersPaid, orders, dados));
+
+        return new FinanceGraph(labels, dataLine, dataBar, dataPie, dataPaidBar, dataReceiveBar, detailsCategory);
+    }
+
+    private DetailsGraphCategory buildDetailsGraphCategory(
+        TipoServico tipo,
+        List<Order> ordersPaid,
+        List<Order> orders,
+        List<Exit> dados
+    ) {
+        return new DetailsGraphCategory(
+            tipo,
+            ordersPaid.stream()
+                .filter(order -> order.getCategoria().equals(String.valueOf(tipo)))
+                .count(),
+            orders.stream()
+                .filter(order -> order.getCategoria().equals(String.valueOf(tipo)))
+                .count(),
+            dados.stream()
+                .filter(exit -> exit.getTipoServico().equals(tipo))
+                .count()
+        );
     }
 
     private Double round2(Double value) {
