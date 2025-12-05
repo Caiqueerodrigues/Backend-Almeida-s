@@ -336,6 +336,28 @@ public class OrderService {
         }
     }
 
+    public ResponseDTO cloneOrderService(String id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+    
+            Long orderId = Long.parseLong(id);
+    
+            Order dadosPedido = repository.findByIdAndExcluidoIsFalseAndDataPagamentoIsNull(orderId)
+                .orElseThrow(() -> new RuntimeException("Pedido com data de pagamento registrada ou já excluído!"));
+    
+            Order novoPedido = dadosPedido.cloneOrder(dadosPedido, user);
+            repository.save(novoPedido);
+    
+            historyOrderService.createHistory(novoPedido, "Pedido clonado a partir do pedido ID: " + dadosPedido.getId(), user);
+    
+            return new ResponseDTO(novoPedido.getId(), "", "", "");
+        } catch (Exception e) {
+            log.error("ERRO ao clonar o pedido " + e);
+            throw new RuntimeException(e.getMessage() != null ? e.getMessage() : "Erro ao clonar o pedido, tente novamente.");
+        }
+    }
+
     private List<ListOrder> createListOrder(List<Order> list) {
         List<ListOrder> listFormatted = new ArrayList<ListOrder>();
 

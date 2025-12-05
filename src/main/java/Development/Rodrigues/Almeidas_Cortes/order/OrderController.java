@@ -79,7 +79,6 @@ public class OrderController {
         }
     }
     
-
     @GetMapping("/period/{initialDate}/{finalDate}")
     public ResponseEntity getOrderPeriod(@PathVariable String initialDate, @PathVariable String finalDate) {
         try {
@@ -142,4 +141,16 @@ public class OrderController {
             return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
         }
     }
+
+    @PostMapping("/clone/{id}")
+    @Transactional
+    public ResponseEntity cloneOrder(@PathVariable String id) {
+        try {
+            ResponseDTO response = service.cloneOrderService(id);
+            return ResponseEntity.status(200).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO("", e.getMessage(), "", ""));
+        }
+    }
+    
 }

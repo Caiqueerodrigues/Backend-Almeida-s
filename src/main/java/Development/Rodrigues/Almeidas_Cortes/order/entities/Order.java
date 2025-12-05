@@ -112,6 +112,32 @@ public class Order {
         this.categoria = dados.categoria();
         this.user = user;
     }
+    
+    public Order cloneOrder(Order order, User user) {
+        Order clonedOrder = new Order();
+        clonedOrder.client = order.client;
+        clonedOrder.modelo = order.modelo;
+        clonedOrder.dataPedido = order.dataPedido;
+        clonedOrder.dataFinalizado = order.dataFinalizado;
+        clonedOrder.relatorioCliente = order.relatorioCliente;
+        clonedOrder.totalDinheiro = order.totalDinheiro;
+        clonedOrder.totalPares = order.totalPares;
+        clonedOrder.grade = order.grade;
+        clonedOrder.obs = order.obs;
+        clonedOrder.dataPagamento = order.dataPagamento;
+        clonedOrder.tipoRecebido = order.tipoRecebido;
+        clonedOrder.rendimentoParesMetro = order.rendimentoParesMetro;
+        clonedOrder.quemAssinou = order.quemAssinou;
+        clonedOrder.cor = order.cor;
+        clonedOrder.dataRetirada = order.dataRetirada;
+        clonedOrder.quemCortou = order.quemCortou;
+        clonedOrder.categoria = order.categoria;
+        clonedOrder.user = user;
+        clonedOrder.excluido = order.excluido;
+        clonedOrder.dataExclusao = order.dataExclusao;
+        clonedOrder.quemExcluiu = order.quemExcluiu;
+        return clonedOrder;
+    }
 
     public void updateOrder(UpdateOrderDTO dados) {
         this.client = dados.client();
