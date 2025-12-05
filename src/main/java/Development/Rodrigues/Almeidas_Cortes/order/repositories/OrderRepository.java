@@ -52,6 +52,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByDataPagamentoIsNullAndExcluidoIsFalse();
 
     List<Order> findAll();
-    Optional<Order> findByIdAndExcluidoIsFalseAndDataPagamentoIsNull(Long id);
+    Optional<Order> findByIdAndExcluidoIsFalse(Long id);
 
 };

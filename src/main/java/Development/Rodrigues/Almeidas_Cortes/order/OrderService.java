@@ -343,8 +343,8 @@ public class OrderService {
     
             Long orderId = Long.parseLong(id);
     
-            Order dadosPedido = repository.findByIdAndExcluidoIsFalseAndDataPagamentoIsNull(orderId)
-                .orElseThrow(() -> new RuntimeException("Pedido com data de pagamento registrada ou já excluído!"));
+            Order dadosPedido = repository.findByIdAndExcluidoIsFalse(orderId)
+                .orElseThrow(() -> new RuntimeException("Pedido inexistente ou já excluído!"));
     
             Order novoPedido = dadosPedido.cloneOrder(dadosPedido, user);
             repository.save(novoPedido);
