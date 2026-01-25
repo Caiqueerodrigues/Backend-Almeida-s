@@ -35,6 +35,8 @@ public class FinanceGraph {
         private TipoServico categoria;
         private Long pedidosPagos;
         private Long pedidosLancados;
+        private Long pedidosAReceberPeriodo;
+        private Long pedidosRecebidosPeriodo;
         private Long gastos;
     }
 }

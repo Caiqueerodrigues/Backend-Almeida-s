@@ -63,7 +63,7 @@ public class ExitService {
 
             return new ResponseDTO("", "Informações incorretas!", "", "");
         } catch (Exception e) {
-            log.error("ERRO ao buscas o lançamento " + e);
+            log.error("ERRO ao buscar o lançamento " + e);
             throw new RuntimeException("Erro ao buscar o lançamento, tente novamente.");
         }
     }

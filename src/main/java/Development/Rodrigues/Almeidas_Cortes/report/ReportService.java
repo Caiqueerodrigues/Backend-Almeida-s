@@ -327,6 +327,7 @@ public class ReportService {
                     }
                     context.setVariable("listaSaidas", exitsReport);
                     context.setVariable("totalSaidas", currencyFormat.format(totalSaidas));
+                    context.setVariable("complementoCategoria", " " + dadosFront.category());
                     htmlContent = templateEngine.process("relatorioCategoria", context);
                 } else if(dadosFront.firstFilter() == TypesFilterReport.PERÍODO) {
                     htmlContent = templateEngine.process("relatorioPeriodo", context);
