@@ -89,6 +89,29 @@ jobs:
             caiqueerodrigues/almeidas:latest
             caiqueerodrigues/almeidas:${{ github.sha }}
 
+      - name: Criar .env na VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          script: |
+            cat > /almeidas/.env <<EOF
+            MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+            MYSQL_USER=${{ secrets.MYSQL_USER }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            MYSQL_ROOT_HOST=${{ secrets.MYSQL_ROOT_HOST }}
+            DATABASE_HOST=${{ secrets.MYSQL_ROOT_HOST }}
+            DATABASE_DATABASE=${{ secrets.MYSQL_DATABASE }}
+            DATABASE_USERNAME=${{ secrets.MYSQL_USER }}
+            DATABASE_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            API_BACKEND=${{ secrets.API_BACKEND }}
+            API_FRONTEND=${{ secrets.API_FRONTEND }}
+            UPLOAD_DIR_PHOTOS=${{ secrets.UPLOAD_DIR_PHOTOS }}
+            UPLOAD_DIR_PHOTOS_USERS=${{ secrets.UPLOAD_DIR_PHOTOS_USERS }}
+            EOF
+
       - name: Copiar docker-compose.yml para o servidor
         uses: appleboy/scp-action@master
         with:
