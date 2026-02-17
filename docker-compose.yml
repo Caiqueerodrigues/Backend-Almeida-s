@@ -5,11 +5,11 @@ services:
     image: mysql:8.0
     container_name: almeidas_db
     environment:
-      MYSQL_ROOT_PASSWORD: um2tres4
-      MYSQL_DATABASE: Almeidas_Cortes
-      MYSQL_USER: root
-      MYSQL_PASSWORD: um2tres4
-      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
     ports:
       - "3307:3306"
     volumes:
@@ -25,14 +25,14 @@ services:
     ports:
       - "3003:3003"
     environment:
-      DATABASE_HOST: db
-      DATABASE_DATABASE: Almeidas_Cortes
-      DATABASE_USERNAME: root
-      DATABASE_PASSWORD: um2tres4
-      API_BACKEND: https://almeidas.app.br/api/
-      API_FRONTEND: https://almeidas.app.br/
-      UPLOAD_DIR_PHOTOS: /anexos
-      UPLOAD_DIR_PHOTOS_USERS: /photosUsers
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_DATABASE: ${DATABASE_DATABASE}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      API_BACKEND: ${API_BACKEND}
+      API_FRONTEND: ${API_FRONTEND}
+      UPLOAD_DIR_PHOTOS: ${UPLOAD_DIR_PHOTOS}
+      UPLOAD_DIR_PHOTOS_USERS: ${UPLOAD_DIR_PHOTOS_USERS}
     restart: always
     volumes:
       - /almeidas/anexos:/anexos
