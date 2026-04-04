@@ -281,8 +281,14 @@ public class FinanceService {
                 .map(Exit::getValorCompra)
                 .reduce(0.0, Double::sum)
         );
+        double totalMontagem = round2(
+            dados.stream()
+                .filter(exit -> TipoServico.Montagem.equals(exit.getTipoServico()))
+                .map(Exit::getValorCompra)
+                .reduce(0.0, Double::sum)
+        );
         
-        List<Double> dataPie = List.of(totalGeral, totalCorte, totalDebruagem, totalDublagem, totalVendaMaterial);
+        List<Double> dataPie = List.of(totalGeral, totalCorte, totalDebruagem, totalDublagem, totalVendaMaterial, totalMontagem);
 
         List<DetailsGraphCategory> detailsCategory = new ArrayList<>();
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Corte, ordersPaid, orders, dados));
@@ -290,7 +296,7 @@ public class FinanceService {
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Dublagem, ordersPaid, orders, dados));
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Geral, ordersPaid, orders, dados));
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Material, ordersPaid, orders, dados));
-
+        detailsCategory.add(buildDetailsGraphCategory(TipoServico.Montagem, ordersPaid, orders, dados));
         return new FinanceGraph(labels, dataLine, dataBar, dataPie, dataPaidBar, dataReceiveBar, detailsCategory);
     }
 

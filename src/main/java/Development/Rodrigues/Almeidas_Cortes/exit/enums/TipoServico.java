@@ -5,5 +5,6 @@ public enum TipoServico {
     Debruagem,
     Dublagem,
     Geral,
-    Material
+    Material,
+    Montagem
 }
