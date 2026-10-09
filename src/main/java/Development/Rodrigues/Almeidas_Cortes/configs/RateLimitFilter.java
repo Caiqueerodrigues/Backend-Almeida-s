@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final int maxRequests;
     private final long windowMillis;
 
+    @Autowired
     public RateLimitFilter(
             ObjectMapper objectMapper,
             @Value("${rate-limit.max-requests:100}") int maxRequests,

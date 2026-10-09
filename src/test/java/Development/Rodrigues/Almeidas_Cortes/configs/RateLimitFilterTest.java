@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -15,6 +16,20 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 class RateLimitFilterTest {
+
+    @Test
+    void createsFilterAsSpringBeanWithConfiguredConstructor() {
+        new ApplicationContextRunner()
+                .withBean(ObjectMapper.class)
+                .withBean(RateLimitFilter.class)
+                .withPropertyValues(
+                        "rate-limit.max-requests=100",
+                        "rate-limit.window-seconds=60")
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context).hasSingleBean(RateLimitFilter.class);
+                });
+    }
 
     @Test
     void blocksRequestsOverTheLimitAndInformsWaitingTime() throws Exception {
