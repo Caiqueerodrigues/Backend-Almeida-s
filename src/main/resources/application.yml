@@ -17,6 +17,10 @@ security:
   token:
     secret: "${JWT_SECRET:ASDasdhjknfghjn123132lkdfasd}"
 
+rate-limit:
+  max-requests: ${RATE_LIMIT_MAX_REQUESTS:100}
+  window-seconds: ${RATE_LIMIT_WINDOW_SECONDS:60}
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

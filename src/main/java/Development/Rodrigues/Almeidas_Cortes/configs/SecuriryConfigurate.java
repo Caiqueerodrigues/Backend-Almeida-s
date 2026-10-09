@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -22,6 +23,9 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecuriryConfigurate {
     @Autowired
     private SecurityFilter securityFilter;
+
+    @Autowired
+    private RateLimitFilter rateLimitFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,12 +61,25 @@ public class SecuriryConfigurate {
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
-                    config.setExposedHeaders(List.of("Authorization"));
+                    config.setExposedHeaders(List.of(
+                        "Authorization",
+                        "Retry-After",
+                        "X-RateLimit-Limit",
+                        "X-RateLimit-Remaining"
+                    ));
                     config.setAllowCredentials(true);
                     return config;
                 }))
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
+    }
+
+    @Bean
+    public FilterRegistrationBean<RateLimitFilter> disableRateLimitFilterAutoRegistration() {
+        FilterRegistrationBean<RateLimitFilter> registration = new FilterRegistrationBean<>(rateLimitFilter);
+        registration.setEnabled(false);
+        return registration;
     }
 
     @Bean
