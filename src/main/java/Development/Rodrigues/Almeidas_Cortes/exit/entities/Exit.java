@@ -33,7 +33,7 @@ public class Exit {
     private Double valorCompra;
     
     @Column(name= "tipo_Servico")
-    @Enumerated(EnumType.STRING) 
+    @Convert(converter = TipoServicoConverter.class)
     private TipoServico tipoServico;
     
     @Column(name= "anotacoes")

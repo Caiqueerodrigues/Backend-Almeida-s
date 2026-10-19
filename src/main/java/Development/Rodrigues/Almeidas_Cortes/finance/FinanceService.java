@@ -36,6 +36,13 @@ public class FinanceService {
 
     private static final Logger log = LoggerFactory.getLogger(HistoryOrderService.class);
 
+    private static final List<TipoServico> NOVOS_TIPOS_SERVICO = List.of(
+        TipoServico.Pesponto,
+        TipoServico.PespontoDuasAgulhas,
+        TipoServico.Vies,
+        TipoServico.Waster
+    );
+
     public ResponseDTO getFinanceDataService(LocalDate initialDate, LocalDate finalDate) {
         try {
             List<Exit> exits = exitRepository.findByDataCompraBetweenAndDeletedIsFalseOrderByDataCompra(initialDate , finalDate);
@@ -137,12 +144,13 @@ public class FinanceService {
             .toList();
         Double totalMaterialBar = round2(ordersVendaMaterial.stream().reduce(0.0, Double::sum));
 
-        List<FinanceGraph.GraphData> dataBar = List.of(
+        List<FinanceGraph.GraphData> dataBar = new ArrayList<>(List.of(
             new FinanceGraph.GraphData("Corte R$ " + String.format("%.2f", totalCortesBar), ordersCortes),
             new FinanceGraph.GraphData("Debruagem R$ " + String.format("%.2f", totalDebruagemBar), ordersDebruagem),
             new FinanceGraph.GraphData("Dublagem R$ " + String.format("%.2f", totalDublagemBar), ordersDublagem),
             new FinanceGraph.GraphData("Venda Material R$ " + String.format("%.2f", totalMaterialBar), ordersVendaMaterial)
-        );
+        ));
+        addOrderGraphData(dataBar, NOVOS_TIPOS_SERVICO, orders, dias, false, false);
 
         // BAR PAID
         List<Double> ordersCortesPaid = dias.stream()
@@ -190,12 +198,13 @@ public class FinanceService {
             .toList();
         Double totalMaterialPaidBar = round2(ordersVendaMaterialPaid.stream().reduce(0.0, Double::sum));
 
-        List<FinanceGraph.GraphData> dataPaidBar = List.of(
+        List<FinanceGraph.GraphData> dataPaidBar = new ArrayList<>(List.of(
             new FinanceGraph.GraphData("Corte R$ " + String.format("%.2f", totalCortesPaidBar), ordersCortesPaid),
             new FinanceGraph.GraphData("Debruagem R$ " + String.format("%.2f", totalDebruagemPaidBar), ordersDebruagemPaid),
             new FinanceGraph.GraphData("Dublagem R$ " + String.format("%.2f", totalDublagemPaidBar), ordersDublagemPaid),
             new FinanceGraph.GraphData("Venda Material R$ " + String.format("%.2f", totalMaterialPaidBar), ordersVendaMaterialPaid)
-        );
+        ));
+        addOrderGraphData(dataPaidBar, NOVOS_TIPOS_SERVICO, ordersPaid, dias, true, false);
 
         //BAR RECEIVE
         List<Double> ordersCortesReceive = dias.stream()
@@ -243,12 +252,13 @@ public class FinanceService {
             .toList();
         Double totalMaterialReceiveBar = round2(ordersVendaMaterialReceive.stream().reduce(0.0, Double::sum));
 
-        List<FinanceGraph.GraphData> dataReceiveBar = List.of(
+        List<FinanceGraph.GraphData> dataReceiveBar = new ArrayList<>(List.of(
             new FinanceGraph.GraphData("Corte R$ " + String.format("%.2f", totalCortesReceiveBar), ordersCortesReceive),
             new FinanceGraph.GraphData("Debruagem R$ " + String.format("%.2f", totalDebruagemReceiveBar), ordersDebruagemReceive),
             new FinanceGraph.GraphData("Dublagem R$ " + String.format("%.2f", totalDublagemReceiveBar), ordersDublagemReceive),
             new FinanceGraph.GraphData("Venda Material R$ " + String.format("%.2f", totalMaterialReceiveBar), ordersVendaMaterialReceive)
-        );
+        ));
+        addOrderGraphData(dataReceiveBar, NOVOS_TIPOS_SERVICO, orders, dias, false, true);
 
         // PIE
         double totalGeral = round2(
@@ -287,8 +297,23 @@ public class FinanceService {
                 .map(Exit::getValorCompra)
                 .reduce(0.0, Double::sum)
         );
+        double totalPesponto = totalExitByType(dados, TipoServico.Pesponto);
+        double totalPespontoDuasAgulhas = totalExitByType(dados, TipoServico.PespontoDuasAgulhas);
+        double totalVies = totalExitByType(dados, TipoServico.Vies);
+        double totalWaster = totalExitByType(dados, TipoServico.Waster);
         
-        List<Double> dataPie = List.of(totalGeral, totalCorte, totalDebruagem, totalDublagem, totalVendaMaterial, totalMontagem);
+        List<Double> dataPie = List.of(
+            totalGeral,
+            totalCorte,
+            totalDebruagem,
+            totalDublagem,
+            totalVendaMaterial,
+            totalMontagem,
+            totalPesponto,
+            totalPespontoDuasAgulhas,
+            totalVies,
+            totalWaster
+        );
 
         List<DetailsGraphCategory> detailsCategory = new ArrayList<>();
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Corte, ordersPaid, orders, dados));
@@ -297,7 +322,41 @@ public class FinanceService {
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Geral, ordersPaid, orders, dados));
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Material, ordersPaid, orders, dados));
         detailsCategory.add(buildDetailsGraphCategory(TipoServico.Montagem, ordersPaid, orders, dados));
+        NOVOS_TIPOS_SERVICO.forEach(tipo ->
+            detailsCategory.add(buildDetailsGraphCategory(tipo, ordersPaid, orders, dados))
+        );
         return new FinanceGraph(labels, dataLine, dataBar, dataPie, dataPaidBar, dataReceiveBar, detailsCategory);
+    }
+
+    private void addOrderGraphData(
+        List<GraphData> graphData,
+        List<TipoServico> tipos,
+        List<Order> orders,
+        List<LocalDate> dias,
+        boolean usarDataPagamento,
+        boolean somentePendentes
+    ) {
+        tipos.forEach(tipo -> {
+            List<Double> values = dias.stream()
+                .map(date -> round2(orders.stream()
+                    .filter(order -> tipo.toString().equals(order.getCategoria()))
+                    .filter(order -> !somentePendentes || order.getDataPagamento() == null)
+                    .filter(order -> (usarDataPagamento
+                        ? order.getDataPagamento().toLocalDate()
+                        : order.getDataPedido().toLocalDate()).isEqual(date))
+                    .map(Order::getTotalDinheiro)
+                    .reduce(0.0, Double::sum)))
+                .toList();
+            Double total = round2(values.stream().reduce(0.0, Double::sum));
+            graphData.add(new GraphData(tipo + " R$ " + String.format("%.2f", total), values));
+        });
+    }
+
+    private double totalExitByType(List<Exit> exits, TipoServico tipo) {
+        return round2(exits.stream()
+            .filter(exit -> tipo.equals(exit.getTipoServico()))
+            .map(Exit::getValorCompra)
+            .reduce(0.0, Double::sum));
     }
 
     private DetailsGraphCategory buildDetailsGraphCategory(

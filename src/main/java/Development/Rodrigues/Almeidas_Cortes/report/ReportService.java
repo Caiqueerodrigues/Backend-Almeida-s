@@ -149,7 +149,7 @@ public class ReportService {
                         }
 
                         if(dados.tipo().equals("Saídas") || dados.tipo().equals("Serviços e Saídas")) {
-                            TipoServico tipoServico = TipoServico.valueOf(dados.category());
+                            TipoServico tipoServico = TipoServico.fromValue(dados.category());
                             listExits = exitRepository.findByDataCompraBetweenAndDeletedIsFalseAndTipoServicoOrderByDataCompra(
                                 initialDate != null ? initialDate.toLocalDate() : null,
                                 finalDate != null ? finalDate.toLocalDate() : null,
